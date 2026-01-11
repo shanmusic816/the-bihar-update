@@ -69,3 +69,11 @@ article img {
   margin: 10px auto;
   border-radius: 8px;
 }
+
+article {
+  transition: transform 0.2s ease;
+}
+
+article:hover {
+  transform: scale(1.02);
+}
