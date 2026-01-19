@@ -45,6 +45,13 @@ margin-top:0;
 color:#b71c1c;
 }
 
+article p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #333;
+  margin-top: 10px;
+}
+
 .news-img{
 width:100%;
 max-height:320px;
