@@ -129,3 +129,21 @@ article p {
   border: 1px solid #b71c1c;
   border-radius: 4px;
 }
+
+.rotate-text {
+  background: #b71c1c;
+  color: #fff;
+  text-align: center;
+  padding: 8px 10px;
+  font-size: 15px;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.rotate-text .rtext {
+  display: none;
+}
+
+.rotate-text .rtext.active {
+  display: block;
+}
