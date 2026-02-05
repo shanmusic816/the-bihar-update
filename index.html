@@ -18,6 +18,12 @@
   <div class="search-box">
   <input type="text" id="searchInput" placeholder="Search news..." onkeyup="searchNews()">
   </div>
+  <div class="rotate-text">
+  <span class="rtext active">The Bihar Update</span>
+  <span class="rtext">आपकी आवाज़ • आपकी खबर</span>
+  <span class="rtext">सच • सटीक • सबसे तेज</span>
+  <span class="rtext">Bihar News | Trusted Source</span>
+  </div>
 </header>
 
 <main>
@@ -129,6 +135,15 @@ function searchNews() {
   });
 }
   </script>
-  
+  <script>
+let rtexts = document.querySelectorAll(".rotate-text .rtext");
+let rIndex = 0;
+
+setInterval(() => {
+  rtexts[rIndex].classList.remove("active");
+  rIndex = (rIndex + 1) % rtexts.length;
+  rtexts[rIndex].classList.add("active");
+}, 2500);
+  </script>
 </body>
 </html>
