@@ -135,15 +135,21 @@ function searchNews() {
   });
 }
   </script>
-  <script>
-let rtexts = document.querySelectorAll(".rotate-text .rtext");
-let rIndex = 0;
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
-setInterval(() => {
-  rtexts[rIndex].classList.remove("active");
-  rIndex = (rIndex + 1) % rtexts.length;
-  rtexts[rIndex].classList.add("active");
-}, 2500);
-  </script>
+  let rtexts = document.querySelectorAll(".rotate-text .rtext");
+  let rIndex = 0;
+
+  if (rtexts.length > 0) {
+    setInterval(function () {
+      rtexts[rIndex].classList.remove("active");
+      rIndex = (rIndex + 1) % rtexts.length;
+      rtexts[rIndex].classList.add("active");
+    }, 2500);
+  }
+
+});
+</script>
 </body>
 </html>
