@@ -187,3 +187,9 @@ article p {
   color: #ffffff;
   transform: scale(1.05);
 }
+
+.download-center {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
