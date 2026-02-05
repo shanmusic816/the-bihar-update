@@ -167,29 +167,29 @@ article p {
   box-shadow: 0 10px 20px rgba(0,0,0,0.35);
 }
 
-.download-btn {
-  display: inline-block;
-  margin: 15px auto;
-  padding: 12px 28px;
+.download-wrap{
+  text-align: center;
+  margin: 25px 0;
+}
+
+.download-btn{
   background: #ffffff;
   color: #b71c1c;
-  font-size: 16px;
-  font-weight: bold;
+  padding: 16px 36px;
+  border-radius: 40px;
+  font-size: 18px;
+  font-weight: 700;
   text-decoration: none;
-  border-radius: 30px;
-  border: 2px solid #ffffff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 2px solid #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.35);
   transition: all 0.3s ease;
 }
 
-.download-btn:hover {
+.download-btn:hover{
   background: #b71c1c;
-  color: #ffffff;
-  transform: scale(1.05);
-}
-
-.download-center {
-  display: flex;
-  justify-content: center;
-  margin: 15px 0;
+  color: #fff;
+  transform: scale(1.06);
 }
