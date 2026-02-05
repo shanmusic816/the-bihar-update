@@ -114,5 +114,21 @@
 <p>© 2026 The Bihar Update | All Rights Reserved</p>
 </footer>
 
+  <script>
+function searchNews() {
+  let input = document.getElementById("searchInput").value.toLowerCase();
+  let articles = document.querySelectorAll("main article");
+
+  articles.forEach(function(article) {
+    let text = article.innerText.toLowerCase();
+    if (text.includes(input)) {
+      article.style.display = "";
+    } else {
+      article.style.display = "none";
+    }
+  });
+}
+  </script>
+  
 </body>
 </html>
