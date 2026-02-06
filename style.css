@@ -213,3 +213,11 @@ article p {
   font-size: 17px;
   color: #0b3cc1;
 }
+
+.news-img {
+  width: 100%;
+  height: auto;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+}
