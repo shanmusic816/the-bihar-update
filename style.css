@@ -226,3 +226,8 @@ article p {
   color: #c62828;   /* RED */
   font-weight: 700;
 }
+
+/* Single news page main heading */
+.news-article h1 {
+  color: #c62828;   /* RED */
+}
