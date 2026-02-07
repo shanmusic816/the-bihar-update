@@ -221,3 +221,8 @@ article p {
   object-fit: cover;
   border-radius: 10px;
 }
+
+.news-card h3 {
+  color: #c62828;   /* RED */
+  font-weight: 700;
+}
