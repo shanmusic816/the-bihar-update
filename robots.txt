@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shanmusic816.github.io/the-bihar-update/sitemap.xml
