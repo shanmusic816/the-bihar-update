@@ -367,3 +367,9 @@ article p {
   font-size: 15px;
   margin: 0;
 }
+
+.news-card {
+  border: 2px solid red;   /* testing ke liye */
+  margin: 15px;
+  padding: 10px;
+}
