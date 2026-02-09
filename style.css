@@ -373,3 +373,103 @@ article p {
   margin: 15px;
   padding: 10px;
 }
+
+/* ===== GLOBAL ===== */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+  padding: 0;
+  color: #222;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: #0b5ed7;
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+header nav {
+  margin-top: 10px;
+}
+
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 8px;
+  font-size: 14px;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+/* ===== MAIN ===== */
+main {
+  max-width: 900px;
+  margin: 15px auto;
+  padding: 0 10px;
+}
+
+/* ===== NEWS CARD (INDEX) ===== */
+.news-card {
+  background: #fff;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.news-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.news-card h2 {
+  font-size: 18px;
+  padding: 10px;
+  margin: 0;
+  color: #111;
+}
+
+.news-card p {
+  padding: 0 10px 12px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* ===== NEWS DETAIL PAGE ===== */
+.news-detail h1 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.news-detail img {
+  width: 100%;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.news-detail p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #333;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  padding: 15px;
+  background: #fff;
+  font-size: 13px;
+  color: #666;
+  margin-top: 30px;
+}
