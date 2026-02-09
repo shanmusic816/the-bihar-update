@@ -5,6 +5,34 @@
   <title>Maintenance | The Bihar Update</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+
+  <!-- INLINE LOADER CSS (GUARANTEED) -->
+  <style>
+    .maintenance-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #f4f6f9;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #e5e7eb;
+      border-top: 6px solid #8b0000;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 
 <body>
@@ -14,29 +42,29 @@
 </header>
 
 <main>
-  <article class="news-card news-detail" style="text-align:center;">
+  <div class="maintenance-wrap">
 
-    <!-- LOADER -->
-    <div class="loader"></div>
+    <!-- GHUMNE WALA LOADER -->
+    <div class="spinner"></div>
 
     <h1>🚧 वेबसाइट मेंटेनेंस में है</h1>
     <p><em>Site is under maintenance</em></p>
 
     <p>
-      हमारी वेबसाइट पर इस समय तकनीकी कार्य चल रहा है।
-      कृपया कुछ समय बाद दोबारा विज़िट करें।
+      हमारी वेबसाइट पर इस समय तकनीकी कार्य चल रहा है।<br>
+      कृपया कुछ समय बाद पुनः विज़िट करें।
     </p>
 
     <p>
-      We are currently performing maintenance.
+      We are currently performing maintenance.<br>
       Please check back again later.
     </p>
 
-    <p style="margin-top:20px;">
+    <p style="margin-top:15px;">
       🔄 <strong>जल्द वापस आएंगे | We’ll be back soon</strong>
     </p>
 
-  </article>
+  </div>
 </main>
 
 <footer>
