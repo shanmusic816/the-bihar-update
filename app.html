@@ -8,7 +8,7 @@
   <style>
     body{
       margin:0;
-      background:#f1f5f9;
+      background:#f5f7fa;
       font-family: Arial, sans-serif;
     }
 
@@ -22,11 +22,11 @@
 
     .app-card{
       background:#ffffff;
-      max-width:400px;
+      max-width:420px;
       width:100%;
-      border-radius:18px;
       padding:30px 24px;
-      box-shadow:0 18px 40px rgba(0,0,0,0.12);
+      border-radius:18px;
+      box-shadow:0 12px 35px rgba(0,0,0,0.12);
       text-align:center;
     }
 
@@ -40,20 +40,20 @@
     h1{
       font-size:22px;
       margin:10px 0;
-      color:#111827;
+      color:#b91c1c;
     }
 
     .tagline{
       font-size:14px;
       color:#555;
-      margin-bottom:20px;
+      margin-bottom:22px;
       line-height:1.6;
     }
 
     .features{
       list-style:none;
       padding:0;
-      margin:0 0 24px 0;
+      margin:0 0 25px 0;
       text-align:left;
     }
 
@@ -65,18 +65,31 @@
 
     .apk-btn{
       display:block;
-      background:#3B82F6;
+      background:#dc2626;
       color:#ffffff;
       padding:14px;
-      border-radius:12px;
+      border-radius:14px;
       font-size:16px;
       font-weight:bold;
       text-decoration:none;
-      margin-bottom:15px;
+      margin-bottom:10px;
     }
 
     .apk-btn:hover{
-      background:#2563eb;
+      background:#b91c1c;
+    }
+
+    .download-info{
+      font-size:13px;
+      color:#555;
+      margin-bottom:6px;
+    }
+
+    .secure-note{
+      font-size:12px;
+      color:#15803d;
+      font-weight:600;
+      margin-bottom:14px;
     }
 
     .note{
@@ -89,42 +102,50 @@
 
 <body>
 
-  <div class="app-wrap">
-    <div class="app-card">
+<div class="app-wrap">
+  <div class="app-card">
 
-      <!-- APP LOGO -->
-      <img src="logo.png" alt="The Bihar Update" class="app-logo">
+    <!-- LOGO -->
+    <img src="logo.png" alt="The Bihar Update" class="app-logo">
 
-      <!-- TITLE -->
-      <h1>The Bihar Update App</h1>
+    <!-- TITLE -->
+    <h1>The Bihar Update App</h1>
 
-      <!-- DESCRIPTION -->
-      <p class="tagline">
-        Bihar ki sabse tez aur bharosemand news,  
-        ab seedha aapke Android mobile par.
-      </p>
+    <!-- TAGLINE -->
+    <p class="tagline">
+      Bihar ki sabse tez aur bharosemand news,<br>
+      ab seedha aapke Android mobile par.
+    </p>
 
-      <!-- FEATURES -->
-      <ul class="features">
-        <li>✔ Fast & lightweight Android app</li>
-        <li>✔ Latest Bihar & local news updates</li>
-        <li>✔ Clean design & easy navigation</li>
-        <li>✔ Website update = app update</li>
-      </ul>
+    <!-- FEATURES -->
+    <ul class="features">
+      <li>✔ Fast & Lightweight Android App</li>
+      <li>✔ Latest Bihar & Local News Updates</li>
+      <li>✔ Clean Design & Easy Navigation</li>
+      <li>✔ Website + App Sync Updates</li>
+    </ul>
 
-      <!-- DOWNLOAD BUTTON -->
-      <a href="TheBiharUpdate.apk" download class="apk-btn">
-        Download APK
-      </a>
+    <!-- DOWNLOAD BUTTON -->
+    <a href="TheBiharUpdate.apk" download class="apk-btn">
+      ⬇ Download App (APK)
+    </a>
 
-      <!-- NOTE -->
-      <p class="note">
-        Agar install blocked aaye to<br>
-        <b>Settings → Allow unknown sources</b> enable karein.
-      </p>
+    <p class="download-info">
+      Version: v1.0 • Size: ~12 MB • Android 6+
+    </p>
 
-    </div>
+    <p class="secure-note">
+      ✔ 100% Safe & Secure • No Play Store Required
+    </p>
+
+    <!-- NOTE -->
+    <p class="note">
+      Agar install blocked aaye to:<br>
+      <b>Settings → Allow unknown sources</b> enable karein.
+    </p>
+
   </div>
+</div>
 
 </body>
 </html>
