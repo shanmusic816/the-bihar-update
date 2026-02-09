@@ -304,3 +304,37 @@ article p {
     display:inline-block;
   }
 }
+/* NEWS DETAIL CARD */
+.news-detail {
+  max-width: 800px;
+  margin: 15px auto;
+}
+
+.news-title {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.news-meta {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.news-image {
+  width: 100%;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.news-detail p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #333;
+}
+
+.news-detail h2 {
+  margin-top: 15px;
+  font-size: 18px;
+  color: #d32f2f;
+}
