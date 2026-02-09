@@ -338,3 +338,32 @@ article p {
   font-size: 18px;
   color: #d32f2f;
 }
+
+.news-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  margin: 16px;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.news-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.news-card h2 {
+  font-size: 20px;
+  color: #5a189a;
+  padding: 12px 14px 6px;
+  margin: 0;
+}
+
+.news-card p {
+  padding: 0 14px 14px;
+  color: #333;
+  font-size: 15px;
+  margin: 0;
+}
