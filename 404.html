@@ -1,77 +1,61 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>404 – Page Not Found</title>
+  <title>404</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="
+  margin:0;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f4f4f4;
+  font-family:Arial;
+">
+
+  <div style="
+    background:#fff;
+    padding:30px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+  ">
+
+    <!-- LOADER -->
+    <div id="loader"></div>
+
+    <h1 style="color:#b30000;margin:15px 0;">404</h1>
+    <p>Page not found</p>
+
+    <a href="/" style="
+      display:inline-block;
+      margin-top:10px;
+      color:#b30000;
+      text-decoration:none;
+      font-weight:bold;
+    ">Go Home</a>
+
+  </div>
 
   <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #f4f4f4;
-      font-family: Arial, sans-serif;
+    #loader{
+      width:60px;
+      height:60px;
+      border:6px solid #ddd;
+      border-top:6px solid #b30000;
+      border-radius:50%;
+      margin:0 auto 15px;
+      animation: spin 1s linear infinite;
     }
 
-    .box {
-      text-align: center;
-      background: #fff;
-      padding: 35px;
-      border-radius: 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    }
-
-    .loader {
-      width: 80px;
-      height: 80px;
-      border: 8px solid #eee;
-      border-top: 8px solid #b30000;
-      border-radius: 50%;
-      margin: 0 auto 20px;
-      animation: spin 1.2s linear infinite;
-    }
-
-    @keyframes spin {
+    @keyframes spin{
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
-    h1 {
-      margin: 10px 0;
-      font-size: 48px;
-      color: #b30000;
-    }
-
-    p {
-      color: #555;
-    }
-
-    a {
-      display: inline-block;
-      margin-top: 18px;
-      padding: 10px 20px;
-      background: #b30000;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 5px;
-    }
-
-    a:hover {
-      background: #8c0000;
-    }
   </style>
-</head>
-<body>
-
-  <div class="box">
-    <div class="loader"></div>
-    <h1>404</h1>
-    <p>यह पेज मौजूद नहीं है</p>
-    <a href="/">होम पेज पर जाएं</a>
-  </div>
 
 </body>
 </html>
