@@ -600,3 +600,10 @@ header nav a {
   background: #b71c1c !important;
   color: #fff !important;
 }
+
+/* FORCE news title red (index + side-by-side) */
+.news-item h2,
+.news-item h2 a {
+  color: #c62828 !important;
+  font-weight: 700;
+}
