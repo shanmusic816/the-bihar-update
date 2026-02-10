@@ -495,29 +495,6 @@ body {
   line-height: 1.6;
 }
 
-/* ===== HEADER ===== */
-header {
-  background: #fff;
-  border-bottom: 1px solid #ddd;
-  padding: 14px 16px;
-}
-
-header h1 {
-  color: #c62828;
-  font-size: 26px;
-  margin-bottom: 6px;
-}
-
-nav a {
-  margin-right: 14px;
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-}
-
-nav a:hover {
-  color: #c62828;
-}
 
 /* ===== MAIN ===== */
 main {
