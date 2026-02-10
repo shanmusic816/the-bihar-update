@@ -6,3 +6,13 @@
     { "src": "/privacy-policy", "dest": "/privacy.html" }
   ]
 }
+{
+  "routes": [
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/about", "dest": "/about.html" },
+    { "src": "/contact", "dest": "/contact.html" },
+    { "src": "/privacy-policy", "dest": "/privacy.html" },
+
+    { "src": "/.*", "status": 404, "dest": "/404.html" }
+  ]
+}
