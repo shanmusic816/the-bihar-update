@@ -607,3 +607,14 @@ header nav a {
   color: #c62828 !important;
   font-weight: 700;
 }
+
+/* LEFT RED BORDER for index news cards */
+.news-item {
+  border-left: 4px solid #c62828;
+  padding-left: 12px;
+}
+
+/* spacing clean rahe */
+.news-item img {
+  margin-left: 0;
+}
