@@ -587,3 +587,10 @@ header h1,
   color: #d32f2f !important;
   font-weight: 700;
 }
+
+/* FIX: white text invisible issue */
+header,
+header h1,
+header nav a {
+  color: #d32f2f !important; /* RED */
+}
