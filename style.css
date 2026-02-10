@@ -594,3 +594,32 @@ header h1,
 header nav a {
   color: #d32f2f !important; /* RED */
 }
+
+/* FORCE header background */
+header {
+  background: #ffffff;
+  border-bottom: 1px solid #eee;
+}
+
+/* Logo red fix */
+header h1 {
+  color: #c62828 !important;
+}
+
+/* Navigation links red */
+header nav a {
+  color: #c62828 !important;
+  font-weight: 500;
+}
+
+/* Search box border red */
+.search-box input {
+  border: 2px solid #c62828;
+}
+
+/* Red strip (sach • satik • sabse tez) */
+.rotate-text,
+.rotate-text span {
+  background: #b71c1c !important;
+  color: #fff !important;
+}
