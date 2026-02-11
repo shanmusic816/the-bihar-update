@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internet Speed Test - Check Your Broadband Speed</title>
+<meta name="description" content="Test your internet speed online. Free broadband speed test tool with ping, download and upload speed checker.">
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#0f172a;
+    color:white;
+    text-align:center;
+}
+
+header{
+    background:#111827;
+    padding:20px;
+}
+
+.container{
+    margin-top:40px;
+}
+
+.speedometer{
+    width:300px;
+    height:150px;
+    background:linear-gradient(to right,#22c55e,#eab308,#ef4444);
+    border-radius:300px 300px 0 0;
+    position:relative;
+    margin:30px auto;
+    overflow:hidden;
+}
+
+.needle{
+    width:4px;
+    height:140px;
+    background:white;
+    position:absolute;
+    bottom:0;
+    left:50%;
+    transform-origin:bottom center;
+    transform:rotate(-90deg);
+    transition:transform 0.5s ease;
+}
+
+.center-circle{
+    width:20px;
+    height:20px;
+    background:white;
+    border-radius:50%;
+    position:absolute;
+    bottom:-10px;
+    left:calc(50% - 10px);
+}
+
+.live-speed{
+    font-size:26px;
+    margin-top:10px;
+}
+
+button{
+    padding:12px 25px;
+    font-size:18px;
+    cursor:pointer;
+    background:#2563eb;
+    border:none;
+    color:white;
+    border-radius:5px;
+    margin-top:20px;
+}
+
+.results{
+    margin-top:30px;
+    font-size:18px;
+}
+
+.ad-space{
+    background:#1f2937;
+    padding:20px;
+    margin:20px;
+    border-radius:5px;
+}
+
+.info{
+    padding:30px;
+    background:#111827;
+    margin-top:40px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Internet Speed Test</h1>
+<p>Check your broadband speed in seconds</p>
+</header>
+
+<!-- TOP AD SPACE -->
+<div class="ad-space">
+    <!-- Adsense Code Yaha Paste Karna (Approval ke baad) -->
+    Ad Space
+</div>
+
+<div class="container">
+
+<div class="speedometer">
+<div class="needle" id="needle"></div>
+<div class="center-circle"></div>
+</div>
+
+<div class="live-speed" id="liveSpeed">0 Mbps</div>
+
+<button onclick="startTest()">Start Test</button>
+
+<div class="results">
+<p>Ping: <span id="ping">-</span> ms</p>
+<p>Download: <span id="download">-</span> Mbps</p>
+<p>Upload: <span id="upload">-</span> Mbps</p>
+</div>
+
+</div>
+
+<!-- BOTTOM AD SPACE -->
+<div class="ad-space">
+    Ad Space
+</div>
+
+<section class="info">
+<h2>About This Speed Test</h2>
+<p>
+This free online internet speed test tool helps you measure your broadband performance.
+It checks your ping, download speed, and upload speed using real-time network requests.
+</p>
+</section>
+
+<script>
+function rotateNeedle(speed){
+    let maxSpeed = 200;
+    if(speed > maxSpeed) speed = maxSpeed;
+
+    let degree = (speed / maxSpeed) * 180 - 90;
+    document.getElementById("needle").style.transform =
+        "rotate(" + degree + "deg)";
+    document.getElementById("liveSpeed").innerText =
+        speed.toFixed(2) + " Mbps";
+}
+
+async function pingTest(){
+    let start = performance.now();
+    await fetch("https://jsonplaceholder.typicode.com/posts/1?cache=" + Math.random());
+    return performance.now() - start;
+}
+
+async function downloadTest(){
+    let start = performance.now();
+    let response = await fetch("https://speed.hetzner.de/10MB.bin?cache=" + Math.random());
+    let blob = await response.blob();
+    let time = (performance.now() - start) / 1000;
+    let size = blob.size * 8 / 1000000;
+    let speed = size / time;
+
+    rotateNeedle(speed);
+    return speed.toFixed(2);
+}
+
+async function uploadTest(){
+    let data = new Blob([new Uint8Array(5*1024*1024)]);
+    let start = performance.now();
+    await fetch("https://httpbin.org/post", {method:"POST", body:data});
+    let time = (performance.now() - start) / 1000;
+    let size = data.size * 8 / 1000000;
+    return (size / time).toFixed(2);
+}
+
+async function startTest(){
+    document.getElementById("ping").innerText = "Testing...";
+    document.getElementById("download").innerText = "Testing...";
+    document.getElementById("upload").innerText = "Testing...";
+    rotateNeedle(0);
+
+    let ping = await pingTest();
+    document.getElementById("ping").innerText = ping.toFixed(2);
+
+    let download = await downloadTest();
+    document.getElementById("download").innerText = download;
+
+    let upload = await uploadTest();
+    document.getElementById("upload").innerText = upload;
+}
+</script>
+
+</body>
+</html>
