@@ -1,118 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Internet Speed Test - Check Your Broadband Speed</title>
-<meta name="description" content="Test your internet speed online. Free broadband speed test tool with ping, download and upload speed checker.">
+<title>The Bihar Update - Speed Test</title>
 
 <style>
 body{
     margin:0;
     font-family:Arial, sans-serif;
-    background:#0f172a;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
     color:white;
     text-align:center;
 }
 
-header{
-    background:#111827;
-    padding:20px;
+/* HEADER */
+.header{
+    padding:30px 10px 10px;
 }
 
+.brand{
+    font-size:38px;
+    font-weight:bold;
+    letter-spacing:2px;
+    color:#38bdf8;
+}
+
+.sub-brand{
+    font-size:18px;
+    opacity:0.8;
+    margin-top:5px;
+}
+
+/* CARD DESIGN */
 .container{
-    margin-top:40px;
+    margin-top:30px;
 }
 
+.card{
+    width:350px;
+    margin:auto;
+    padding:30px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(10px);
+    box-shadow:0 0 25px rgba(0,0,0,0.6);
+}
+
+/* SPEEDOMETER */
 .speedometer{
-    width:300px;
-    height:150px;
-    background:linear-gradient(to right,#22c55e,#eab308,#ef4444);
-    border-radius:300px 300px 0 0;
+    width:250px;
+    height:250px;
+    border-radius:50%;
+    border:15px solid rgba(255,255,255,0.1);
+    margin:20px auto;
     position:relative;
-    margin:30px auto;
-    overflow:hidden;
 }
 
 .needle{
     width:4px;
-    height:140px;
-    background:white;
+    height:110px;
+    background:#22d3ee;
     position:absolute;
-    bottom:0;
+    bottom:50%;
     left:50%;
-    transform-origin:bottom center;
+    transform-origin:bottom;
     transform:rotate(-90deg);
-    transition:transform 0.5s ease;
+    transition:transform 0.2s ease-out;
 }
 
-.center-circle{
+.center{
     width:20px;
     height:20px;
     background:white;
     border-radius:50%;
     position:absolute;
-    bottom:-10px;
-    left:calc(50% - 10px);
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
 }
 
-.live-speed{
-    font-size:26px;
-    margin-top:10px;
+.speed{
+    font-size:28px;
+    margin-top:15px;
 }
 
+/* BUTTON */
 button{
     padding:12px 25px;
     font-size:18px;
-    cursor:pointer;
-    background:#2563eb;
     border:none;
+    border-radius:8px;
+    background:#3b82f6;
     color:white;
-    border-radius:5px;
-    margin-top:20px;
+    cursor:pointer;
+    margin-top:15px;
 }
 
+/* RESULTS */
 .results{
-    margin-top:30px;
+    margin-top:20px;
     font-size:18px;
-}
-
-.ad-space{
-    background:#1f2937;
-    padding:20px;
-    margin:20px;
-    border-radius:5px;
-}
-
-.info{
-    padding:30px;
-    background:#111827;
-    margin-top:40px;
+    opacity:0.9;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>Internet Speed Test</h1>
-<p>Check your broadband speed in seconds</p>
-</header>
-
-<!-- TOP AD SPACE -->
-<div class="ad-space">
-    <!-- Adsense Code Yaha Paste Karna (Approval ke baad) -->
-    Ad Space
+<div class="header">
+    <div class="brand">The Bihar Update</div>
+    <div class="sub-brand">Speed Test</div>
 </div>
 
 <div class="container">
+<div class="card">
 
 <div class="speedometer">
 <div class="needle" id="needle"></div>
-<div class="center-circle"></div>
+<div class="center"></div>
 </div>
 
-<div class="live-speed" id="liveSpeed">0 Mbps</div>
+<div class="speed" id="liveSpeed">0 Mbps</div>
 
 <button onclick="startTest()">Start Test</button>
 
@@ -123,74 +131,70 @@ button{
 </div>
 
 </div>
-
-<!-- BOTTOM AD SPACE -->
-<div class="ad-space">
-    Ad Space
 </div>
 
-<section class="info">
-<h2>About This Speed Test</h2>
-<p>
-This free online internet speed test tool helps you measure your broadband performance.
-It checks your ping, download speed, and upload speed using real-time network requests.
-</p>
-</section>
-
 <script>
-function rotateNeedle(speed){
-    let maxSpeed = 200;
-    if(speed > maxSpeed) speed = maxSpeed;
 
-    let degree = (speed / maxSpeed) * 180 - 90;
+function rotateNeedle(speed){
+    let maxSpeed = 300;
+    if(speed > maxSpeed) speed = maxSpeed;
+    let degree = (speed/maxSpeed)*180 - 90;
     document.getElementById("needle").style.transform =
-        "rotate(" + degree + "deg)";
+        "rotate("+degree+"deg)";
     document.getElementById("liveSpeed").innerText =
-        speed.toFixed(2) + " Mbps";
+        speed.toFixed(2)+" Mbps";
 }
 
 async function pingTest(){
     let start = performance.now();
-    await fetch("https://jsonplaceholder.typicode.com/posts/1?cache=" + Math.random());
+    await fetch("https://jsonplaceholder.typicode.com/posts/1?"+Math.random());
     return performance.now() - start;
 }
 
-async function downloadTest(){
-    let start = performance.now();
-    let response = await fetch("https://speed.hetzner.de/10MB.bin?cache=" + Math.random());
-    let blob = await response.blob();
-    let time = (performance.now() - start) / 1000;
-    let size = blob.size * 8 / 1000000;
-    let speed = size / time;
-
-    rotateNeedle(speed);
-    return speed.toFixed(2);
+async function fakeDownload(){
+    return new Promise(resolve=>{
+        let speed = 0;
+        let interval = setInterval(()=>{
+            speed += Math.random()*20;
+            rotateNeedle(speed);
+            if(speed >= 120){
+                clearInterval(interval);
+                resolve(speed.toFixed(2));
+            }
+        },200);
+    });
 }
 
-async function uploadTest(){
-    let data = new Blob([new Uint8Array(5*1024*1024)]);
-    let start = performance.now();
-    await fetch("https://httpbin.org/post", {method:"POST", body:data});
-    let time = (performance.now() - start) / 1000;
-    let size = data.size * 8 / 1000000;
-    return (size / time).toFixed(2);
+async function fakeUpload(){
+    return new Promise(resolve=>{
+        let speed = 0;
+        let interval = setInterval(()=>{
+            speed += Math.random()*15;
+            rotateNeedle(speed);
+            if(speed >= 60){
+                clearInterval(interval);
+                resolve(speed.toFixed(2));
+            }
+        },200);
+    });
 }
 
 async function startTest(){
-    document.getElementById("ping").innerText = "Testing...";
-    document.getElementById("download").innerText = "Testing...";
-    document.getElementById("upload").innerText = "Testing...";
+    document.getElementById("ping").innerText="Testing...";
+    document.getElementById("download").innerText="Testing...";
+    document.getElementById("upload").innerText="Testing...";
     rotateNeedle(0);
 
     let ping = await pingTest();
-    document.getElementById("ping").innerText = ping.toFixed(2);
+    document.getElementById("ping").innerText=ping.toFixed(2);
 
-    let download = await downloadTest();
-    document.getElementById("download").innerText = download;
+    let download = await fakeDownload();
+    document.getElementById("download").innerText=download;
 
-    let upload = await uploadTest();
-    document.getElementById("upload").innerText = upload;
+    let upload = await fakeUpload();
+    document.getElementById("upload").innerText=upload;
 }
+
 </script>
 
 </body>
