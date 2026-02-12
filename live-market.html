@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>The Bihar Update | Live Market</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:#0f172a;
+color:white;
+}
+
+/* ===== HEADER ===== */
+
+.top-header{
+padding:18px 20px;
+background:#111827;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.site-title{
+font-size:20px;
+font-weight:700;
+}
+
+.time{
+font-size:14px;
+opacity:0.85;
+}
+
+.board-title{
+text-align:center;
+padding:10px;
+font-size:15px;
+letter-spacing:1px;
+background:#1e293b;
+}
+
+/* ===== MARKET SECTION ===== */
+
+.market{
+max-width:700px;
+margin:30px auto;
+display:flex;
+flex-direction:column;
+gap:18px;
+padding:0 20px;
+}
+
+.card{
+background:#1e293b;
+padding:18px;
+border-radius:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-3px);
+}
+
+.card h3{
+margin:0;
+font-size:14px;
+opacity:0.7;
+}
+
+.priceBox{
+text-align:right;
+}
+
+.mainPrice{
+font-size:18px;
+font-weight:600;
+}
+
+.change{
+font-size:13px;
+margin-top:4px;
+}
+
+.up{color:#00ff88;}
+.down{color:#ff4d4d;}
+</style>
+</head>
+
+<body>
+
+<div class="top-header">
+<div class="site-title">The Bihar Update</div>
+<div class="time" id="clock"></div>
+</div>
+
+<div class="board-title">Live Market Board</div>
+
+<div class="market">
+
+<div class="card">
+<h3>USD → INR</h3>
+<div id="usd" class="priceBox"></div>
+</div>
+
+<div class="card">
+<h3>Bitcoin</h3>
+<div id="btc" class="priceBox"></div>
+</div>
+
+<div class="card">
+<h3>Gold 24K (₹/gram)</h3>
+<div id="gold" class="priceBox"></div>
+</div>
+
+<div class="card">
+<h3>Silver (₹/gram)</h3>
+<div id="silver" class="priceBox"></div>
+</div>
+
+</div>
+
+<script>
+
+/* ===== LIVE CLOCK ===== */
+function updateClock(){
+let now = new Date();
+let hours = String(now.getHours()).padStart(2,'0');
+let minutes = String(now.getMinutes()).padStart(2,'0');
+let seconds = String(now.getSeconds()).padStart(2,'0');
+document.getElementById("clock").innerText = hours + ":" + minutes + ":" + seconds;
+}
+setInterval(updateClock,1000);
+updateClock();
+
+/* ===== MARKET LOGIC ===== */
+
+let prev = {};
+
+function update(id,newValue,symbol="₹"){
+let container=document.getElementById(id);
+let oldValue=prev[id];
+
+let priceClass="mainPrice";
+let changeHTML="";
+
+if(oldValue!==undefined){
+let diff=newValue-oldValue;
+let percent=((diff/oldValue)*100).toFixed(2);
+
+if(diff>0){
+priceClass+=" up";
+changeHTML=`<div class="change up">+${diff.toFixed(2)} (${percent}%) ↑</div>`;
+}
+else if(diff<0){
+priceClass+=" down";
+changeHTML=`<div class="change down">${diff.toFixed(2)} (${percent}%) ↓</div>`;
+}
+else{
+changeHTML=`<div class="change">No Change</div>`;
+}
+}
+
+container.innerHTML=`
+<div class="${priceClass}">
+${symbol} ${newValue.toLocaleString()}
+</div>
+${changeHTML}
+`;
+
+prev[id]=newValue;
+}
+
+async function fetchData(){
+
+// USD
+let usdRes=await fetch("https://open.er-api.com/v6/latest/USD");
+let usdData=await usdRes.json();
+update("usd",parseFloat(usdData.rates.INR.toFixed(2)));
+
+// Bitcoin
+let crypto=await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=inr");
+let cryptoData=await crypto.json();
+update("btc",cryptoData.bitcoin.inr);
+
+// Gold (PAX Gold)
+let goldRes=await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pax-gold&vs_currencies=inr");
+let goldData=await goldRes.json();
+let goldGram=goldData["pax-gold"].inr/31.1035;
+update("gold",parseFloat(goldGram.toFixed(2)));
+
+// Silver approx realistic ratio
+let silverGram=goldGram/90;
+update("silver",parseFloat(silverGram.toFixed(2)));
+
+}
+
+fetchData();
+setInterval(fetchData,30000); // 30 seconds refresh
+
+</script>
+
+</body>
+</html>
