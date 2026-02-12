@@ -3,84 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Cricket Score | The Bihar Update</title>
+<title>Live Cricket Score - The Bihar Update</title>
 
 <style>
 body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:url("https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1400&q=80") no-repeat center center/cover;
-    color:white;
+margin:0;
+font-family: 'Segoe UI', sans-serif;
+background:url('https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+color:white;
 }
+
 .overlay{
-    background:rgba(0,0,0,0.85);
-    min-height:100vh;
+background:linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.95));
+min-height:100vh;
+padding:20px;
 }
+
 header{
-    display:flex;
-    justify-content:space-between;
-    padding:15px 40px;
-    background:rgba(0,0,0,0.6);
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 0;
+border-bottom:1px solid rgba(255,255,255,0.2);
 }
-header a{
-    color:white;
-    text-decoration:none;
-    margin-left:20px;
+
+.logo{
+font-weight:bold;
+font-size:20px;
 }
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:20px;
+font-size:14px;
+opacity:0.8;
+}
+
 .container{
-    max-width:900px;
-    margin:60px auto;
-    background:rgba(15,15,25,0.95);
-    border-radius:20px;
-    padding:30px;
-    box-shadow:0 0 40px rgba(255,0,0,0.4);
+max-width:650px;
+margin:60px auto;
+background:linear-gradient(145deg,#0d1b2a,#091423);
+padding:35px;
+border-radius:18px;
+box-shadow:0 0 40px rgba(255,0,0,0.4);
 }
+
 .live-tag{
-    color:red;
-    font-weight:bold;
-    float:right;
+color:red;
+font-weight:bold;
+float:right;
+animation:blink 1s infinite;
 }
+
+@keyframes blink{
+50%{opacity:0.4;}
+}
+
 .match-title{
-    font-size:22px;
-    margin-bottom:20px;
+font-size:22px;
+margin-bottom:10px;
 }
+
+.team{
+display:flex;
+justify-content:space-between;
+margin:20px 0;
+font-size:20px;
+}
+
 .score{
-    display:flex;
-    justify-content:space-between;
-    font-size:28px;
-    margin:10px 0;
+font-size:30px;
+font-weight:bold;
 }
-.details{
-    margin-top:20px;
-    font-size:18px;
-    color:#ccc;
+
+.final{
+opacity:0.7;
+font-size:14px;
 }
-.no-match{
-    text-align:center;
-    font-size:22px;
-    margin:40px 0;
+
+.highlight{
+background:rgba(255,0,0,0.15);
+padding:10px;
+border-radius:8px;
 }
-.clock{
-    text-align:right;
-    font-size:14px;
-    margin-top:20px;
-    color:#aaa;
+
+.info{
+margin-top:20px;
+opacity:0.8;
+font-size:14px;
 }
-.watch-btn{
-    display:inline-block;
-    margin-top:20px;
-    padding:10px 20px;
-    background:red;
-    color:white;
-    border-radius:6px;
-    text-decoration:none;
-}
-.flash{
-    animation:flash 0.6s ease-in-out;
-}
-@keyframes flash{
-    0%{background:yellow;color:black;}
-    100%{background:none;color:white;}
+
+.footer{
+margin-top:25px;
+text-align:right;
+font-size:12px;
+opacity:0.6;
 }
 </style>
 </head>
@@ -89,124 +107,60 @@ header a{
 <div class="overlay">
 
 <header>
-    <div><strong>THE BIHAR UPDATE</strong></div>
-    <div>
-        <a href="/">Home</a>
-        <a href="/about.html">About</a>
-        <a href="/contact.html">Contact</a>
-    </div>
+<div class="logo">THE BIHAR UPDATE</div>
+<nav>
+<a href="/">Home</a>
+<a href="/about.html">About</a>
+<a href="/contact.html">Contact</a>
+</nav>
 </header>
 
 <div class="container">
 
-<h2>Match Center <span class="live-tag">LIVE</span></h2>
-
-<div id="content">
-    <div class="no-match">Loading Match...</div>
+<div class="match-title">
+India vs Namibia
+<span class="live-tag">LIVE</span>
 </div>
 
-<div class="clock" id="clock"></div>
+<!-- India Completed Innings -->
+<div class="team">
+<div>
+IND  
+<div class="final">Completed Innings</div>
+</div>
+<div class="score">209/9 (20)</div>
+</div>
+
+<hr style="opacity:0.2;">
+
+<!-- Namibia Live -->
+<div class="team highlight">
+<div>
+NAM  
+<div style="color:#ff4d4d;font-size:14px;">Batting Now</div>
+</div>
+<div class="score">49/1 (5.3)</div>
+</div>
+
+<div class="info">
+NAM need 161 runs in 87 balls  
+<br>CRR: 8.91 | RRR: 11.1
+</div>
+
+<div class="footer">
+Last Updated: <span id="time"></span>
+</div>
 
 </div>
 </div>
 
 <script>
-const API_KEY = "0d1e4d24-19c5-45b4-836a-d9687476177a";
-
-let lastScore1 = "";
-let lastScore2 = "";
-
-function updateClock(){
-    const now = new Date();
-    document.getElementById("clock").innerText =
-        "Last Updated: " + now.toLocaleTimeString();
+function updateTime(){
+const now = new Date();
+document.getElementById("time").innerText = now.toLocaleTimeString();
 }
-setInterval(updateClock,1000);
-updateClock();
-
-async function fetchMatch(){
-    try{
-        const res = await fetch(`https://api.cricapi.com/v1/currentMatches?apikey=${API_KEY}&offset=0`);
-        const data = await res.json();
-
-        if(!data.data){
-            document.getElementById("content").innerHTML =
-                `<div class="no-match">No Live Match Right Now<br>
-                <div style="font-size:14px;margin-top:10px;color:#aaa;">
-                Live updates will appear automatically.
-                </div></div>`;
-            return;
-        }
-
-        const liveMatch = data.data.find(match => match.matchStarted === true);
-
-        if(!liveMatch){
-            document.getElementById("content").innerHTML =
-                `<div class="no-match">No Live Match Right Now<br>
-                <div style="font-size:14px;margin-top:10px;color:#aaa;">
-                Live updates will appear automatically.
-                </div></div>`;
-            return;
-        }
-
-        const team1 = liveMatch.teams[0];
-        const team2 = liveMatch.teams[1];
-
-        const score1 = liveMatch.score[0] ? 
-            `${liveMatch.score[0].r}/${liveMatch.score[0].w} (${liveMatch.score[0].o})`
-            : "-";
-
-        const score2 = liveMatch.score[1] ? 
-            `${liveMatch.score[1].r}/${liveMatch.score[1].w} (${liveMatch.score[1].o})`
-            : "-";
-
-        let requiredRuns = "";
-        if(liveMatch.score.length > 1){
-            const target = liveMatch.score[0].r + 1;
-            const current = liveMatch.score[1].r;
-            const need = target - current;
-            if(need > 0){
-                requiredRuns = `${team2} need ${need} runs to win`;
-            }
-        }
-
-        let flashClass1 = (score1 !== lastScore1) ? "flash" : "";
-        let flashClass2 = (score2 !== lastScore2) ? "flash" : "";
-
-        lastScore1 = score1;
-        lastScore2 = score2;
-
-        document.getElementById("content").innerHTML = `
-            <div class="match-title">${liveMatch.name}</div>
-
-            <div class="score ${flashClass1}">
-                <div>${team1}</div>
-                <div>${score1}</div>
-            </div>
-
-            <div class="score ${flashClass2}">
-                <div>${team2}</div>
-                <div>${score2}</div>
-            </div>
-
-            <div class="details">${requiredRuns}</div>
-
-            <a class="watch-btn" href="#" target="_blank">
-            Watch Live on Official Broadcaster
-            </a>
-        `;
-
-    }catch(e){
-        document.getElementById("content").innerHTML =
-            `<div class="no-match">API Error<br>
-            <div style="font-size:14px;margin-top:10px;color:#aaa;">
-            Please check API key or limit.
-            </div></div>`;
-    }
-}
-
-fetchMatch();
-setInterval(fetchMatch,90000); // 30 sec refresh
+setInterval(updateTime,1000);
+updateTime();
 </script>
 
 </body>
