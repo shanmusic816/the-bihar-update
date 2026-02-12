@@ -1,101 +1,219 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Live Cricket | The Bihar Update</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter, system-ui, sans-serif;
+}
 
 body{
 min-height:100vh;
-background:linear-gradient(rgba(0,0,0,0.9),rgba(0,0,0,0.9)),
+background:
+linear-gradient(rgba(0,0,0,0.82),rgba(0,0,0,0.9)),
 url("https://images.unsplash.com/photo-1540747913346-19e32dc3e97e") center/cover no-repeat;
+color:#f1f5f9;
+display:flex;
+flex-direction:column;
+}
+
+/* NAVBAR */
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px 40px;
+background:rgba(12,18,30,0.85);
+backdrop-filter:blur(18px);
+border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+.logo{
+font-size:14px;
+font-weight:600;
+letter-spacing:1px;
+}
+
+.nav-links{
+display:flex;
+gap:28px;
+font-size:13px;
+}
+
+.nav-links a{
+color:#cbd5e1;
+text-decoration:none;
+transition:0.25s ease;
+}
+
+.nav-links a:hover{
+color:#22c55e;
+}
+
+/* CENTER */
+.main{
+flex:1;
 display:flex;
 justify-content:center;
 align-items:center;
-color:white;
-padding:20px;
+padding:40px 20px;
 }
 
-.container{
-max-width:800px;
+.wrapper{
 width:100%;
-text-align:center;
+max-width:520px;
+background:rgba(12,18,30,0.95);
+border-radius:16px;
+overflow:hidden;
+box-shadow:0 35px 90px rgba(0,0,0,0.8);
+border:1px solid rgba(255,255,255,0.06);
 }
 
-.title{
-font-size:38px;
-font-weight:800;
-margin-bottom:10px;
-}
-
-.liveClock{
-font-size:16px;
-opacity:0.8;
-margin-bottom:30px;
-}
-
-.card{
-background:rgba(0,0,0,0.75);
-border-radius:30px;
-padding:60px 40px;
-box-shadow:0 40px 100px rgba(0,0,0,0.95);
+/* HEADER */
+.card-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 18px;
+background:rgba(255,255,255,0.03);
+font-size:13px;
 }
 
 .live{
-color:#ff3b3b;
-font-weight:bold;
-font-size:22px;
-margin-bottom:25px;
-}
-
-.match{
-font-size:28px;
+display:flex;
+align-items:center;
+gap:6px;
+color:#ef4444;
 font-weight:600;
-margin-bottom:10px;
 }
 
-.time{
-font-size:22px;
-margin-top:20px;
-opacity:0.9;
+.dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:#ef4444;
+animation:pulse 1.4s infinite;
 }
 
-.countdown{
-font-size:36px;
-font-weight:bold;
-margin-top:25px;
-letter-spacing:2px;
+@keyframes pulse{
+0%{opacity:1;transform:scale(1);}
+50%{opacity:0.4;transform:scale(1.4);}
+100%{opacity:1;transform:scale(1);}
 }
 
-.note{
-margin-top:25px;
-opacity:0.6;
-font-size:14px;
+/* MATCH INFO */
+.match{
+text-align:center;
+padding:20px;
+border-bottom:1px solid rgba(255,255,255,0.06);
 }
+
+.match h2{
+font-size:18px;
+font-weight:600;
+margin-bottom:4px;
+}
+
+.match p{
+font-size:12px;
+color:#94a3b8;
+}
+
+/* SCORE */
+.score-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px 22px;
+font-size:15px;
+border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+.team{
+font-weight:600;
+}
+
+.score{
+font-weight:700;
+font-size:18px;
+}
+
+/* STATS */
+.stats{
+padding:14px 20px;
+font-size:12px;
+color:#cbd5e1;
+text-align:center;
+border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+/* FOOTER */
+.footer{
+display:flex;
+justify-content:space-between;
+padding:12px 18px;
+font-size:11px;
+color:#94a3b8;
+background:rgba(255,255,255,0.02);
+}
+
+@media(max-width:600px){
+.navbar{padding:14px 20px;}
+.nav-links{gap:16px;}
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="navbar">
+<div class="logo">THE BIHAR UPDATE</div>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</div>
+</div>
 
-<div class="title">The Bihar Update</div>
-<div id="liveClock" class="liveClock"></div>
+<div class="main">
+<div class="wrapper">
 
-<div class="card">
+<div class="card-header">
+<div>Match Center</div>
+<div class="live">
+<div class="dot"></div>LIVE
+</div>
+</div>
 
-<div class="live">🔴 LIVE CRICKET</div>
+<div class="match">
+<h2 id="matchName">Loading...</h2>
+<p id="matchVenue"></p>
+</div>
 
-<div class="match">India vs Australia</div>
+<div class="score-row">
+<div class="team" id="team1">-</div>
+<div class="score" id="score1">-</div>
+</div>
 
-<div class="time">Match Starts At: <b>7:00 PM</b></div>
+<div class="score-row">
+<div class="team" id="team2">-</div>
+<div class="score" id="score2">-</div>
+</div>
 
-<div id="countdown" class="countdown"></div>
+<div class="stats" id="statsText">
+Waiting for live data...
+</div>
 
-<div class="note">
-Live scoreboard will activate automatically once the match begins.
+<div class="footer">
+<div id="statusText"></div>
+<div id="clock"></div>
 </div>
 
 </div>
@@ -103,36 +221,99 @@ Live scoreboard will activate automatically once the match begins.
 
 <script>
 
-/* LIVE CURRENT TIME */
+const API_KEY = "https://api.cricapi.com/v1/currentMatches?apikey=0d1e4d24-19c5-45b4-836a-d9687476177a";
+
+/* Clock */
 setInterval(()=>{
-document.getElementById("liveClock").innerText =
-"Current Time: " + new Date().toLocaleTimeString();
+document.getElementById("clock").innerText =
+new Date().toLocaleTimeString();
 },1000);
 
-/* SET MATCH START TIME (24-hour format) */
-const matchTime = new Date();
-matchTime.setHours(19,0,0,0); // 7:00 PM
+function showNoMatch(){
+document.getElementById("matchName").innerText =
+"No Live Match Right Now";
+document.getElementById("matchVenue").innerText = "";
+document.getElementById("team1").innerText = "-";
+document.getElementById("team2").innerText = "-";
+document.getElementById("score1").innerText = "-";
+document.getElementById("score2").innerText = "-";
+document.getElementById("statsText").innerText =
+"Live updates will appear automatically.";
+document.getElementById("statusText").innerText = "";
+}
 
-function updateCountdown(){
+async function loadMatch(){
 
-const now = new Date();
-const diff = matchTime - now;
+try{
 
-if(diff <= 0){
-document.getElementById("countdown").innerText = "Starting Soon...";
+const res = await fetch(
+"https://api.cricapi.com/v1/currentMatches?apikey="+API_KEY
+);
+
+if(!res.ok){
+showNoMatch();
 return;
 }
 
-const hours = Math.floor(diff / (1000*60*60));
-const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
-const seconds = Math.floor((diff % (1000*60)) / 1000);
+const data = await res.json();
 
-document.getElementById("countdown").innerText =
-hours+"h "+minutes+"m "+seconds+"s";
+if(!data || !data.data){
+showNoMatch();
+return;
 }
 
-setInterval(updateCountdown,1000);
-updateCountdown();
+let match = data.data.find(m=>m.matchStarted===true);
+
+if(!match){
+showNoMatch();
+return;
+}
+
+/* Match info */
+document.getElementById("matchName").innerText =
+match.name || "";
+
+document.getElementById("matchVenue").innerText =
+match.venue || "";
+
+/* Score */
+if(match.score && match.score.length>0){
+
+let innings = match.score;
+
+document.getElementById("team1").innerText =
+innings[0].inning || "";
+
+document.getElementById("score1").innerText =
+innings[0].r + "/" + innings[0].w + " (" + innings[0].o + ")";
+
+if(innings[1]){
+document.getElementById("team2").innerText =
+innings[1].inning || "";
+
+document.getElementById("score2").innerText =
+innings[1].r + "/" + innings[1].w + " (" + innings[1].o + ")";
+
+let target = innings[0].r + 1;
+let need = target - innings[1].r;
+
+document.getElementById("statsText").innerText =
+"Target " + target + " • Need " + need;
+}
+
+}
+
+document.getElementById("statusText").innerText =
+match.status || "";
+
+}catch(e){
+showNoMatch();
+}
+
+}
+
+loadMatch();
+setInterval(loadMatch,60000);
 
 </script>
 
