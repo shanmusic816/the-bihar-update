@@ -9,7 +9,7 @@
 
 body{
 min-height:100vh;
-background:linear-gradient(rgba(0,0,0,0.92),rgba(0,0,0,0.92)),
+background:linear-gradient(rgba(0,0,0,0.9),rgba(0,0,0,0.9)),
 url("https://images.unsplash.com/photo-1540747913346-19e32dc3e97e") center/cover no-repeat;
 display:flex;
 justify-content:center;
@@ -18,123 +18,61 @@ color:white;
 padding:20px;
 }
 
-.container{max-width:900px;width:100%;}
-
-.header{
+.container{
+max-width:800px;
+width:100%;
 text-align:center;
-font-size:36px;
-font-weight:800;
-letter-spacing:1px;
-margin-bottom:8px;
 }
 
-.clock{
-text-align:center;
-font-size:15px;
-opacity:0.85;
+.title{
+font-size:38px;
+font-weight:800;
+margin-bottom:10px;
+}
+
+.liveClock{
+font-size:16px;
+opacity:0.8;
 margin-bottom:30px;
 }
 
 .card{
 background:rgba(0,0,0,0.75);
 border-radius:30px;
-padding:50px;
+padding:60px 40px;
 box-shadow:0 40px 100px rgba(0,0,0,0.95);
-border:1px solid rgba(255,255,255,0.1);
 }
 
 .live{
-text-align:center;
 color:#ff3b3b;
 font-weight:bold;
 font-size:22px;
-margin-bottom:30px;
-letter-spacing:1px;
+margin-bottom:25px;
 }
 
 .match{
-text-align:center;
 font-size:28px;
 font-weight:600;
-margin-bottom:8px;
+margin-bottom:10px;
 }
 
-.meta{
-text-align:center;
-font-size:15px;
-opacity:0.7;
-margin-bottom:35px;
-}
-
-.team-row{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:25px 0;
-font-size:42px;
-font-weight:900;
-border-bottom:1px solid rgba(255,255,255,0.15);
-transition:0.4s;
-}
-
-.team-row span:first-child{
-letter-spacing:1px;
-}
-
-.flash{
-animation:flashEffect 0.7s ease;
-}
-
-@keyframes flashEffect{
-0%{background:rgba(0,255,127,0.5);}
-100%{background:transparent;}
-}
-
-.extra{
-text-align:center;
-margin-top:30px;
-font-size:20px;
-font-weight:500;
-}
-
-.progress-bar{
-height:14px;
-background:#222;
-border-radius:30px;
-overflow:hidden;
+.time{
+font-size:22px;
 margin-top:20px;
+opacity:0.9;
 }
 
-.progress{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#00c853,#00ff7f);
-transition:width 1s ease;
-}
-
-.winner{
-margin-top:35px;
-padding:18px;
-background:linear-gradient(90deg,#00c853,#00ff7f);
-color:black;
+.countdown{
+font-size:36px;
 font-weight:bold;
-text-align:center;
-border-radius:16px;
-display:none;
-font-size:24px;
-animation:fadeIn 0.6s ease;
+margin-top:25px;
+letter-spacing:2px;
 }
 
-@keyframes fadeIn{
-from{opacity:0;transform:scale(0.95);}
-to{opacity:1;transform:scale(1);}
-}
-
-.updated{
-text-align:center;
-margin-top:20px;
-font-size:13px;
+.note{
+margin-top:25px;
 opacity:0.6;
+font-size:14px;
 }
 </style>
 </head>
@@ -143,172 +81,58 @@ opacity:0.6;
 
 <div class="container">
 
-<div class="header">The Bihar Update</div>
-<div class="clock" id="liveClock"></div>
+<div class="title">The Bihar Update</div>
+<div id="liveClock" class="liveClock"></div>
 
 <div class="card">
 
-<div class="live">🔴 LIVE BROADCAST</div>
+<div class="live">🔴 LIVE CRICKET</div>
 
-<div id="matchName" class="match"></div>
-<div id="meta" class="meta"></div>
+<div class="match">India vs Australia</div>
 
-<div id="teams"></div>
+<div class="time">Match Starts At: <b>7:00 PM</b></div>
 
-<div id="extra" class="extra"></div>
+<div id="countdown" class="countdown"></div>
 
-<div class="progress-bar">
-<div id="progress" class="progress"></div>
+<div class="note">
+Live scoreboard will activate automatically once the match begins.
 </div>
-
-<div id="winnerBanner" class="winner"></div>
-
-<div id="updated" class="updated"></div>
 
 </div>
 </div>
 
 <script>
 
-const API_KEY = "PASTE_YOUR_API_KEY_HERE";
-
-let previousScores=[];
-
-/* CLOCK */
+/* LIVE CURRENT TIME */
 setInterval(()=>{
 document.getElementById("liveClock").innerText =
-"Live Time: "+new Date().toLocaleTimeString();
+"Current Time: " + new Date().toLocaleTimeString();
 },1000);
 
-function calcRR(runs,overs){
-if(!overs||overs<=0)return 0;
-return (runs/overs).toFixed(2);
-}
+/* SET MATCH START TIME (24-hour format) */
+const matchTime = new Date();
+matchTime.setHours(19,0,0,0); // 7:00 PM
 
-function showNoMatch(){
-document.getElementById("matchName").innerText=
-"No Live Match Right Now";
-document.getElementById("meta").innerText="";
-document.getElementById("teams").innerHTML="";
-document.getElementById("extra").innerText=
-"Next match updates will appear automatically.";
-document.getElementById("progress").style.width="0%";
-document.getElementById("winnerBanner").style.display="none";
-document.getElementById("updated").innerText="";
-}
+function updateCountdown(){
 
-async function fetchMatch(){
-try{
+const now = new Date();
+const diff = matchTime - now;
 
-const res=await fetch(
-"https://api.cricapi.com/v1/currentMatches?apikey=0d1e4d24-19c5-45b4-836a-d9687476177a";
-);
-const data=await res.json();
-
-if(!data||!data.data||data.data.length===0){
-showNoMatch();
+if(diff <= 0){
+document.getElementById("countdown").innerText = "Starting Soon...";
 return;
 }
 
-let match=data.data.find(m=>m.matchStarted===true);
+const hours = Math.floor(diff / (1000*60*60));
+const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+const seconds = Math.floor((diff % (1000*60)) / 1000);
 
-if(!match){
-showNoMatch();
-return;
+document.getElementById("countdown").innerText =
+hours+"h "+minutes+"m "+seconds+"s";
 }
 
-document.getElementById("matchName").innerText=match.name||"";
-document.getElementById("meta").innerText=
-(match.matchType?match.matchType.toUpperCase()+" | ":"")+
-(match.venue?match.venue:"");
-
-let html="";
-let currentScores=[];
-
-if(match.score){
-match.score.forEach((inning,i)=>{
-let text=`${inning.r}/${inning.w} (${inning.o})`;
-currentScores.push(text);
-
-html+=`
-<div class="team-row" id="team${i}">
-<span>${inning.inning}</span>
-<span>${text}</span>
-</div>
-`;
-});
-}
-
-document.getElementById("teams").innerHTML=html;
-
-/* Flash on change */
-currentScores.forEach((s,i)=>{
-if(previousScores[i]&&previousScores[i]!==s){
-let row=document.getElementById("team"+i);
-row.classList.add("flash");
-setTimeout(()=>row.classList.remove("flash"),700);
-}
-});
-previousScores=currentScores;
-
-/* Chase Logic */
-if(match.score && match.score.length===2){
-
-let first=match.score[0];
-let second=match.score[1];
-
-let target=first.r+1;
-let current=second.r;
-let overs=parseFloat(second.o);
-
-let required=target-current;
-
-let currentRR=calcRR(current,overs);
-
-/* detect total overs from first innings */
-let totalOvers=parseFloat(first.o)||20;
-
-let remainingOvers=totalOvers-overs;
-let requiredRR=calcRR(required,remainingOvers);
-
-document.getElementById("extra").innerText=
-"Target: "+target+
-" | Need: "+required+
-" | CRR: "+currentRR+
-" | RRR: "+requiredRR;
-
-let percent=(current/target)*100;
-document.getElementById("progress").style.width=
-(percent>100?100:percent)+"%";
-
-}
-
-/* Winner */
-let status=(match.status||"").toLowerCase();
-
-if(status.includes("won")||
-status.includes("match over")||
-status.includes("tied")||
-status.includes("draw")){
-
-document.getElementById("winnerBanner").innerText=
-"🏆 "+match.status;
-document.getElementById("winnerBanner").style.display="block";
-
-}else{
-document.getElementById("winnerBanner").style.display="none";
-}
-
-document.getElementById("updated").innerText=
-"Last Updated: "+new Date().toLocaleTimeString();
-
-}catch(e){
-showNoMatch();
-}
-}
-
-fetchMatch();
-setInterval(fetchMatch,60000);
+setInterval(updateCountdown,1000);
+updateCountdown();
 
 </script>
 
