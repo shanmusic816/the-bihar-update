@@ -1,64 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Cricket Scores</title>
+  <title>The Bihar Update - Cricket</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
 
-<style>
-body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#0f172a;
-    color:white;
-}
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, sans-serif;
+    }
 
-.container{
-    max-width:900px;
-    margin:auto;
-    padding:20px;
-}
+    body{
+      background: url('https://images.unsplash.com/photo-1593341646782-e0b495cff86d') no-repeat center center/cover;
+      min-height:100vh;
+      color:white;
+      text-align:center;
+    }
 
-h1{
-    text-align:center;
-    color:#00ffae;
-}
+    .overlay{
+      position:fixed;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.75);
+      z-index:-1;
+    }
 
-.notice{
-    background:#1e293b;
-    padding:20px;
-    border-radius:10px;
-    text-align:center;
-    margin:20px 0;
-}
+    .title{
+      font-size:30px;
+      font-weight:bold;
+      padding:20px;
+      color:#FFD700;
+    }
 
-.info{
-    background:#111827;
-    padding:20px;
-    border-radius:10px;
-    line-height:1.6;
-}
-</style>
+    .nav{
+      margin-bottom:25px;
+    }
+
+    .nav a{
+      color:white;
+      text-decoration:none;
+      margin:0 15px;
+      font-size:16px;
+    }
+
+    .nav a:hover{
+      color:#FFD700;
+    }
+
+    .result{
+      font-size:20px;
+      font-weight:bold;
+      background:linear-gradient(45deg,#FFD700,#ffae00);
+      color:black;
+      display:inline-block;
+      padding:10px 20px;
+      border-radius:8px;
+      margin-bottom:30px;
+    }
+
+    .scores{
+      font-size:22px;
+    }
+
+    .team{
+      margin:20px 0;
+    }
+
+    .team img{
+      width:45px;
+      vertical-align:middle;
+      margin-right:10px;
+    }
+
+  </style>
 </head>
 
 <body>
 
-<div class="container">
-    <h1>🏏 Live Cricket Scores</h1>
+<div class="overlay"></div>
 
-    <div class="notice">
-        <h2>Scores Will Update Soon</h2>
-        <p>We are currently updating live match data. Please check back shortly for the latest cricket scores and match updates.</p>
-    </div>
+<div class="title">The Bihar Update</div>
 
-    <div class="info">
-        <h3>About Our Cricket Coverage</h3>
-        <p>
-        We provide live cricket scores, match summaries, team updates, and detailed scorecards.
-        Stay connected for real-time updates, match results, and upcoming fixtures.
-        Our platform ensures accurate and timely cricket information for fans worldwide.
-        </p>
-    </div>
+<div class="nav">
+  <a href="#">Home</a>
+  <a href="#">Cricket</a>
+  <a href="#">News</a>
+  <a href="#">About</a>
+  <a href="#">Contact</a>
+</div>
+
+<div class="result">
+  🏆 India won by 93 runs
+</div>
+
+<div class="scores">
+
+  <div class="team">
+    <img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg">
+    India - 209/9 (20)
+  </div>
+
+  <div class="team">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Flag_of_Namibia.svg">
+    Namibia - 116 (18.2)
+  </div>
 
 </div>
 
