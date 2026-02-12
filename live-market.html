@@ -151,7 +151,7 @@ updateClock();
 
 /* ===== MARKET LOGIC ===== */
 
-let prev = {};
+let prev = JSON.parse(localStorage.getItem("marketPrev")) || {};
 
 function update(id,newValue,symbol="₹"){
 let container=document.getElementById(id);
@@ -185,6 +185,7 @@ ${changeHTML}
 `;
 
 prev[id]=newValue;
+  localStorage.setItem("marketPrev", JSON.stringify(prev));
 }
 
 async function fetchData(){
