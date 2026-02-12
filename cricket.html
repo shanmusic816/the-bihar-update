@@ -3,189 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Cricket Score - The Bihar Update</title>
+<title>Live Cricket Scores</title>
 
 <style>
 body{
-margin:0;
-font-family:Arial, sans-serif;
-background:url("https://images.unsplash.com/photo-1593766788306-28561086694e") no-repeat center center/cover;
-background-attachment:fixed;
-color:white;
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#0f172a;
+    color:white;
 }
 
-.overlay{
-background:rgba(0,0,0,0.75);
-min-height:100vh;
-padding:20px;
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
 }
 
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 0;
-border-bottom:1px solid rgba(255,255,255,0.1);
+h1{
+    text-align:center;
+    color:#00ffae;
 }
 
-header h1{
-font-size:22px;
+.notice{
+    background:#1e293b;
+    padding:20px;
+    border-radius:10px;
+    text-align:center;
+    margin:20px 0;
 }
 
-nav a{
-color:white;
-margin-left:15px;
-text-decoration:none;
-opacity:0.8;
-}
-
-nav a:hover{
-opacity:1;
-}
-
-.card{
-max-width:650px;
-margin:40px auto;
-background:rgba(20,20,30,0.9);
-border-radius:15px;
-padding:30px;
-box-shadow:0 0 30px rgba(255,0,0,0.3);
-text-align:center;
-}
-
-.live-badge{
-color:red;
-font-weight:bold;
-}
-
-.team{
-font-size:20px;
-margin:10px 0;
-}
-
-.score{
-font-size:30px;
-font-weight:bold;
-margin:10px 0;
-}
-
-.update{
-font-size:14px;
-opacity:0.7;
-margin-top:15px;
-}
-
-.hidden{
-display:none;
+.info{
+    background:#111827;
+    padding:20px;
+    border-radius:10px;
+    line-height:1.6;
 }
 </style>
 </head>
 
 <body>
 
-<div class="overlay">
+<div class="container">
+    <h1>🏏 Live Cricket Scores</h1>
 
-<header>
-<h1>THE BIHAR UPDATE</h1>
-<nav>
-<a href="/">Home</a>
-<a href="/about.html">About</a>
-<a href="/contact.html">Contact</a>
-</nav>
-</header>
+    <div class="notice">
+        <h2>Scores Will Update Soon</h2>
+        <p>We are currently updating live match data. Please check back shortly for the latest cricket scores and match updates.</p>
+    </div>
 
-<div class="card">
-
-<h2>Match Center <span class="live-badge">● LIVE</span></h2>
-
-<div id="noMatch">
-<h3>No Live Match Right Now</h3>
-<p>Live updates will appear automatically.</p>
-</div>
-
-<div id="matchData" class="hidden">
-<h3 id="matchTitle"></h3>
-
-<div class="team" id="team1"></div>
-<div class="score" id="score1"></div>
-
-<div class="team" id="team2"></div>
-<div class="score" id="score2"></div>
-</div>
-
-<div class="update" id="lastUpdate"></div>
+    <div class="info">
+        <h3>About Our Cricket Coverage</h3>
+        <p>
+        We provide live cricket scores, match summaries, team updates, and detailed scorecards.
+        Stay connected for real-time updates, match results, and upcoming fixtures.
+        Our platform ensures accurate and timely cricket information for fans worldwide.
+        </p>
+    </div>
 
 </div>
-
-</div>
-
-<script>
-const API_KEY = "0d1e4d24-19c5-45b4-836a-d9687476177a";  // <-- API key yahan daalo
-
-async function loadMatch(){
-
-try{
-
-const res = await fetch(`https://api.cricapi.com/v1/currentMatches?apikey=${API_KEY}&offset=0`);
-const data = await res.json();
-
-document.getElementById("lastUpdate").innerText =
-"Last Updated: " + new Date().toLocaleTimeString();
-
-if(data.status !== "success"){
-document.getElementById("noMatch").innerHTML =
-"API Error or Limit Reached";
-return;
-}
-
-let liveMatch = data.data.find(match =>
-match.matchStarted && !match.matchEnded
-);
-
-if(!liveMatch){
-document.getElementById("noMatch").classList.remove("hidden");
-document.getElementById("matchData").classList.add("hidden");
-return;
-}
-
-document.getElementById("noMatch").classList.add("hidden");
-document.getElementById("matchData").classList.remove("hidden");
-
-document.getElementById("matchTitle").innerText =
-liveMatch.name;
-
-if(liveMatch.score && liveMatch.score.length >= 2){
-
-document.getElementById("team1").innerText =
-liveMatch.score[0].inning;
-
-document.getElementById("score1").innerText =
-liveMatch.score[0].r + "/" +
-liveMatch.score[0].w +
-" (" + liveMatch.score[0].o + ")";
-
-document.getElementById("team2").innerText =
-liveMatch.score[1].inning;
-
-document.getElementById("score2").innerText =
-liveMatch.score[1].r + "/" +
-liveMatch.score[1].w +
-" (" + liveMatch.score[1].o + ")";
-}
-
-}catch(err){
-document.getElementById("noMatch").innerHTML =
-"Connection Error";
-}
-
-}
-
-loadMatch();
-
-// 🔥 120 seconds refresh (Safe for free API)
-setInterval(loadMatch,120000);
-
-</script>
 
 </body>
 </html>
