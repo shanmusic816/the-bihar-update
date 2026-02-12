@@ -619,28 +619,7 @@ header nav a {
   margin-left: 0;
 }
 
-.live-market-link{
-display:inline-block;
-margin:15px 0;
-padding:10px 16px;
-background:#111827;
-color:#fff;
-text-decoration:none;
-font-weight:600;
-border-radius:8px;
-position:relative;
-animation:blinkGlow 1.5s infinite alternate;
-}
-
-@keyframes blinkGlow{
-0%{box-shadow:0 0 5px #ff0000;}
-100%{box-shadow:0 0 15px #ff0000;}
-}
-
-.live-market-link:hover{
-background:#1e293b;
-}
-
+.
 /* ===== Live Market Clean Button ===== */
 
 .live-market-box{
