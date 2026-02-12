@@ -663,7 +663,7 @@ header nav a {
 
 .hero-video {
   width: 100%;
-  height: 40vh;       /* Banner height control */
+  height: 20vh;       /* Banner height control */
   max-height: 400px;  /* Mobile pe zyada bada na ho */
   overflow: hidden;
 }
