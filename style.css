@@ -624,8 +624,10 @@ header nav a {
 
 .live-market-box{
     display:flex;
-    justify-content:center;
-    margin:30px 0;
+    flex-direction:column;
+    align-items:center;
+    margin:15px 0;
+    gap:10px;   /* buttons ke beech halka gap */
 }
 
 .live-market-link{
