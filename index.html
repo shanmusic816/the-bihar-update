@@ -425,38 +425,35 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function() {
 
     const itemsPerPage = 10;
-    const items = document.querySelectorAll("main article");
-    const pagination = document.createElement("div");
-    pagination.style.textAlign = "center";
-    pagination.style.margin = "30px 0";
+    const items = Array.from(document.querySelectorAll("main article"));
+    const main = document.querySelector("main");
 
     let currentPage = 1;
     const totalPages = Math.ceil(items.length / itemsPerPage);
 
-    function showPage(page) {
+    // Pagination container
+    const pagination = document.createElement("div");
+    pagination.style.textAlign = "center";
+    pagination.style.margin = "30px 0";
+
+    function renderPage(page) {
         currentPage = page;
 
-        items.forEach((item, index) => {
-            item.style.display =
-                index >= (page - 1) * itemsPerPage &&
-                index < page * itemsPerPage
-                ? "block"
-                : "none";
+        // Clear main
+        items.forEach(item => item.style.display = "none");
+
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+
+        items.slice(start, end).forEach(item => {
+            item.style.display = "block";
         });
-
-        document.querySelectorAll(".page-btn").forEach(btn =>
-            btn.style.background = "#fff"
-        );
-
-        document.getElementById("page-" + page)
-            .style.background = "#c62828";
     }
 
+    // Create buttons
     for (let i = 1; i <= totalPages; i++) {
         const btn = document.createElement("button");
         btn.innerText = i;
-        btn.id = "page-" + i;
-        btn.className = "page-btn";
         btn.style.margin = "5px";
         btn.style.padding = "8px 12px";
         btn.style.border = "1px solid #c62828";
@@ -464,12 +461,12 @@ document.addEventListener("DOMContentLoaded", function() {
         btn.style.color = "#c62828";
         btn.style.cursor = "pointer";
 
-        btn.addEventListener("click", () => showPage(i));
+        btn.addEventListener("click", () => renderPage(i));
         pagination.appendChild(btn);
     }
 
-    document.querySelector("main").appendChild(pagination);
-    showPage(1);
+    main.after(pagination);
+    renderPage(1);
 });
 </script>
 <!-- PAGINATION SCRIPT END -->
