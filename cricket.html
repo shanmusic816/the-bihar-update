@@ -3,138 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Cricket | The Bihar Update</title>
+<title>Live Cricket Score | The Bihar Update</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    background: url('https://images.unsplash.com/photo-1508098682722-e99c643e7f0b') no-repeat center center fixed;
+    background-size: cover;
 }
 
-body{
-    font-family:Arial, sans-serif;
-    background:url('https://images.unsplash.com/photo-1593766827228-8737b4534aa6?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
-    min-height:100vh;
-    position:relative;
-    color:white;
+.overlay {
+    background: rgba(0, 0, 0, 0.75);
+    min-height: 100vh;
 }
 
-/* Dark Overlay */
-body::before{
-    content:"";
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.65);
-    z-index:0;
+/* Navigation */
+header {
+    background: #c62828;
+    padding: 15px 0;
+    text-align: center;
 }
 
-/* HEADER */
-header{
-    background:#c62828;
-    padding:18px;
-    position:relative;
-    z-index:2;
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #fff;
 }
 
-.header-container{
-    max-width:1100px;
-    margin:auto;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+nav {
+    margin-top: 8px;
 }
 
-.logo{
-    font-size:22px;
-    font-weight:bold;
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 12px;
+    font-weight: bold;
+    transition: 0.3s;
 }
 
-nav a{
-    color:white;
-    text-decoration:none;
-    margin-left:18px;
-    font-weight:500;
+nav a:hover {
+    text-decoration: underline;
 }
 
-nav a:hover{
-    text-decoration:underline;
+/* Live Section */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(0,0,0,0.7);
+    border-left: 5px solid #c62828;
+    border-radius: 8px;
 }
 
-/* MAIN CONTENT */
-.container{
-    position:relative;
-    z-index:2;
-    max-width:750px;
-    margin:120px auto;
-    text-align:center;
-    padding:45px;
-    background:rgba(0,0,0,0.55);
-    border-radius:14px;
-    box-shadow:0 15px 35px rgba(0,0,0,0.5);
+.live-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ff5252;
 }
 
-.live-title{
-    font-size:30px;
-    margin-bottom:25px;
-    color:#ff5252;
-    font-weight:bold;
+.status {
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
-.message{
-    font-size:22px;
-    margin-top:15px;
+.info-text {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-top: 20px;
 }
 
-.sub-message{
-    font-size:16px;
-    margin-top:15px;
-    color:#ddd;
+/* Footer */
+footer {
+    background: #111;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 14px;
 }
 
-/* Responsive */
-@media(max-width:768px){
-    .header-container{
-        flex-direction:column;
-        text-align:center;
-    }
-    nav{
-        margin-top:10px;
-    }
+footer a {
+    color: #ff5252;
+    text-decoration: none;
+    margin: 0 8px;
+}
+
+footer a:hover {
+    text-decoration: underline;
 }
 </style>
 </head>
 
 <body>
 
+<div class="overlay">
+
 <header>
-    <div class="header-container">
-        <div class="logo">The Bihar Update</div>
-        <nav>
-            <a href="/">Home</a>
-            <a href="/about.html">About</a>
-            <a href="/contact.html">Contact</a>
-            <a href="/privacy.html">Privacy</a>
-            <a href="/disclaimer.html">Disclaimer</a>
-        </nav>
-    </div>
+    <h1>The Bihar Update</h1>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="news.html">News</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+    </nav>
 </header>
 
 <div class="container">
-    <div class="live-title">
-        🔴 LIVE CRICKET
-    </div>
+    <div class="live-title">🔴 LIVE CRICKET</div>
+    <div class="status">No Live Match Right Now</div>
+    <div>Next match updates will appear automatically.</div>
 
-    <div class="message">
-        No Live Match Right Now
-    </div>
+    <div class="info-text">
+        <h3>About Live Cricket Section</h3>
+        <p>
+            The Live Cricket section of The Bihar Update provides real-time updates 
+            of ongoing cricket matches including T20, ODI and Test formats. 
+            When a match is live, this page will display current scores, overs, 
+            target details and match results automatically.
+        </p>
 
-    <div class="sub-message">
-        Next match updates will appear automatically.
+        <h3>Why No Match Is Showing?</h3>
+        <p>
+            If no match is currently being played, this section will display 
+            a message indicating that there is no live match at the moment. 
+            As soon as the next official match begins, live score updates 
+            will be reflected here.
+        </p>
+
+        <h3>Coverage Information</h3>
+        <p>
+            This page covers major international and domestic cricket matches. 
+            Stay connected with The Bihar Update for timely sports coverage 
+            and accurate match updates.
+        </p>
+
+        <h3>Disclaimer</h3>
+        <p>
+            Live score data is sourced from reliable public data providers. 
+            This website does not host or stream any live match video content.
+        </p>
     </div>
+</div>
+
+<footer>
+    © 2026 The Bihar Update |
+    <a href="about.html">About</a> |
+    <a href="contact.html">Contact</a> |
+    <a href="privacy-policy.html">Privacy Policy</a>
+</footer>
+
 </div>
 
 </body>
