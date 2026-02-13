@@ -397,11 +397,12 @@ function searchNews() {
   articles.forEach(function(article) {
     let text = article.innerText.toLowerCase();
     if (text.includes(input)) {
-      article.style.display = "";
-    } else {
-      article.style.display = "none";
+    article.classList.remove("hidden-by-search");
+    article.style.display = "";
+} else {
+    article.classList.add("hidden-by-search");
+    article.style.display = "none";
     }
-  });
 }
   </script>
 <script>
