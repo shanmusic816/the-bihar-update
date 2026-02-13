@@ -681,3 +681,24 @@ header nav a {
     height: 30vh;
   }
 }
+
+/* Smooth effect */
+.news-card{
+    transition: all 0.3s ease;
+}
+
+/* IMPORTANT: hover jab card ya uske andar kisi link par aaye */
+.news-card:hover,
+.news-card:has(a:hover){
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+/* Image zoom */
+.news-img{
+    transition: transform 0.3s ease;
+}
+
+.news-card:hover .news-img{
+    transform: scale(1.03);
+}
