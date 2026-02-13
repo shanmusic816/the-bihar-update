@@ -1,87 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>The Bihar Update - Cricket</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match Result - The Bihar Update</title>
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family: Arial, sans-serif;
-    }
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-    body{
-      background: url('https://images.unsplash.com/photo-1593341646782-e0b495cff86d') no-repeat center center/cover;
-      min-height:100vh;
-      color:white;
-      text-align:center;
-    }
+body{
+  background:url('https://images.unsplash.com/photo-1593766827228-8737b4534aa6?q=80&w=1400') no-repeat center center/cover;
+  min-height:100vh;
+  color:white;
+  text-align:center;
+}
 
-    .overlay{
-      position:fixed;
-      width:100%;
-      height:100%;
-      background:rgba(0,0,0,0.75);
-      z-index:-1;
-    }
+/* Dark overlay */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.75);
+  z-index:-1;
+}
 
-    .title{
-      font-size:30px;
-      font-weight:bold;
-      padding:20px;
-      color:#FFD700;
-    }
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 20px;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter: blur(10px);
+}
 
-    .nav{
-      margin-bottom:25px;
-    }
+header h1{
+  font-size:20px;
+  color:#fff;
+}
 
-    .nav a{
-      color:white;
-      text-decoration:none;
-      margin:0 15px;
-      font-size:16px;
-    }
+nav a{
+  color:white;
+  text-decoration:none;
+  margin-left:15px;
+  font-size:14px;
+  transition:0.3s;
+}
 
-    .nav a:hover{
-      color:#FFD700;
-    }
+nav a:hover{
+  color:#ffd700;
+}
 
-    .result{
-      font-size:20px;
-      font-weight:bold;
-      background:linear-gradient(45deg,#FFD700,#ffae00);
-      color:black;
-      display:inline-block;
-      padding:10px 20px;
-      border-radius:8px;
-      margin-bottom:30px;
-    }
+/* MAIN CARD */
+.container{
+  max-width:500px;
+  margin:60px auto;
+  padding:30px;
+  background:rgba(0,0,0,0.85);
+  border-radius:15px;
+  box-shadow:0 0 30px rgba(255,0,0,0.4);
+}
 
-    .scores{
-      font-size:22px;
-    }
+/* RESULT BADGE */
+.result{
+  background:#ffd700;
+  color:black;
+  padding:12px;
+  font-weight:bold;
+  border-radius:8px;
+  margin-bottom:25px;
+  font-size:18px;
+}
 
-    .team{
-      margin:20px 0;
-    }
+/* TEAM ROW */
+.team{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:15px 0;
+  font-size:20px;
+}
 
-    .team img{
-      width:45px;
-      vertical-align:middle;
-      margin-right:10px;
-    }
+.team img{
+  width:35px;
+  margin-right:10px;
+}
 
-  </style>
+.score{
+  font-size:22px;
+  font-weight:bold;
+}
+
+/* FOOTER */
+footer{
+  margin-top:40px;
+  font-size:13px;
+  opacity:0.7;
+}
+
+</style>
 </head>
-
 <body>
-
-<div class="overlay"></div>
-
-<div class="title">The Bihar Update</div>
 
 <header>
   <h1>The Bihar Update</h1>
@@ -93,21 +117,32 @@
   </nav>
 </header>
 
-<div class="result">
-  🏆 India won by 93 runs
-</div>
+<div class="container">
 
-<div class="scores">
-
-  <div class="team">
-    <img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg">
-    India - 209/9 (20)
+  <div class="result">
+    🏆 India won by 93 runs
   </div>
 
   <div class="team">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Flag_of_Namibia.svg">
-    Namibia - 116 (18.2)
+    <img src="https://flagcdn.com/w40/in.png">
+    <div>
+      <div>India</div>
+      <div class="score">209/9 (20)</div>
+    </div>
   </div>
+
+  <div class="team">
+    <img src="https://flagcdn.com/w40/na.png">
+    <div>
+      <div>Namibia</div>
+      <div class="score">116 (18.2)</div>
+    </div>
+  </div>
+
+  <footer>
+    T20 World Cup • Group Stage<br>
+    Powered by The Bihar Update
+  </footer>
 
 </div>
 
