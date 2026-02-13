@@ -427,7 +427,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const itemsPerPage = 10;
 
     // Sirf direct children lo
-    const items = Array.from(document.querySelectorAll("main > article"));
+    const items = Array.from(document.querySelectorAll("main > article:not(.hidden-by-search)"));
 
     const main = document.querySelector("main");
 
