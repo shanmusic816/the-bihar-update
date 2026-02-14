@@ -2,122 +2,165 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>The Bihar Update - Cricket Match</title>
+<title>The Bihar Update - Live Cricket</title>
 
 <style>
-body {
+
+/* Proper Full Screen Fix */
+html, body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background: url('https://images.unsplash.com/photo-1593341646782-4e6b5fcb9f0c') no-repeat center center/cover;
-    height: 100vh;
+    height: 100%;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
     color: white;
     text-align: center;
+    position: relative;
 }
 
-.overlay {
-    background: rgba(0,0,0,0.7);
-    height: 100vh;
+/* Dark Premium Overlay */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85));
+    z-index: -1;
 }
 
+/* Header */
 .header {
-    background: #c62828;
-    padding: 15px;
+    background: linear-gradient(90deg, #b71c1c, #e53935);
+    padding: 18px;
     font-size: 28px;
     font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
+/* Nav */
 .nav {
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .nav a {
     color: white;
-    margin: 0 15px;
+    margin: 0 18px;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .nav a:hover {
-    text-decoration: underline;
+    color: #ffd700;
 }
 
-.content-box {
+/* Score Card */
+.score-card {
     margin-top: 120px;
+    width: 90%;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 30px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 30px rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.15);
 }
 
-h2 {
-    font-size: 32px;
-    margin-bottom: 10px;
+.match-title {
+    font-size: 24px;
+    margin-bottom: 15px;
 }
 
-.timer {
-    font-size: 28px;
-    font-weight: bold;
-    margin-top: 15px;
-    color: #00ff00;
+.team {
+    font-size: 20px;
+    margin: 12px 0;
+    padding: 8px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 8px;
 }
 
-.info {
+.status {
     margin-top: 15px;
     font-size: 18px;
+    color: #00ff88;
+    font-weight: bold;
 }
+
+.live-dot {
+    height: 10px;
+    width: 10px;
+    background: red;
+    border-radius: 50%;
+    display: inline-block;
+    animation: blink 1s infinite;
+    margin-right: 8px;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="overlay">
-
 <div class="header">The Bihar Update</div>
 
 <div class="nav">
-    <a href="#">Home</a>
-    <a href="#">News</a>
-    <a href="#">About</a>
-    <a href="#">Contact</a>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy.html">Privacy</a>
 </div>
 
-<div class="content-box">
-    <h2 id="statusText">Match Starting Soon</h2>
-    <div class="info">
-        Match Starts At: 7:00 PM<br>
-        Live Scores Begin At: 7:30 PM
+<div class="score-card">
+    <div class="match-title">
+        <span class="live-dot"></span>
+        <span id="match">Loading Match...</span>
     </div>
-    <div class="timer" id="countdown"></div>
-</div>
 
+    <div class="team" id="team1"></div>
+    <div class="team" id="team2"></div>
+    <div class="status" id="status"></div>
 </div>
 
 <script>
 
-// 🔥 SET YOUR MATCH DATE HERE
-// Format: Year, Month-1, Date, Hour, Minute
-// Example below is today at 7:30 PM
+const apiUrl = "https://api.cricapi.com/v1/cricScore?apikey=0d1e4d24-19c5-45b4-836a-d9687476177a";
+const apiKey = "0d1e4d24-19c5-45b4-836a-d9687476177a";
 
-const scoreStartTime = new Date();
-scoreStartTime.setHours(19, 30, 0); // 7:30 PM
+async function fetchLiveScore() {
+    try {
+        const response = await fetch(apiUrl, {
+            headers: {
+                "Authorization": "Bearer " + apiKey
+            }
+        });
 
-function updateCountdown() {
-    const now = new Date();
-    const diff = scoreStartTime - now;
+        const data = await response.json();
 
-    if (diff <= 0) {
-        document.getElementById("statusText").innerHTML = "Live Scores Are Now Available!";
-        document.getElementById("countdown").innerHTML = "Match is Live";
-        return;
+        document.getElementById("match").innerHTML = data.match_name || "Live Match";
+        document.getElementById("team1").innerHTML = (data.team1 || "") + " : " + (data.score1 || "");
+        document.getElementById("team2").innerHTML = (data.team2 || "") + " : " + (data.score2 || "");
+        document.getElementById("status").innerHTML = data.status || "Match in Progress";
+
+    } catch (error) {
+        document.getElementById("match").innerHTML = "Live Score Not Available";
     }
-
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-    document.getElementById("countdown").innerHTML =
-        hours + "h " + minutes + "m " + seconds + "s Remaining";
 }
 
-setInterval(updateCountdown, 1000);
-updateCountdown();
+fetchLiveScore();
+setInterval(fetchLiveScore, 1800000);
 
 </script>
 
