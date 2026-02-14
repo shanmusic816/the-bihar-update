@@ -1,98 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Cricket Score | The Bihar Update</title>
+<title>The Bihar Update - Cricket Match</title>
 
 <style>
 body {
     margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
-    color: #fff;
-    background: url('https://images.unsplash.com/photo-1508098682722-e99c643e7f0b') no-repeat center center fixed;
-    background-size: cover;
+    background: url('https://images.unsplash.com/photo-1593341646782-4e6b5fcb9f0c') no-repeat center center/cover;
+    height: 100vh;
+    color: white;
+    text-align: center;
 }
 
 .overlay {
-    background: rgba(0, 0, 0, 0.75);
-    min-height: 100vh;
-}
-
-/* Navigation */
-header {
-    background: #c62828;
-    padding: 15px 0;
-    text-align: center;
-}
-
-header h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #fff;
-}
-
-nav {
-    margin-top: 8px;
-}
-
-nav a {
-    color: #fff;
-    text-decoration: none;
-    margin: 0 12px;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-nav a:hover {
-    text-decoration: underline;
-}
-
-/* Live Section */
-.container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
     background: rgba(0,0,0,0.7);
-    border-left: 5px solid #c62828;
-    border-radius: 8px;
+    height: 100vh;
 }
 
-.live-title {
+.header {
+    background: #c62828;
+    padding: 15px;
     font-size: 28px;
     font-weight: bold;
-    margin-bottom: 10px;
-    color: #ff5252;
 }
 
-.status {
-    font-size: 20px;
-    margin-bottom: 10px;
+.nav {
+    margin-top: 10px;
 }
 
-.info-text {
-    font-size: 16px;
-    line-height: 1.6;
-    margin-top: 20px;
-}
-
-/* Footer */
-footer {
-    background: #111;
-    text-align: center;
-    padding: 20px;
-    margin-top: 40px;
-    font-size: 14px;
-}
-
-footer a {
-    color: #ff5252;
+.nav a {
+    color: white;
+    margin: 0 15px;
     text-decoration: none;
-    margin: 0 8px;
+    font-weight: bold;
 }
 
-footer a:hover {
+.nav a:hover {
     text-decoration: underline;
+}
+
+.content-box {
+    margin-top: 120px;
+}
+
+h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.timer {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #00ff00;
+}
+
+.info {
+    margin-top: 15px;
+    font-size: 18px;
 }
 </style>
 </head>
@@ -101,61 +69,57 @@ footer a:hover {
 
 <div class="overlay">
 
-<header>
-    <h1>The Bihar Update</h1>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="index.html">News</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-    </nav>
-</header>
+<div class="header">The Bihar Update</div>
 
-<div class="container">
-    <div class="live-title">🔴 LIVE CRICKET</div>
-    <div class="status">No Live Match Right Now</div>
-    <div>Next match updates will appear automatically.</div>
+<div class="nav">
+    <a href="#">Home</a>
+    <a href="#">News</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+</div>
 
-    <div class="info-text">
-        <h3>About Live Cricket Section</h3>
-        <p>
-            The Live Cricket section of The Bihar Update provides real-time updates 
-            of ongoing cricket matches including T20, ODI and Test formats. 
-            When a match is live, this page will display current scores, overs, 
-            target details and match results automatically.
-        </p>
-
-        <h3>Why No Match Is Showing?</h3>
-        <p>
-            If no match is currently being played, this section will display 
-            a message indicating that there is no live match at the moment. 
-            As soon as the next official match begins, live score updates 
-            will be reflected here.
-        </p>
-
-        <h3>Coverage Information</h3>
-        <p>
-            This page covers major international and domestic cricket matches. 
-            Stay connected with The Bihar Update for timely sports coverage 
-            and accurate match updates.
-        </p>
-
-        <h3>Disclaimer</h3>
-        <p>
-            Live score data is sourced from reliable public data providers. 
-            This website does not host or stream any live match video content.
-        </p>
+<div class="content-box">
+    <h2 id="statusText">Match Starting Soon</h2>
+    <div class="info">
+        Match Starts At: 7:00 PM<br>
+        Live Scores Begin At: 7:30 PM
     </div>
+    <div class="timer" id="countdown"></div>
 </div>
 
-<footer>
-    © 2026 The Bihar Update |
-    <a href="about.html">About</a> |
-    <a href="contact.html">Contact</a> |
-    <a href="privacy.html">Privacy Policy</a>
-</footer>
-
 </div>
+
+<script>
+
+// 🔥 SET YOUR MATCH DATE HERE
+// Format: Year, Month-1, Date, Hour, Minute
+// Example below is today at 7:30 PM
+
+const scoreStartTime = new Date();
+scoreStartTime.setHours(19, 30, 0); // 7:30 PM
+
+function updateCountdown() {
+    const now = new Date();
+    const diff = scoreStartTime - now;
+
+    if (diff <= 0) {
+        document.getElementById("statusText").innerHTML = "Live Scores Are Now Available!";
+        document.getElementById("countdown").innerHTML = "Match is Live";
+        return;
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById("countdown").innerHTML =
+        hours + "h " + minutes + "m " + seconds + "s Remaining";
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+</script>
 
 </body>
 </html>
