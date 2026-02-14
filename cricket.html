@@ -1,168 +1,161 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>The Bihar Update - Live Cricket</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Cricket Score | The Bihar Update</title>
 
 <style>
-
-/* Proper Full Screen Fix */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
-
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e') no-repeat center center;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    background: url('https://images.unsplash.com/photo-1508098682722-e99c643e7f0b') no-repeat center center fixed;
     background-size: cover;
-    background-attachment: fixed;
+}
+
+.overlay {
+    background: rgba(0, 0, 0, 0.75);
     min-height: 100vh;
-    color: white;
+}
+
+/* Navigation */
+header {
+    background: #c62828;
+    padding: 15px 0;
     text-align: center;
-    position: relative;
 }
 
-/* Dark Premium Overlay */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85));
-    z-index: -1;
-}
-
-/* Header */
-.header {
-    background: linear-gradient(90deg, #b71c1c, #e53935);
-    padding: 18px;
-    font-size: 28px;
-    font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-}
-
-/* Nav */
-.nav {
-    margin-top: 12px;
-}
-
-.nav a {
-    color: white;
-    margin: 0 18px;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.nav a:hover {
-    color: #ffd700;
-}
-
-/* Score Card */
-.score-card {
-    margin-top: 120px;
-    width: 90%;
-    max-width: 480px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 30px;
-    border-radius: 18px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 0 30px rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.15);
-}
-
-.match-title {
+header h1 {
+    margin: 0;
     font-size: 24px;
-    margin-bottom: 15px;
+    color: #fff;
 }
 
-.team {
-    font-size: 20px;
-    margin: 12px 0;
-    padding: 8px;
-    background: rgba(0,0,0,0.4);
+nav {
+    margin-top: 8px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 12px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Live Section */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(0,0,0,0.7);
+    border-left: 5px solid #c62828;
     border-radius: 8px;
 }
 
-.status {
-    margin-top: 15px;
-    font-size: 18px;
-    color: #00ff88;
+.live-title {
+    font-size: 28px;
     font-weight: bold;
+    margin-bottom: 10px;
+    color: #ff5252;
 }
 
-.live-dot {
-    height: 10px;
-    width: 10px;
-    background: red;
-    border-radius: 50%;
-    display: inline-block;
-    animation: blink 1s infinite;
-    margin-right: 8px;
+.status {
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
-@keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: 0.3; }
-    100% { opacity: 1; }
+.info-text {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-top: 20px;
 }
 
+/* Footer */
+footer {
+    background: #111;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 14px;
+}
+
+footer a {
+    color: #ff5252;
+    text-decoration: none;
+    margin: 0 8px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">The Bihar Update</div>
+<div class="overlay">
 
-<div class="nav">
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-    <a href="privacy.html">Privacy</a>
-</div>
+<header>
+    <h1>The Bihar Update</h1>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="index.html">News</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+</header>
 
-<div class="score-card">
-    <div class="match-title">
-        <span class="live-dot"></span>
-        <span id="match">Loading Match...</span>
+<div class="container">
+    <div class="live-title">🔴 LIVE CRICKET</div>
+    <div class="status">No Live Match Right Now</div>
+    <div>Next match updates will appear automatically.</div>
+
+    <div class="info-text">
+        <h3>About Live Cricket Section</h3>
+        <p>
+            The Live Cricket section of The Bihar Update provides real-time updates 
+            of ongoing cricket matches including T20, ODI and Test formats. 
+            When a match is live, this page will display current scores, overs, 
+            target details and match results automatically.
+        </p>
+
+        <h3>Why No Match Is Showing?</h3>
+        <p>
+            If no match is currently being played, this section will display 
+            a message indicating that there is no live match at the moment. 
+            As soon as the next official match begins, live score updates 
+            will be reflected here.
+        </p>
+
+        <h3>Coverage Information</h3>
+        <p>
+            This page covers major international and domestic cricket matches. 
+            Stay connected with The Bihar Update for timely sports coverage 
+            and accurate match updates.
+        </p>
+
+        <h3>Disclaimer</h3>
+        <p>
+            Live score data is sourced from reliable public data providers. 
+            This website does not host or stream any live match video content.
+        </p>
     </div>
-
-    <div class="team" id="team1"></div>
-    <div class="team" id="team2"></div>
-    <div class="status" id="status"></div>
 </div>
 
-<script>
+<footer>
+    © 2026 The Bihar Update |
+    <a href="about.html">About</a> |
+    <a href="contact.html">Contact</a> |
+    <a href="privacy.html">Privacy Policy</a>
+</footer>
 
-const apiUrl = "https://api.cricapi.com/v1/cricScore?apikey=0d1e4d24-19c5-45b4-836a-d9687476177a";
-const apiKey = "0d1e4d24-19c5-45b4-836a-d9687476177a";
-
-async function fetchLiveScore() {
-    try {
-        const response = await fetch(apiUrl, {
-            headers: {
-                "Authorization": "Bearer " + apiKey
-            }
-        });
-
-        const data = await response.json();
-
-        document.getElementById("match").innerHTML = data.match_name || "Live Match";
-        document.getElementById("team1").innerHTML = (data.team1 || "") + " : " + (data.score1 || "");
-        document.getElementById("team2").innerHTML = (data.team2 || "") + " : " + (data.score2 || "");
-        document.getElementById("status").innerHTML = data.status || "Match in Progress";
-
-    } catch (error) {
-        document.getElementById("match").innerHTML = "Live Score Not Available";
-    }
-}
-
-fetchLiveScore();
-setInterval(fetchLiveScore, 1800000);
-
-</script>
+</div>
 
 </body>
 </html>
