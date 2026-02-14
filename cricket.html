@@ -1,126 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Cricket Score | The Bihar Update</title>
+<title>Match Result | The Bihar Update</title>
 
 <style>
 body{
     margin:0;
+    background:#121212;
     font-family: Arial, sans-serif;
-    background:url("https://images.unsplash.com/photo-1593766788306-28561086694b") no-repeat center center/cover;
     color:white;
 }
 
-/* Header */
-header{
-    background:#c62828;
-    padding:15px;
-    text-align:center;
-}
-
-header h1{
-    margin:0;
-    font-size:22px;
-}
-
-nav{
-    margin-top:8px;
-}
-
-nav a{
-    color:white;
-    margin:0 10px;
-    text-decoration:none;
-    font-weight:bold;
-}
-
-/* Live Score Box */
-.live-box{
-    max-width:400px;
-    margin:100px auto;
-    background:rgba(0,0,0,0.65);
+.card{
+    max-width:600px;
+    margin:60px auto;
+    background:#1e1e1e;
     padding:25px;
-    border-radius:15px;
-    text-align:center;
-    backdrop-filter: blur(5px);
-    box-shadow:0 0 20px rgba(255,255,255,0.2);
+    border-radius:18px;
+    box-shadow:0 0 20px rgba(255,255,255,0.1);
 }
 
-.live-box h2{
+.top{
+    display:flex;
+    justify-content:space-between;
+    color:#aaa;
     margin-bottom:20px;
+    font-size:14px;
+}
+
+.team{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:18px 0;
+    font-size:20px;
 }
 
 .score{
-    font-size:20px;
-    margin:10px 0;
+    font-weight:bold;
 }
 
-.status{
-    margin-top:15px;
-    font-weight:bold;
+.result{
+    margin-top:20px;
+    font-size:18px;
     color:#ff5252;
+    font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-    <h1>The Bihar Update</h1>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-        <a href="privacy.html">Privacy</a>
-    </nav>
-</header>
+<div class="card">
 
-<div class="live-box">
-    <h2>🔴 Live Match</h2>
-    <div id="team1" class="score">Loading...</div>
-    <div id="team2" class="score"></div>
-    <div id="status" class="status"></div>
+    <div class="top">
+        <div>Group stage · T20 24 of 55</div>
+        <div>Today</div>
+    </div>
+
+    <div class="team">
+        <div>🇳🇿 New Zealand</div>
+        <div class="score">175/7 (20)</div>
+    </div>
+
+    <div class="team">
+        <div>🇿🇦 South Africa</div>
+        <div class="score">178/3 (17.1)</div>
+    </div>
+
+    <div class="result">
+        SA won by 7 wickets (17 balls left)
+    </div>
+
 </div>
-
-<script>
-const API_KEY = "0d1e4d24-19c5-45b4-836a-d9687476177a";
-const MATCH_ID = "e26911e8-20c6-4b3d-ab34-16dd4d2aa3df";
-async function fetchLiveScore(){
-    try{
-        const response = await fetch(
-            `https://api.cricapi.com/v1/match_info?apikey=${API_KEY}&id=${MATCH_ID}`
-        );
-
-        const result = await response.json();
-
-        if(result.status !== "success"){
-            document.getElementById("status").innerText = "Match Not Available";
-            return;
-        }
-
-        const match = result.data;
-
-        document.getElementById("team1").innerText = match.name;
-
-        if(match.score && match.score.length > 0){
-            let scoreData = match.score[0];
-            document.getElementById("team2").innerText =
-                scoreData.r + "/" + scoreData.w + 
-                " (" + scoreData.o + " ov)";
-        }
-
-        document.getElementById("status").innerText = match.status;
-
-    }catch(error){
-        document.getElementById("status").innerText = "Error Loading Score";
-    }
-}
-
-fetchLiveScore();
-setInterval(fetchLiveScore, 50000);
-</script>
 
 </body>
 </html>
