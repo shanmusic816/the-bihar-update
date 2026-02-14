@@ -3,159 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Live Cricket Score | The Bihar Update</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    color: #fff;
-    background: url('https://images.unsplash.com/photo-1508098682722-e99c643e7f0b') no-repeat center center fixed;
-    background-size: cover;
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:url('images/cricket-bg.jpg') no-repeat center center/cover;
+    color:white;
 }
 
-.overlay {
-    background: rgba(0, 0, 0, 0.75);
-    min-height: 100vh;
+header{
+    background:#c62828;
+    padding:15px;
+    text-align:center;
 }
 
-/* Navigation */
-header {
-    background: #c62828;
-    padding: 15px 0;
-    text-align: center;
+header h1{
+    margin:0;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #fff;
+nav{
+    margin-top:8px;
 }
 
-nav {
-    margin-top: 8px;
+nav a{
+    color:white;
+    margin:0 10px;
+    text-decoration:none;
+    font-weight:bold;
 }
 
-nav a {
-    color: #fff;
-    text-decoration: none;
-    margin: 0 12px;
-    font-weight: bold;
-    transition: 0.3s;
+.live-box{
+    max-width:400px;
+    margin:100px auto;
+    background:rgba(0,0,0,0.6);
+    padding:25px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 0 25px rgba(255,255,255,0.2);
 }
 
-nav a:hover {
-    text-decoration: underline;
+.live-box h2{
+    margin-bottom:20px;
 }
 
-/* Live Section */
-.container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-    background: rgba(0,0,0,0.7);
-    border-left: 5px solid #c62828;
-    border-radius: 8px;
+.score{
+    font-size:18px;
+    margin:10px 0;
 }
 
-.live-title {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #ff5252;
-}
-
-.status {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-.info-text {
-    font-size: 16px;
-    line-height: 1.6;
-    margin-top: 20px;
-}
-
-/* Footer */
-footer {
-    background: #111;
-    text-align: center;
-    padding: 20px;
-    margin-top: 40px;
-    font-size: 14px;
-}
-
-footer a {
-    color: #ff5252;
-    text-decoration: none;
-    margin: 0 8px;
-}
-
-footer a:hover {
-    text-decoration: underline;
+.status{
+    margin-top:15px;
+    font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<div class="overlay">
-
 <header>
     <h1>The Bihar Update</h1>
     <nav>
         <a href="index.html">Home</a>
-        <a href="index.html">News</a>
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy</a>
     </nav>
 </header>
 
-<div class="container">
-    <div class="live-title">🔴 LIVE CRICKET</div>
-    <div class="status">No Live Match Right Now</div>
-    <div>Next match updates will appear automatically.</div>
+<div class="live-box">
+    <h2>🔴 Live Match</h2>
 
-    <div class="info-text">
-        <h3>About Live Cricket Section</h3>
-        <p>
-            The Live Cricket section of The Bihar Update provides real-time updates 
-            of ongoing cricket matches including T20, ODI and Test formats. 
-            When a match is live, this page will display current scores, overs, 
-            target details and match results automatically.
-        </p>
+    <div id="team1" class="score">Loading...</div>
+    <div id="team2" class="score"></div>
 
-        <h3>Why No Match Is Showing?</h3>
-        <p>
-            If no match is currently being played, this section will display 
-            a message indicating that there is no live match at the moment. 
-            As soon as the next official match begins, live score updates 
-            will be reflected here.
-        </p>
-
-        <h3>Coverage Information</h3>
-        <p>
-            This page covers major international and domestic cricket matches. 
-            Stay connected with The Bihar Update for timely sports coverage 
-            and accurate match updates.
-        </p>
-
-        <h3>Disclaimer</h3>
-        <p>
-            Live score data is sourced from reliable public data providers. 
-            This website does not host or stream any live match video content.
-        </p>
-    </div>
+    <div id="status" class="status"></div>
 </div>
 
-<footer>
-    © 2026 The Bihar Update |
-    <a href="about.html">About</a> |
-    <a href="contact.html">Contact</a> |
-    <a href="privacy.html">Privacy Policy</a>
-</footer>
+<script>
 
-</div>
+const API_KEY = "0d1e4d24-19c5-45b4-836a-d9687476177a";
+
+async function fetchLiveScore(){
+
+    try{
+        const response = await fetch(
+            `https://api.cricketdata.org/v1/matches?apikey=${API_KEY}&status=live`
+        );
+
+        const data = await response.json();
+        console.log(data);
+
+        if(data.status !== "success"){
+            document.getElementById("status").innerText = "API Error";
+            return;
+        }
+
+        if(data.data && data.data.length > 0){
+
+            const match = data.data[0];
+
+            let team1Score = "No Score";
+            let team2Score = "No Score";
+
+            if(match.score && match.score.length > 0){
+                team1Score = match.score[0]?.r + "/" + match.score[0]?.w + 
+                             " (" + match.score[0]?.o + " ov)";
+            }
+
+            if(match.score && match.score.length > 1){
+                team2Score = match.score[1]?.r + "/" + match.score[1]?.w + 
+                             " (" + match.score[1]?.o + " ov)";
+            }
+
+            document.getElementById("team1").innerText =
+                match.team1 + " : " + team1Score;
+
+            document.getElementById("team2").innerText =
+                match.team2 + " : " + team2Score;
+
+            document.getElementById("status").innerText =
+                match.status || "Live";
+
+        } else {
+
+            document.getElementById("team1").innerText = "";
+            document.getElementById("team2").innerText = "";
+            document.getElementById("status").innerText = "No Live Match Right Now";
+
+        }
+
+    } catch(error){
+        console.log(error);
+        document.getElementById("status").innerText = "Error Loading Score";
+    }
+}
+
+fetchLiveScore();
+
+// Auto refresh every 30 sec
+setInterval(fetchLiveScore, 30000);
+
+</script>
 
 </body>
 </html>
