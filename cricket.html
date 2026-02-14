@@ -2,29 +2,43 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Match Result | The Bihar Update</title>
+<title>Match Scores | The Bihar Update</title>
 
 <style>
-body{
+
+html, body{
     margin:0;
-    background:#121212;
+    padding:0;
+    height:100%;
+}
+
+/* Stadium Background */
+body{
     font-family: Arial, sans-serif;
+    background:
+    linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.9)),
+    url("https://images.pexels.com/photos/399187/pexels-photo-399187.jpeg?auto=compress&cs=tinysrgb&w=1600")
+    no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
     color:white;
 }
 
+/* Score Card */
 .card{
     max-width:600px;
-    margin:60px auto;
-    background:#1e1e1e;
+    margin:80px auto;
+    background:rgba(0,0,0,0.75);
     padding:25px;
     border-radius:18px;
-    box-shadow:0 0 20px rgba(255,255,255,0.1);
+    box-shadow:0 0 25px rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px);
 }
 
 .top{
     display:flex;
     justify-content:space-between;
-    color:#aaa;
+    color:#ccc;
     margin-bottom:20px;
     font-size:14px;
 }
@@ -55,8 +69,8 @@ body{
 <div class="card">
 
     <div class="top">
-        <div>Group stage · T20 24 of 55</div>
-        <div>Today</div>
+        <div>Group Stage · T20 24 of 55</div>
+        <div>14 Feb 2026</div>
     </div>
 
     <div class="team">
