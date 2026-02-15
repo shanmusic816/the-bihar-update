@@ -3,207 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>India vs Pakistan Match Live Updates | The Bihar Update</title>
-
-<meta name="description" content="India vs Pakistan international cricket match starting at 7:00 PM IST. Stay tuned for live match updates, score information and match details.">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<title>IND vs PAK Live Score | ICC T20 World Cup</title>
 
 <style>
-*{
+body{
     margin:0;
-    padding:0;
-    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+    background:url('images/cricket-bg.jpeg') no-repeat center center/cover;
 }
 
-body{
-    font-family:'Inter', sans-serif;
-    background:#0e1117;
+/* Dark Overlay */
+.overlay{
+    background:rgba(0,0,0,0.7);
+    min-height:100vh;
+}
+
+/* Header */
+header{
+    background:#c62828;
+    padding:15px;
     color:white;
 }
 
-/* HEADER */
-header{
-    background:#c62828;
-    padding:16px;
-    text-align:center;
-    font-weight:800;
-    letter-spacing:1px;
-    font-size:20px;
-}
-
-/* WRAPPER */
-.wrapper{
-    max-width:950px;
-    margin:70px auto;
-    padding:20px;
-}
-
-/* MATCH CARD */
-.match-card{
-    background:linear-gradient(145deg,#161b22,#0f141c);
-    padding:50px;
-    border-radius:20px;
-    box-shadow:0 0 40px rgba(0,0,0,0.6);
-    text-align:center;
-}
-
-/* MATCH LABEL */
-.match-label{
-    font-size:13px;
-    letter-spacing:2px;
-    color:#ff5252;
-    text-transform:uppercase;
-    margin-bottom:15px;
-}
-
-/* TEAMS */
-.teams{
+.nav{
+    max-width:1100px;
+    margin:auto;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin:40px 0;
+    flex-wrap:wrap;
+}
+
+.nav a{
+    color:white;
+    text-decoration:none;
+    margin-left:15px;
+}
+
+/* Score Card */
+.score-card{
+    max-width:600px;
+    margin:80px auto;
+    background:white;
+    padding:25px;
+    border-radius:8px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    border-left:6px solid #c62828;
 }
 
 .team{
-    flex:1;
+    display:flex;
+    justify-content:space-between;
+    font-size:20px;
+    margin:15px 0;
+}
+
+.result{
     text-align:center;
-}
-
-.flag{
-    font-size:42px;
-}
-
-.team-name{
-    font-size:28px;
-    font-weight:800;
-    margin-top:10px;
-}
-
-.vs{
-    font-size:16px;
-    color:#999;
-    font-weight:600;
-}
-
-/* TIMER */
-.timer{
-    font-size:38px;
-    font-weight:800;
-    color:#ffcc00;
+    color:green;
+    font-size:18px;
     margin-top:15px;
-}
-
-.subtitle{
-    margin-top:10px;
-    font-size:14px;
-    color:#aaa;
-}
-
-/* INFO BOX */
-.info-box{
-    margin-top:30px;
-    padding:20px;
-    background:rgba(255,255,255,0.04);
-    border-radius:12px;
-    font-size:14px;
-    color:#ccc;
-    line-height:1.6;
-}
-
-/* LIVE BADGE */
-.live-badge{
-    display:inline-block;
-    margin-top:15px;
-    padding:8px 20px;
-    background:#ff0000;
-    border-radius:40px;
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:1px;
-    animation:pulse 1.2s infinite;
-}
-
-@keyframes pulse{
-    0%{opacity:1;}
-    50%{opacity:0.6;}
-    100%{opacity:1;}
+    font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
+<div class="overlay">
+
 <header>
-    THE BIHAR UPDATE
+    <div class="nav">
+        <div style="font-size:22px; font-weight:bold;">
+            <a href="index.html">The Bihar Update</a>
+        </div>
+
+        <div>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="disclaimer.html">Disclaimer</a>
+        </div>
+    </div>
 </header>
 
-<div class="wrapper">
+<div class="score-card">
 
-    <div class="match-card">
+<h2 style="color:#c62828; margin-top:0;">
+ICC Men's T20 World Cup
+</h2>
 
-        <div class="match-label">International Cricket Match</div>
+<p style="color:gray;">Group Stage</p>
 
-        <div class="teams">
-            <div class="team">
-                <div class="flag">🇮🇳</div>
-                <div class="team-name">INDIA</div>
-            </div>
+<hr>
 
-            <div class="vs">VS</div>
+<div class="team">
+    <strong>🇮🇳 India</strong>
+    <span>175/7 (20)</span>
+</div>
 
-            <div class="team">
-                <div class="flag">🇵🇰</div>
-                <div class="team-name">PAKISTAN</div>
-            </div>
-        </div>
+<div class="team">
+    <strong>🇵🇰 Pakistan</strong>
+    <span>114 (18)</span>
+</div>
 
-        <div class="timer" id="countdown">Loading...</div>
+<hr>
 
-        <div class="subtitle">
-            Match scheduled to begin at 7:00 PM (IST)
-        </div>
-
-        <div id="liveIndicator"></div>
-
-        <div class="info-box">
-            Venue: International Cricket Stadium<br>
-            Format: T20 International Match<br>
-            This page provides match timing and official live update information. 
-            For official broadcast, refer to authorized TV or streaming platforms.
-        </div>
-
-    </div>
+<div class="result">
+    IND won by 61 runs
+</div>
 
 </div>
 
-<script>
-const matchTime = new Date();
-matchTime.setHours(19,0,0,0);
-
-function updateTimer(){
-    const now = new Date();
-    const diff = matchTime - now;
-
-    if(diff <= 0){
-        document.getElementById("countdown").innerText = "Match In Progress";
-        document.getElementById("liveIndicator").innerHTML =
-            '<div class="live-badge">LIVE</div>';
-        return;
-    }
-
-    const hours = Math.floor(diff / (1000*60*60));
-    const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
-    const seconds = Math.floor((diff % (1000*60)) / 1000);
-
-    document.getElementById("countdown").innerText =
-        hours + "h " + minutes + "m " + seconds + "s";
-}
-
-setInterval(updateTimer,1000);
-updateTimer();
-</script>
+</div>
 
 </body>
 </html>
