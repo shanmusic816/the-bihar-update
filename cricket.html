@@ -3,67 +3,96 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IND vs PAK Live Score | ICC T20 World Cup</title>
+<title>Live Cricket Score | The Bihar Update</title>
 
 <style>
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:url('images/cricket-bg.jpeg') no-repeat center center/cover;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    background: url('https://images.unsplash.com/photo-1508098682722-e99c643e7f0b') no-repeat center center fixed;
+    background-size: cover;
 }
 
-/* Dark Overlay */
-.overlay{
-    background:rgba(0,0,0,0.7);
-    min-height:100vh;
+.overlay {
+    background: rgba(0, 0, 0, 0.75);
+    min-height: 100vh;
 }
 
-/* Header */
-header{
-    background:#c62828;
-    padding:15px;
-    color:white;
+/* Navigation */
+header {
+    background: #c62828;
+    padding: 15px 0;
+    text-align: center;
 }
 
-.nav{
-    max-width:1100px;
-    margin:auto;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #fff;
 }
 
-.nav a{
-    color:white;
-    text-decoration:none;
-    margin-left:15px;
+nav {
+    margin-top: 8px;
 }
 
-/* Score Card */
-.score-card{
-    max-width:600px;
-    margin:80px auto;
-    background:white;
-    padding:25px;
-    border-radius:8px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.3);
-    border-left:6px solid #c62828;
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 12px;
+    font-weight: bold;
+    transition: 0.3s;
 }
 
-.team{
-    display:flex;
-    justify-content:space-between;
-    font-size:20px;
-    margin:15px 0;
+nav a:hover {
+    text-decoration: underline;
 }
 
-.result{
-    text-align:center;
-    color:green;
-    font-size:18px;
-    margin-top:15px;
-    font-weight:bold;
+/* Live Section */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(0,0,0,0.7);
+    border-left: 5px solid #c62828;
+    border-radius: 8px;
+}
+
+.live-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ff5252;
+}
+
+.status {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.info-text {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-top: 20px;
+}
+
+/* Footer */
+footer {
+    background: #111;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 14px;
+}
+
+footer a {
+    color: #ff5252;
+    text-decoration: none;
+    margin: 0 8px;
+}
+
+footer a:hover {
+    text-decoration: underline;
 }
 </style>
 </head>
@@ -73,48 +102,58 @@ header{
 <div class="overlay">
 
 <header>
-    <div class="nav">
-        <div style="font-size:22px; font-weight:bold;">
-            <a href="index.html">The Bihar Update</a>
-        </div>
-
-        <div>
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="disclaimer.html">Disclaimer</a>
-        </div>
-    </div>
+    <h1>The Bihar Update</h1>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="index.html">News</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+    </nav>
 </header>
 
-<div class="score-card">
+<div class="container">
+    <div class="live-title">🔴 LIVE CRICKET</div>
+    <div class="status">No Live Match Right Now</div>
+    <div>Next match updates will appear automatically.</div>
 
-<h2 style="color:#c62828; margin-top:0;">
-ICC Men's T20 World Cup
-</h2>
+    <div class="info-text">
+        <h3>About Live Cricket Section</h3>
+        <p>
+            The Live Cricket section of The Bihar Update provides real-time updates 
+            of ongoing cricket matches including T20, ODI and Test formats. 
+            When a match is live, this page will display current scores, overs, 
+            target details and match results automatically.
+        </p>
 
-<p style="color:gray;">Group Stage</p>
+        <h3>Why No Match Is Showing?</h3>
+        <p>
+            If no match is currently being played, this section will display 
+            a message indicating that there is no live match at the moment. 
+            As soon as the next official match begins, live score updates 
+            will be reflected here.
+        </p>
 
-<hr>
+        <h3>Coverage Information</h3>
+        <p>
+            This page covers major international and domestic cricket matches. 
+            Stay connected with The Bihar Update for timely sports coverage 
+            and accurate match updates.
+        </p>
 
-<div class="team">
-    <strong>🇮🇳 India</strong>
-    <span>175/7 (20)</span>
+        <h3>Disclaimer</h3>
+        <p>
+            Live score data is sourced from reliable public data providers. 
+            This website does not host or stream any live match video content.
+        </p>
+    </div>
 </div>
 
-<div class="team">
-    <strong>🇵🇰 Pakistan</strong>
-    <span>114 (18)</span>
-</div>
-
-<hr>
-
-<div class="result">
-    IND won by 61 runs
-</div>
-
-</div>
+<footer>
+    © 2026 The Bihar Update |
+    <a href="about.html">About</a> |
+    <a href="contact.html">Contact</a> |
+    <a href="privacy.html">Privacy Policy</a>
+</footer>
 
 </div>
 
