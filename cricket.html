@@ -182,20 +182,22 @@ THE BIHAR UPDATE | LIVE MATCH CENTER
 <div class="status" id="status"></div>
 
 </div>
-
 <script>
 
-const apiKey="0d1e4d24-19c5-45b4-836a-d9687476177a";
+const apiKey="YOUR_API_KEY";
 const matchId="66187914";
 
 async function fetchScore(){
 try{
-const res=await fetch(`https://api.cricapi.com/v1/match_info?apikey=${apiKey}&id=${matchId}`);
+const res=await fetch(`https://api.cricapi.com/v1/currentMatches?apikey=${apiKey}&offset=0`);
 const data=await res.json();
 
-if(data && data.data && data.data.score && data.data.score.length > 0){
+if(data && data.data){
 
-const match=data.data;
+const match=data.data.find(m => m.id === matchId);
+
+if(match && match.score && match.score.length>0){
+
 const innings=match.score[0];
 
 const runs=innings.r || 0;
@@ -209,22 +211,14 @@ if(overs>0){
 document.getElementById("rr").innerHTML=(runs/overs).toFixed(2);
 }
 
-if(match.score.length>1){
-const target=match.score[1].r+1;
-document.getElementById("target").innerHTML=target;
-
-const ballsLeft=(20-overs)*6;
-const runsNeeded=target-runs;
-
-if(ballsLeft>0){
-document.getElementById("rrr").innerHTML=(runsNeeded/(ballsLeft/6)).toFixed(2);
-}
-}
-
 document.getElementById("status").innerHTML=match.status || "";
 
 }else{
-document.getElementById("score").innerHTML="Match Not Started";
+document.getElementById("score").innerHTML="Match Not Live";
+}
+
+}else{
+document.getElementById("score").innerHTML="No Data Found";
 }
 
 }catch(err){
@@ -245,6 +239,5 @@ fetchScore();
 updateClock();
 
 </script>
-
 </body>
 </html>
