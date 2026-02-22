@@ -1,105 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IND vs SA Live | The Bihar Update</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Arial, sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
 
 body{
   background:url('images/cricket-bg.jpeg') no-repeat center center/cover;
   height:100vh;
   display:flex;
   flex-direction:column;
-  justify-content:space-between;
+  justify-content:center;
+  align-items:center;
   color:white;
   position:relative;
 }
 
-/* Dark overlay */
 body::before{
   content:"";
   position:absolute;
-  top:0;
-  left:0;
   width:100%;
   height:100%;
-  background:rgba(0,0,0,0.65);
+  background:rgba(0,0,0,0.7);
   z-index:0;
 }
 
-/* Header */
 .header{
-  position:relative;
-  z-index:2;
-  text-align:center;
-  padding:20px;
+  position:absolute;
+  top:20px;
   font-size:26px;
   font-weight:bold;
-  letter-spacing:1px;
+  z-index:2;
 }
 
-.header span{
-  color:#c62828;
-}
+.header span{color:#c62828;}
 
-/* Score Box */
-.score-box{
+.box{
   position:relative;
   z-index:2;
-  margin:auto;
-  background:rgba(0,0,0,0.75);
+  background:rgba(0,0,0,0.8);
   padding:40px;
   border-radius:15px;
   text-align:center;
   width:90%;
-  max-width:600px;
-  backdrop-filter:blur(6px);
-  box-shadow:0 0 25px rgba(0,0,0,0.5);
+  max-width:500px;
 }
 
-.live{
-  color:#ff1744;
-  font-weight:bold;
-  margin-bottom:10px;
-  font-size:14px;
-}
-
-.team{
-  font-size:22px;
-  margin:10px 0;
-}
-
-.score{
-  font-size:28px;
-  font-weight:bold;
-  margin:15px 0;
-}
-
-.status{
-  font-size:14px;
-  color:#ccc;
-  margin-top:10px;
-}
-
-@media(max-width:600px){
-  .score-box{
-    padding:25px;
-  }
-  .team{
-    font-size:18px;
-  }
-  .score{
-    font-size:22px;
-  }
-}
+.live{color:#ff1744;font-weight:bold;}
 </style>
 </head>
 
@@ -109,43 +59,36 @@ body::before{
   The <span>Bihar Update</span>
 </div>
 
-<div class="score-box">
-  <div class="live">🔴 LIVE SCORE</div>
-  <div class="team" id="matchName">Loading match...</div>
-  <div class="score" id="matchScore">Fetching score...</div>
-  <div class="status" id="matchStatus"></div>
+<div class="box">
+  <h2 id="statusText">Match Starting Soon</h2>
+  <p id="countdown"></p>
 </div>
 
 <script>
-const API_KEY = "YOUR_API_KEY_HERE";   // 🔑 Apna API key yaha daalo
-const MATCH_ID = "YOUR_MATCH_ID_HERE"; // 🆔 Match ID yaha daalo
+// Set match start time (Today 7:00 PM IST)
+let matchTime = new Date();
+matchTime.setHours(19,0,0,0);
 
-async function fetchScore(){
-  try{
-    const response = await fetch(
-      `https://api.cricapi.com/v1/match_info?apikey=${API_KEY}&id=${MATCH_ID}`
-    );
+function updateTimer(){
+  let now = new Date();
+  let diff = matchTime - now;
 
-    const data = await response.json();
-
-    if(data.status !== "success"){
-      document.getElementById("matchScore").innerHTML = "Unable to load score";
-      return;
-    }
-
-    const match = data.data;
-
-    document.getElementById("matchName").innerHTML = match.name;
-    document.getElementById("matchScore").innerHTML = match.score || "Score updating...";
-    document.getElementById("matchStatus").innerHTML = match.status;
-
-  } catch(error){
-    document.getElementById("matchScore").innerHTML = "API Error";
+  if(diff <= 0){
+    document.getElementById("statusText").innerHTML = "🔴 LIVE NOW";
+    document.getElementById("countdown").innerHTML = "Match has started!";
+    return;
   }
+
+  let hours = Math.floor(diff / (1000*60*60));
+  let minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+  let seconds = Math.floor((diff % (1000*60)) / 1000);
+
+  document.getElementById("countdown").innerHTML =
+    hours + "h " + minutes + "m " + seconds + "s remaining";
 }
 
-fetchScore();
-setInterval(fetchScore, 120000); // refresh every 30 sec
+setInterval(updateTimer,1000);
+updateTimer();
 </script>
 
 </body>
