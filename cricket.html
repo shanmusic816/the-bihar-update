@@ -3,92 +3,247 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IND vs SA Live | The Bihar Update</title>
+<title>LIVE | The Bihar Update</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-  background:url('images/cricket-bg.jpeg') no-repeat center center/cover;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  color:white;
-  position:relative;
+    font-family:'Rajdhani',sans-serif;
+    background:url("cricket-bg.jpeg") no-repeat center center/cover;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    position:relative;
 }
 
 body::before{
-  content:"";
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.7);
-  z-index:0;
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
 }
 
-.header{
-  position:absolute;
-  top:20px;
-  font-size:26px;
-  font-weight:bold;
-  z-index:2;
+/* Top bar */
+.top-bar{
+    position:absolute;
+    top:0;
+    width:100%;
+    background:#c62828;
+    padding:10px;
+    text-align:center;
+    font-size:13px;
+    font-weight:600;
 }
 
-.header span{color:#c62828;}
-
-.box{
-  position:relative;
-  z-index:2;
-  background:rgba(0,0,0,0.8);
-  padding:40px;
-  border-radius:15px;
-  text-align:center;
-  width:90%;
-  max-width:500px;
+/* Clock */
+.clock{
+    position:absolute;
+    top:50px;
+    left:20px;
+    color:#ffeb3b;
+    font-weight:bold;
 }
 
-.live{color:#ff1744;font-weight:bold;}
+/* Live */
+.live{
+    position:absolute;
+    top:50px;
+    right:20px;
+    background:red;
+    padding:4px 12px;
+    border-radius:20px;
+    font-size:12px;
+    animation:pulse 1s infinite;
+}
+@keyframes pulse{
+    0%{opacity:1;}
+    50%{opacity:0.4;}
+    100%{opacity:1;}
+}
+
+/* Panel */
+.panel{
+    position:relative;
+    width:90%;
+    max-width:700px;
+    padding:40px;
+    background:rgba(0,0,0,0.7);
+    border-radius:15px;
+    text-align:center;
+}
+
+/* Teams */
+.teams{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.team{
+    font-family:'Oswald',sans-serif;
+    font-size:38px;
+    font-weight:700;
+}
+
+.vs{
+    font-size:16px;
+    opacity:0.6;
+}
+
+/* Score */
+.score{
+    font-family:'Oswald',sans-serif;
+    font-size:60px;
+    color:#ffeb3b;
+    margin:20px 0;
+}
+
+/* Stats */
+.stats{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+}
+
+.stat{
+    flex:1;
+}
+
+.stat h4{
+    font-size:12px;
+    opacity:0.7;
+}
+
+.stat p{
+    font-size:16px;
+    font-weight:bold;
+}
+
+.status{
+    margin-top:20px;
+    color:#ffeb3b;
+}
+
+@media(max-width:600px){
+    .team{font-size:22px;}
+    .score{font-size:40px;}
+    .stats{flex-direction:column;}
+    .stat{margin-bottom:10px;}
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  The <span>Bihar Update</span>
+<div class="top-bar">
+THE BIHAR UPDATE | LIVE MATCH CENTER
 </div>
 
-<div class="box">
-  <h2 id="statusText">Match Starting Soon</h2>
-  <p id="countdown"></p>
+<div class="clock" id="clock"></div>
+<div class="live">● LIVE</div>
+
+<div class="panel">
+
+<div class="teams">
+<div class="team">IND</div>
+<div class="vs">VS</div>
+<div class="team">SA</div>
+</div>
+
+<div class="score" id="score">Loading...</div>
+
+<div class="stats">
+<div class="stat">
+<h4>Overs</h4>
+<p id="overs">-</p>
+</div>
+
+<div class="stat">
+<h4>Run Rate</h4>
+<p id="rr">-</p>
+</div>
+
+<div class="stat">
+<h4>Req RR</h4>
+<p id="rrr">-</p>
+</div>
+<div class="stat">
+<h4>Target</h4>
+<p id="target">-</p>
+</div>
+</div>
+
+<div class="status" id="status"></div>
+
 </div>
 
 <script>
-// Set match start time (Today 7:00 PM IST)
-let matchTime = new Date();
-matchTime.setHours(19,0,0,0);
 
-function updateTimer(){
-  let now = new Date();
-  let diff = matchTime - now;
+const apiKey="0d1e4d24-19c5-45b4-836a-d9687476177a";
+const matchId="66187914";
 
-  if(diff <= 0){
-    document.getElementById("statusText").innerHTML = "🔴 LIVE NOW";
-    document.getElementById("countdown").innerHTML = "Match has started!";
-    return;
-  }
+async function fetchScore(){
+try{
+const res=await fetch(`https://api.cricapi.com/v1/match_info?apikey=${apiKey}&id=${matchId}`);
+const data=await res.json();
 
-  let hours = Math.floor(diff / (1000*60*60));
-  let minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
-  let seconds = Math.floor((diff % (1000*60)) / 1000);
+if(data && data.data && data.data.score && data.data.score.length > 0){
 
-  document.getElementById("countdown").innerHTML =
-    hours + "h " + minutes + "m " + seconds + "s remaining";
+const match=data.data;
+const innings=match.score[0];
+
+const runs=innings.r || 0;
+const wickets=innings.w || 0;
+const overs=innings.o || 0;
+
+document.getElementById("score").innerHTML=runs+"/"+wickets;
+document.getElementById("overs").innerHTML=overs;
+
+if(overs>0){
+document.getElementById("rr").innerHTML=(runs/overs).toFixed(2);
 }
 
-setInterval(updateTimer,1000);
-updateTimer();
+if(match.score.length>1){
+const target=match.score[1].r+1;
+document.getElementById("target").innerHTML=target;
+
+const ballsLeft=(20-overs)*6;
+const runsNeeded=target-runs;
+
+if(ballsLeft>0){
+document.getElementById("rrr").innerHTML=(runsNeeded/(ballsLeft/6)).toFixed(2);
+}
+}
+
+document.getElementById("status").innerHTML=match.status || "";
+
+}else{
+document.getElementById("score").innerHTML="Match Not Started";
+}
+
+}catch(err){
+document.getElementById("score").innerHTML="Error Loading Score";
+}
+}
+
+function updateClock(){
+const now=new Date();
+document.getElementById("clock").innerHTML=
+"IST "+now.toLocaleTimeString("en-IN",{hour12:false});
+}
+
+setInterval(fetchScore,30000);
+setInterval(updateClock,1000);
+
+fetchScore();
+updateClock();
+
 </script>
 
 </body>
