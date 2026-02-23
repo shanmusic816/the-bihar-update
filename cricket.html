@@ -1,250 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LIVE | The Bihar Update</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<title>South Africa vs India Match Result</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-
 body{
-    font-family:'Rajdhani',sans-serif;
-    background:url("cricket-bg.jpeg") no-repeat center center/cover;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:white;
-    position:relative;
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#f4f4f4;
 }
 
-body::before{
-    content:"";
-    position:absolute;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.6);
-}
-
-/* Top bar */
-.top-bar{
-    position:absolute;
-    top:0;
-    width:100%;
+.header{
     background:#c62828;
-    padding:10px;
+    color:#fff;
+    padding:15px;
     text-align:center;
-    font-size:13px;
-    font-weight:600;
-}
-
-/* Clock */
-.clock{
-    position:absolute;
-    top:50px;
-    left:20px;
-    color:#ffeb3b;
+    font-size:22px;
     font-weight:bold;
 }
 
-/* Live */
-.live{
-    position:absolute;
-    top:50px;
-    right:20px;
-    background:red;
-    padding:4px 12px;
-    border-radius:20px;
-    font-size:12px;
-    animation:pulse 1s infinite;
-}
-@keyframes pulse{
-    0%{opacity:1;}
-    50%{opacity:0.4;}
-    100%{opacity:1;}
+.news-container{
+    max-width:800px;
+    margin:20px auto;
+    background:#fff;
+    border-left:5px solid #c62828;
+    padding:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Panel */
-.panel{
-    position:relative;
-    width:90%;
-    max-width:700px;
-    padding:40px;
-    background:rgba(0,0,0,0.7);
-    border-radius:15px;
-    text-align:center;
+h1{
+    margin-top:0;
+    color:#c62828;
 }
 
-/* Teams */
-.teams{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:20px;
+.match-line{
+    font-size:14px;
+    color:gray;
+    margin-bottom:15px;
 }
 
-.team{
-    font-family:'Oswald',sans-serif;
-    font-size:38px;
-    font-weight:700;
-}
-
-.vs{
-    font-size:16px;
-    opacity:0.6;
-}
-
-/* Score */
 .score{
-    font-family:'Oswald',sans-serif;
-    font-size:60px;
-    color:#ffeb3b;
-    margin:20px 0;
+    font-size:18px;
+    margin:8px 0;
 }
 
-/* Stats */
-.stats{
-    display:flex;
-    justify-content:space-between;
-    margin-top:20px;
-}
-
-.stat{
-    flex:1;
-}
-
-.stat h4{
-    font-size:12px;
-    opacity:0.7;
-}
-
-.stat p{
-    font-size:16px;
+.result{
     font-weight:bold;
-}
-
-.status{
-    margin-top:20px;
-    color:#ffeb3b;
-}
-
-@media(max-width:600px){
-    .team{font-size:22px;}
-    .score{font-size:40px;}
-    .stats{flex-direction:column;}
-    .stat{margin-bottom:10px;}
+    color:#c62828;
+    margin-top:15px;
+    font-size:18px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="top-bar">
-THE BIHAR UPDATE | LIVE MATCH CENTER
+<div class="header">
+THE BIHAR UPDATE
 </div>
 
-<div class="clock" id="clock"></div>
-<div class="live">● LIVE</div>
+<div class="news-container" data-date="2026-02-22">
 
-<div class="panel">
+<h1>South Africa vs India – Match Result</h1>
 
-<div class="teams">
-<div class="team">IND</div>
-<div class="vs">VS</div>
-<div class="team">SA</div>
+<div class="match-line">
+43rd Match, Super Eights, Ahmedabad | February 22, 2026 | T20 World Cup
 </div>
 
-<div class="score" id="score">Loading...</div>
-
-<div class="stats">
-<div class="stat">
-<h4>Overs</h4>
-<p id="overs">-</p>
+<div class="score">
+South Africa: 187/7 (20 Overs)
 </div>
 
-<div class="stat">
-<h4>Run Rate</h4>
-<p id="rr">-</p>
+<div class="score">
+India: 111 (18.5 Overs)
 </div>
 
-<div class="stat">
-<h4>Req RR</h4>
-<p id="rrr">-</p>
-</div>
-<div class="stat">
-<h4>Target</h4>
-<p id="target">-</p>
-</div>
+<div class="result">
+South Africa won by 76 runs.
 </div>
 
-<div class="status" id="status"></div>
+<p>
+South Africa delivered a dominant performance against India in the Super Eights match. 
+After posting a competitive total of 187/7 in 20 overs, their bowling attack restricted India 
+to 111 runs in 18.5 overs, securing a convincing 76-run victory.
+</p>
 
 </div>
-
-<script>
-
-const apiKey="0d1e4d24-19c5-45b4-836a-d9687476177a";
-const matchId="66187914";
-
-async function fetchScore(){
-try{
-const res=await fetch(`https://api.cricapi.com/v1/match_info?apikey=${apiKey}&id=${matchId}`);
-const data=await res.json();
-
-if(data && data.data && data.data.score && data.data.score.length > 0){
-
-const match=data.data;
-const innings=match.score[0];
-
-const runs=innings.r || 0;
-const wickets=innings.w || 0;
-const overs=innings.o || 0;
-
-document.getElementById("score").innerHTML=runs+"/"+wickets;
-document.getElementById("overs").innerHTML=overs;
-
-if(overs>0){
-document.getElementById("rr").innerHTML=(runs/overs).toFixed(2);
-}
-
-if(match.score.length>1){
-const target=match.score[1].r+1;
-document.getElementById("target").innerHTML=target;
-
-const ballsLeft=(20-overs)*6;
-const runsNeeded=target-runs;
-
-if(ballsLeft>0){
-document.getElementById("rrr").innerHTML=(runsNeeded/(ballsLeft/6)).toFixed(2);
-}
-}
-
-document.getElementById("status").innerHTML=match.status || "";
-
-}else{
-document.getElementById("score").innerHTML="Match Not Started";
-}
-
-}catch(err){
-document.getElementById("score").innerHTML="Error Loading Score";
-}
-}
-
-function updateClock(){
-const now=new Date();
-document.getElementById("clock").innerHTML=
-"IST "+now.toLocaleTimeString("en-IN",{hour12:false});
-}
-
-setInterval(fetchScore,30000);
-setInterval(updateClock,1000);
-
-fetchScore();
-updateClock();
-
-</script>
 
 </body>
 </html>
