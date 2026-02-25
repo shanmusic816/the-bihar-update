@@ -7,104 +7,92 @@
 
 <style>
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, sans-serif;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Full Screen Background */
 body{
-height:100vh;
-background:url('images/INDvsZIM.jpg') no-repeat center center;
-background-size:cover;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-color:white;
+  background:#000;
+  color:#fff;
 }
 
-/* Dark Overlay */
-body::before{
-content:"";
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.65);
-z-index:-1;
-}
-
-/* Top Header Transparent */
+/* ===== Header ===== */
 .header{
-position:absolute;
-top:0;
-width:100%;
-padding:18px;
-text-align:center;
-font-size:20px;
-font-weight:bold;
-background:rgba(0,0,0,0.4);
-backdrop-filter:blur(6px);
+  position:absolute;
+  top:0;
+  width:100%;
+  text-align:center;
+  padding:18px 0;
+  font-size:22px;
+  font-weight:bold;
+  letter-spacing:1px;
+  background:rgba(0,0,0,0.55);
+  z-index:10;
 }
 
-/* Center Content */
-.center-content{
-flex:1;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:20px;
+/* ===== Hero Section ===== */
+.hero{
+  height:100vh;
+  width:100%;
+  background: 
+  linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.65)),
+  url("images/INDvsZIM.jpg") center/cover no-repeat;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
 }
 
-.center-content h1{
-font-size:34px;
-margin-bottom:10px;
+.hero-content h1{
+  font-size:40px;
+  margin-bottom:10px;
 }
 
-.center-content p{
-font-size:16px;
-opacity:0.9;
-margin-bottom:25px;
+.hero-content p{
+  font-size:18px;
+  opacity:0.9;
 }
 
-/* Timer */
-.timer{
-font-size:42px;
-font-weight:bold;
-color:#ff5252;
+#countdown{
+  margin-top:25px;
+  font-size:42px;
+  font-weight:bold;
+  color:#ff3b3b;
 }
 
-.live{
-color:#ff1744;
-font-weight:bold;
-animation:blink 1s infinite;
+/* ===== Content Section ===== */
+.content{
+  background:#f4f4f4;
+  color:#111;
+  padding:40px 20px;
+  border-top-left-radius:30px;
+  border-top-right-radius:30px;
+  margin-top:-40px;
 }
 
-@keyframes blink{
-0%{opacity:1;}
-50%{opacity:0.4;}
-100%{opacity:1;}
+.content h2{
+  color:#c62828;
+  margin-bottom:15px;
 }
 
-/* Bottom Info Section */
-.bottom-section{
-background:white;
-color:#333;
-padding:25px;
-border-top-left-radius:20px;
-border-top-right-radius:20px;
+.content p{
+  line-height:1.6;
+  margin-bottom:15px;
 }
 
-.bottom-section h2{
-color:#c62828;
-margin-bottom:10px;
+/* Responsive */
+@media(max-width:600px){
+  .hero-content h1{
+    font-size:30px;
+  }
+  #countdown{
+    font-size:32px;
+  }
 }
 </style>
-
 </head>
 
 <body>
@@ -113,42 +101,51 @@ margin-bottom:10px;
 THE BIHAR UPDATE
 </div>
 
-<div class="center-content">
-<h1>IND vs ZIM</h1>
-<p>T20 International Clash</p>
+<section class="hero">
+  <div class="hero-content">
+      <h1>IND vs ZIM</h1>
+      <p>T20 International Clash</p>
+      <div id="countdown">Loading...</div>
+  </div>
+</section>
 
-<div id="countdown" class="timer">Loading...</div>
-</div>
+<section class="content">
+  <h2>मैच का पूर्वावलोकन</h2>
+  <p>
+  भारत और जिम्बाब्वे के बीच होने वाला मुकाबला बेहद रोमांचक रहने वाला है।
+  दोनों टीमें जीत के इरादे से मैदान में उतरेंगी।
+  </p>
 
-<div class="bottom-section">
-<h2>मैच का पूर्वावलोकन</h2>
-<p>
-भारत और जिम्बाब्वे के बीच होने वाला मुकाबला बेहद रोमांचक रहने वाला है।
-दोनों टीमें जीत के इरादे से मैदान में उतरेंगी।
-</p>
-</div>
+  <h2>पिच रिपोर्ट</h2>
+  <p>
+  चेन्नई की पिच बल्लेबाज़ों के लिए अनुकूल मानी जाती है,
+  हालांकि शुरुआती ओवरों में तेज गेंदबाज़ों को मदद मिल सकती है।
+  </p>
+</section>
 
 <script>
-const matchTime = new Date("Feb 26, 2026 19:00:00").getTime();
+// ✅ Exact IST Time (26 Feb 2026, 7:00 PM IST)
+const matchDate = new Date("2026-02-26T19:00:00+05:30").getTime();
 
-const timer = setInterval(function() {
-const now = new Date().getTime();
-const distance = matchTime - now;
+const timer = setInterval(function(){
 
-if (distance < 0) {
-clearInterval(timer);
-document.getElementById("countdown").innerHTML =
-"<span class='live'>Match Live 🔴</span>";
-return;
-}
+  const now = new Date().getTime();
+  const distance = matchDate - now;
 
-const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  if(distance <= 0){
+    document.getElementById("countdown").innerHTML = "MATCH STARTED";
+    clearInterval(timer);
+    return;
+  }
 
-document.getElementById("countdown").innerHTML =
-hours + "h " + minutes + "m " + seconds + "s";
-}, 1000);
+  const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+  const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
+  const seconds = Math.floor((distance % (1000*60)) / 1000);
+
+  document.getElementById("countdown").innerHTML =
+  hours + "h " + minutes + "m " + seconds + "s ";
+
+},1000);
 </script>
 
 </body>
