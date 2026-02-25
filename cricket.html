@@ -6,9 +6,14 @@
 <title>IND vs ZIM Live Match | The Bihar Update</title>
 
 <style>
-body{
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:Arial, sans-serif;
+}
+
+body{
 background:#f4f4f4;
 }
 
@@ -25,8 +30,8 @@ font-weight:bold;
 /* Hero Section */
 .hero{
 position:relative;
-height:250px;
-background:url('INDvsZIM.jpg') center/cover no-repeat;
+height:300px;
+background:url('images/INDvsZIM.jpg') center/cover no-repeat;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -40,38 +45,38 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.6);
+background:rgba(0,0,0,0.65);
 }
 
-.hero h1{
+.hero-content{
 position:relative;
 z-index:1;
-font-size:28px;
 text-align:center;
-padding:0 10px;
 }
 
-/* Main Content */
-.container{
-max-width:900px;
-margin:20px auto;
-background:white;
-padding:20px;
-border-left:6px solid #c62828;
-box-shadow:0 2px 10px rgba(0,0,0,0.1);
-}
-
-/* Timer Box */
-.timer-box{
-background:#fafafa;
-padding:20px;
-text-align:center;
-border-radius:10px;
-margin-bottom:20px;
-}
-
-#countdown{
+.hero-content h1{
 font-size:32px;
+margin-bottom:10px;
+}
+
+.hero-content p{
+font-size:16px;
+opacity:0.9;
+}
+
+/* Countdown Section */
+.countdown-section{
+background:white;
+max-width:900px;
+margin:-40px auto 20px;
+padding:30px;
+border-left:6px solid #c62828;
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+.timer{
+font-size:36px;
 font-weight:bold;
 color:#c62828;
 margin-top:10px;
@@ -80,7 +85,27 @@ margin-top:10px;
 .live{
 color:red;
 font-weight:bold;
-font-size:20px;
+animation:blink 1s infinite;
+}
+
+@keyframes blink{
+0%{opacity:1;}
+50%{opacity:0.4;}
+100%{opacity:1;}
+}
+
+/* Content Section */
+.container{
+max-width:900px;
+margin:20px auto;
+background:white;
+padding:20px;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+h2{
+color:#c62828;
+margin-bottom:10px;
 }
 
 /* Footer */
@@ -102,25 +127,28 @@ THE BIHAR UPDATE
 </div>
 
 <div class="hero">
-<h1>IND vs ZIM – T20 Live Countdown</h1>
+<div class="hero-content">
+<h1>IND vs ZIM</h1>
+<p>T20 International Clash</p>
+</div>
+</div>
+
+<div class="countdown-section">
+<p>Match Starts In:</p>
+<div id="countdown" class="timer">Loading...</div>
 </div>
 
 <div class="container">
 
-<div class="timer-box">
-<p>Match Starts In:</p>
-<div id="countdown">Loading...</div>
-</div>
-
 <h2>मैच का पूर्वावलोकन</h2>
 <p>
-भारत और जिम्बाब्वे के बीच होने वाला मुकाबला क्रिकेट प्रेमियों के लिए बेहद रोमांचक रहेगा।
+भारत और जिम्बाब्वे के बीच होने वाला मुकाबला बेहद रोमांचक रहेगा।
 दोनों टीमें जीत के इरादे से मैदान में उतरेंगी।
 </p>
 
-<h2>संभावित प्लेइंग इलेवन</h2>
+<h2>पिच रिपोर्ट</h2>
 <p>
-टीम इंडिया युवा खिलाड़ियों के साथ उतर सकती है, जबकि जिम्बाब्वे संतुलित संयोजन के साथ चुनौती पेश करेगा।
+पिच बल्लेबाजों के लिए मददगार मानी जा रही है, हालांकि शुरुआती ओवरों में तेज गेंदबाजों को स्विंग मिल सकती है।
 </p>
 
 </div>
@@ -133,22 +161,22 @@ THE BIHAR UPDATE
 const matchTime = new Date("Feb 26, 2026 19:00:00").getTime();
 
 const timer = setInterval(function() {
-  const now = new Date().getTime();
-  const distance = matchTime - now;
+const now = new Date().getTime();
+const distance = matchTime - now;
 
-  if (distance < 0) {
-    clearInterval(timer);
-    document.getElementById("countdown").innerHTML =
-      "<span class='live'>Match Live 🔴</span>";
-    return;
-  }
+if (distance < 0) {
+clearInterval(timer);
+document.getElementById("countdown").innerHTML =
+"<span class='live'>Match Live 🔴</span>";
+return;
+}
 
-  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  document.getElementById("countdown").innerHTML =
-    hours + "h " + minutes + "m " + seconds + "s ";
+document.getElementById("countdown").innerHTML =
+hours + "h " + minutes + "m " + seconds + "s";
 }, 1000);
 </script>
 
