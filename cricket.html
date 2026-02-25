@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IND vs ZIM Live Match | The Bihar Update</title>
+<title>IND vs ZIM Live | The Bihar Update</title>
 
 <style>
 *{
@@ -13,77 +13,73 @@ box-sizing:border-box;
 font-family:Arial, sans-serif;
 }
 
+/* Full Screen Background */
 body{
-background:#f4f4f4;
-}
-
-/* Header */
-.header{
-background:#c62828;
-color:white;
-padding:15px;
-text-align:center;
-font-size:22px;
-font-weight:bold;
-}
-
-/* Hero Section */
-.hero{
-position:relative;
-height:300px;
-background:url('images/INDvsZIM.jpg') center/cover no-repeat;
+height:100vh;
+background:url('images/INDvsZIM.jpg') no-repeat center center;
+background-size:cover;
 display:flex;
-align-items:center;
-justify-content:center;
+flex-direction:column;
+justify-content:space-between;
 color:white;
 }
 
-.hero::after{
+/* Dark Overlay */
+body::before{
 content:"";
-position:absolute;
+position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
 background:rgba(0,0,0,0.65);
+z-index:-1;
 }
 
-.hero-content{
-position:relative;
-z-index:1;
+/* Top Header Transparent */
+.header{
+position:absolute;
+top:0;
+width:100%;
+padding:18px;
 text-align:center;
+font-size:20px;
+font-weight:bold;
+background:rgba(0,0,0,0.4);
+backdrop-filter:blur(6px);
 }
 
-.hero-content h1{
-font-size:32px;
+/* Center Content */
+.center-content{
+flex:1;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+}
+
+.center-content h1{
+font-size:34px;
 margin-bottom:10px;
 }
 
-.hero-content p{
+.center-content p{
 font-size:16px;
 opacity:0.9;
+margin-bottom:25px;
 }
 
-/* Countdown Section */
-.countdown-section{
-background:white;
-max-width:900px;
-margin:-40px auto 20px;
-padding:30px;
-border-left:6px solid #c62828;
-box-shadow:0 4px 15px rgba(0,0,0,0.1);
-text-align:center;
-}
-
+/* Timer */
 .timer{
-font-size:36px;
+font-size:42px;
 font-weight:bold;
-color:#c62828;
-margin-top:10px;
+color:#ff5252;
 }
 
 .live{
-color:red;
+color:#ff1744;
 font-weight:bold;
 animation:blink 1s infinite;
 }
@@ -94,27 +90,18 @@ animation:blink 1s infinite;
 100%{opacity:1;}
 }
 
-/* Content Section */
-.container{
-max-width:900px;
-margin:20px auto;
+/* Bottom Info Section */
+.bottom-section{
 background:white;
-padding:20px;
-box-shadow:0 2px 10px rgba(0,0,0,0.1);
+color:#333;
+padding:25px;
+border-top-left-radius:20px;
+border-top-right-radius:20px;
 }
 
-h2{
+.bottom-section h2{
 color:#c62828;
 margin-bottom:10px;
-}
-
-/* Footer */
-.footer{
-background:#222;
-color:#ccc;
-text-align:center;
-padding:15px;
-margin-top:30px;
 }
 </style>
 
@@ -126,35 +113,19 @@ margin-top:30px;
 THE BIHAR UPDATE
 </div>
 
-<div class="hero">
-<div class="hero-content">
+<div class="center-content">
 <h1>IND vs ZIM</h1>
 <p>T20 International Clash</p>
-</div>
-</div>
 
-<div class="countdown-section">
-<p>Match Starts In:</p>
 <div id="countdown" class="timer">Loading...</div>
 </div>
 
-<div class="container">
-
+<div class="bottom-section">
 <h2>मैच का पूर्वावलोकन</h2>
 <p>
-भारत और जिम्बाब्वे के बीच होने वाला मुकाबला बेहद रोमांचक रहेगा।
+भारत और जिम्बाब्वे के बीच होने वाला मुकाबला बेहद रोमांचक रहने वाला है।
 दोनों टीमें जीत के इरादे से मैदान में उतरेंगी।
 </p>
-
-<h2>पिच रिपोर्ट</h2>
-<p>
-पिच बल्लेबाजों के लिए मददगार मानी जा रही है, हालांकि शुरुआती ओवरों में तेज गेंदबाजों को स्विंग मिल सकती है।
-</p>
-
-</div>
-
-<div class="footer">
-© 2026 The Bihar Update. All Rights Reserved.
 </div>
 
 <script>
