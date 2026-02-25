@@ -874,7 +874,12 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 <!-- PAGINATION SCRIPT START -->
-
+<script>
+document.querySelectorAll("img").forEach(img=>{
+  img.setAttribute("loading","lazy");
+  img.setAttribute("decoding","async");
+});
+</script>
 <!-- PAGINATION SCRIPT END -->
 </body>
 </html>
