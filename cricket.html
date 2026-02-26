@@ -1,156 +1,126 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IND vs ZIM Live | The Bihar Update</title>
+<title>IND vs ZIM Live</title>
 
 <style>
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:Arial, sans-serif;
 }
 
 body{
-  background:#000;
-  color:#fff;
-  overflow-x:hidden;
-}
-
-/* ===== Header ===== */
-.header{
-  position:absolute;
-  top:0;
-  width:100%;
-  text-align:center;
-  padding:18px 0;
-  font-size:22px;
-  font-weight:bold;
-  letter-spacing:1px;
-  background:rgba(0,0,0,0.6);
-  z-index:10;
-}
-
-/* ===== Hero Section ===== */
-.hero{
   height:100vh;
-  width:100%;
-  background:
-  linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7)),
-  url("images/INDvsZIM.jpg") center center / cover no-repeat;
   display:flex;
   justify-content:center;
   align-items:center;
+  background:url("images/INDvsZIM.jpg") no-repeat center center;
+  background-size:cover;
+  position:relative;
+}
+
+body::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.65);
+}
+
+.live-box{
+  position:relative;
+  background:rgba(0,0,0,0.6);
+  padding:40px 60px;
+  border-radius:20px;
   text-align:center;
-  padding:20px;
+  color:#fff;
+  backdrop-filter:blur(8px);
+  box-shadow:0 0 40px rgba(0,0,0,0.5);
+  min-width:300px;
 }
 
-.hero-content h1{
-  font-size:42px;
-  margin-bottom:10px;
-}
-
-.hero-content p{
-  font-size:18px;
-  opacity:0.9;
-}
-
-#countdown{
-  margin-top:25px;
-  font-size:40px;
+.score{
+  font-size:26px;
   font-weight:bold;
-  color:#ff3b3b;
+  margin:10px 0;
 }
 
-/* ===== Content Section ===== */
-.content{
-  background:#f4f4f4;
-  color:#111;
-  padding:40px 20px;
-  border-top-left-radius:30px;
-  border-top-right-radius:30px;
-  margin-top:-40px;
+.live{
+  margin-top:15px;
+  display:inline-block;
+  padding:8px 20px;
+  background:#ff0000;
+  border-radius:30px;
+  font-size:14px;
+  font-weight:bold;
+  letter-spacing:1px;
+  animation:pulse 1s infinite;
 }
 
-.content h2{
-  color:#c62828;
-  margin-bottom:15px;
-}
-
-.content p{
-  line-height:1.6;
-  margin-bottom:15px;
-}
-
-/* Responsive */
-@media(max-width:600px){
-  .hero-content h1{
-    font-size:30px;
-  }
-  #countdown{
-    font-size:30px;
-  }
+@keyframes pulse{
+  0%{opacity:1;}
+  50%{opacity:0.6;}
+  100%{opacity:1;}
 }
 </style>
 </head>
-
 <body>
 
-<div class="header">
-THE BIHAR UPDATE
+<div class="live-box">
+  <div class="score" id="score1">Loading...</div>
+  <div class="score" id="score2"></div>
+  <div class="live">LIVE</div>
 </div>
-
-<section class="hero">
-  <div class="hero-content">
-      <h1>IND vs ZIM</h1>
-      <p>T20 International Clash</p>
-      <div id="countdown">Loading...</div>
-  </div>
-</section>
-
-<section class="content">
-  <h2>मैच का पूर्वावलोकन</h2>
-  <p>
-  भारत और जिम्बाब्वे के बीच होने वाला मुकाबला बेहद रोमांचक रहेगा।
-  दोनों टीमें जीत के इरादे से मैदान में उतरेंगी।
-  </p>
-
-  <h2>पिच रिपोर्ट</h2>
-  <p>
-  चेन्नई की पिच बल्लेबाज़ों के लिए अनुकूल मानी जाती है,
-  हालांकि शुरुआती ओवरों में तेज गेंदबाज़ों को मदद मिल सकती है।
-  </p>
-</section>
 
 <script>
 
-// ✅ Proper IST-safe Date (Year, Month-1, Date, Hour, Min, Sec)
-// 26 February 2026, 7:00 PM
-const matchDate = new Date(2026, 1, 26, 19, 0, 0).getTime();
+const API_KEY = "YOUR_API_KEY"; // 👈 yaha apna key daalo
 
-const timer = setInterval(function(){
+async function fetchScore(){
+  try{
+    const response = await fetch(
+      `https://api.cricapi.com/v1/currentMatches?apikey=${API_KEY}&offset=0`
+    );
 
-  const now = new Date().getTime();
-  const distance = matchDate - now;
+    const data = await response.json();
 
-  if(distance <= 0){
-    document.getElementById("countdown").innerHTML = "MATCH STARTED";
-    clearInterval(timer);
-    return;
+    if(!data.data) throw new Error("No data");
+
+    const match = data.data.find(m =>
+      m.teams.includes("India") &&
+      m.teams.includes("Zimbabwe")
+    );
+
+    if(!match){
+      document.getElementById("score1").innerText = "Match not live";
+      document.getElementById("score2").innerText = "";
+      return;
+    }
+
+    const score = match.score;
+
+    document.getElementById("score1").innerText =
+      match.teams[0] + " " +
+      score[0]?.r + "/" + score[0]?.w +
+      " (" + score[0]?.o + ")";
+
+    document.getElementById("score2").innerText =
+      match.teams[1] + " " +
+      score[1]?.r + "/" + score[1]?.w +
+      " (" + score[1]?.o + ")";
+
+  }catch(err){
+    document.getElementById("score1").innerText = "Error loading";
+    document.getElementById("score2").innerText = "";
+    console.log(err);
   }
+}
 
-  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
-  const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
-  const seconds = Math.floor((distance % (1000*60)) / 1000);
-
-  document.getElementById("countdown").innerHTML =
-    (days > 0 ? days + "d " : "") +
-    hours + "h " + minutes + "m " + seconds + "s ";
-
-},1000);
+fetchScore();
+setInterval(fetchScore,120000); // 15 sec refresh
 
 </script>
 
