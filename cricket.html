@@ -118,40 +118,52 @@ p{
   <p>T20 World Cup Match – 1 March 2026</p>
   <p>Venue: Eden Gardens Stadium, Kolkata</p>
 
-  <div id="countdown">Loading countdown...</div>
-
-  <div class="status" id="matchStatus">UPCOMING</div>
-</div>
+  <div id="score1">Loading score...</div>
+<div id="score2"></div>
 
 <script>
-const matchDate = new Date("March 1, 2026 19:00:00").getTime();
-const countdownElement = document.getElementById("countdown");
-const statusElement = document.getElementById("matchStatus");
+async function loadScore(){
+  try{
+    const res = await fetch("/api/score");
+    const json = await res.json();
 
-const timer = setInterval(function(){
-  const now = new Date().getTime();
-  const distance = matchDate - now;
+    if(!json.data){
+      document.getElementById("score1").innerHTML="No live match";
+      return;
+    }
 
-  if(distance < 0){
-    clearInterval(timer);
-    countdownElement.innerHTML = "Match is LIVE now!";
-    statusElement.innerHTML = "LIVE";
-    statusElement.style.background = "#00c853";
-    return;
+    const match = json.data.find(m =>
+      m.name && m.name.includes("India") && m.name.includes("West Indies")
+    );
+
+    if(!match){
+      document.getElementById("score1").innerHTML="Match not live";
+      return;
+    }
+
+    if(!match.score || match.score.length < 1){
+      document.getElementById("score1").innerHTML="Score updating...";
+      return;
+    }
+
+    const t1 = match.score[0];
+    const t2 = match.score[1];
+
+    document.getElementById("score1").innerHTML =
+      match.teams[0] + " " + t1.r + "/" + t1.w + " (" + t1.o + ")";
+
+    if(t2){
+      document.getElementById("score2").innerHTML =
+        match.teams[1] + " " + t2.r + "/" + t2.w + " (" + t2.o + ")";
+    }
+
+  }catch(e){
+    document.getElementById("score1").innerHTML="Error loading score";
   }
+}
 
-  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-  countdownElement.innerHTML =
-    days + "d " +
-    hours + "h " +
-    minutes + "m " +
-    seconds + "s";
-
-}, 1000);
+loadScore();
+setInterval(loadScore,15000);
 </script>
 
 </body>
