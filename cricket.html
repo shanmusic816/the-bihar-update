@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IND vs WI Live Match | The Bihar Update</title>
-
-<meta name="description" content="India vs West Indies live match countdown, schedule and updates. Stay tuned for IND vs WI T20 World Cup match.">
+<title>IND Live Match</title>
 
 <style>
 *{
@@ -15,111 +13,73 @@
   font-family:Arial, sans-serif;
 }
 
-/* NAVBAR */
-header{
-  position:fixed;
-  top:0;
-  width:100%;
-  background:#c62828;
-  padding:15px 0;
-  text-align:center;
-  z-index:1000;
-}
-
-header h1{
-  color:#fff;
-  font-size:20px;
-  margin-bottom:5px;
-}
-
-nav a{
-  color:#fff;
-  text-decoration:none;
-  margin:0 12px;
-  font-size:14px;
-  font-weight:bold;
-}
-
-nav a:hover{
-  text-decoration:underline;
-}
-
-/* BODY */
 body{
-  min-height:100vh;
-  background:url("images/ind-vs-wi-2026.jpg") no-repeat center center;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:url("images/ind-vs-wi-2026.jpg") no-repeat center center fixed;
   background-size:cover;
   position:relative;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding-top:90px; /* space for navbar */
 }
 
 body::before{
   content:"";
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,0.65);
+  background:rgba(0,0,0,0.7);
 }
 
-.container{
+.live-box{
   position:relative;
   background:rgba(0,0,0,0.75);
-  padding:40px;
-  border-radius:12px;
-  max-width:700px;
-  width:90%;
+  padding:50px 70px;
+  border-radius:25px;
   text-align:center;
+  color:#fff;
+  min-width:350px;
+  box-shadow:0 0 50px rgba(0,0,0,0.8);
 }
 
-h2{
-  font-size:28px;
-  margin-bottom:10px;
+h1{
+  font-size:26px;
+  margin-bottom:25px;
 }
 
-p{
-  font-size:16px;
-  line-height:1.6;
-  margin-top:10px;
-}
-
-#countdown{
-  font-size:22px;
+.score{
+  font-size:24px;
   font-weight:bold;
+  margin:12px 0;
+}
+
+.live{
   margin-top:20px;
+  display:inline-block;
+  padding:10px 25px;
+  background:#ff0000;
+  border-radius:40px;
+  font-size:14px;
+  font-weight:bold;
+  letter-spacing:1px;
+  animation:pulse 1s infinite;
 }
 
-.status{
-  margin-top:15px;
-  padding:8px 20px;
-  display:inline-block;
-  background:#ff0000;
-  border-radius:20px;
-  font-weight:bold;
+@keyframes pulse{
+  0%{opacity:1;}
+  50%{opacity:0.5;}
+  100%{opacity:1;}
 }
 </style>
 </head>
+
 <body>
 
-<header>
-  <h1>The Bihar Update</h1>
-  <nav>
-    <a href="/">Home</a>
-    <a href="/about.html">About</a>
-    <a href="/contact.html">Contact</a>
-    <a href="/privacy.html">Privacy Policy</a>
-  </nav>
-</header>
-
-<div class="container">
-  <h2>India vs West Indies</h2>
-  <p>T20 World Cup Match – 1 March 2026</p>
-  <p>Venue: Eden Gardens Stadium, Kolkata</p>
-
-  <div id="score1">Loading score...</div>
-<div id="score2"></div>
+<div class="live-box">
+  <h1>India Live Match</h1>
+  <div class="score" id="score1">Loading score...</div>
+  <div class="score" id="score2"></div>
+  <div class="live">LIVE</div>
+</div>
 
 <script>
 async function loadScore(){
@@ -132,12 +92,13 @@ async function loadScore(){
       return;
     }
 
+    // India wala match find karega automatically
     const match = json.data.find(m =>
-      m.name && m.name.includes("India") && m.name.includes("West Indies")
+      m.name && m.name.toLowerCase().includes("india")
     );
 
     if(!match){
-      document.getElementById("score1").innerHTML="Match not live";
+      document.getElementById("score1").innerHTML="India match not live";
       return;
     }
 
