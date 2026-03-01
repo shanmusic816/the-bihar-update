@@ -92,10 +92,9 @@ async function loadScore(){
     }
 
     // India match detect karega automatically
-    const match = json.data.find(m =>
-      m.name && (m.name.includes("IND") || m.name.includes("India"))
-    );
-
+ const match = json.data.find(m =>
+  m.teams && (m.teams.includes("India") || m.teams.includes("IND"))
+);
     if(!match){
       document.getElementById("score1").innerHTML="India match not live";
       return;
