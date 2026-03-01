@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IND Live Match</title>
+<title>India Live Match</title>
 
 <style>
 *{
@@ -27,22 +27,22 @@ body::before{
   content:"";
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,0.7);
+  background:rgba(0,0,0,0.75);
 }
 
 .live-box{
   position:relative;
-  background:rgba(0,0,0,0.75);
+  background:rgba(0,0,0,0.8);
   padding:50px 70px;
-  border-radius:25px;
+  border-radius:20px;
   text-align:center;
   color:#fff;
   min-width:350px;
-  box-shadow:0 0 50px rgba(0,0,0,0.8);
+  box-shadow:0 0 40px rgba(0,0,0,0.7);
 }
 
 h1{
-  font-size:26px;
+  font-size:28px;
   margin-bottom:25px;
 }
 
@@ -55,18 +55,17 @@ h1{
 .live{
   margin-top:20px;
   display:inline-block;
-  padding:10px 25px;
+  padding:8px 20px;
   background:#ff0000;
   border-radius:40px;
   font-size:14px;
   font-weight:bold;
-  letter-spacing:1px;
   animation:pulse 1s infinite;
 }
 
 @keyframes pulse{
   0%{opacity:1;}
-  50%{opacity:0.5;}
+  50%{opacity:0.6;}
   100%{opacity:1;}
 }
 </style>
@@ -87,14 +86,14 @@ async function loadScore(){
     const res = await fetch("/api/score");
     const json = await res.json();
 
-    if(!json.data){
+    if(!json.data || json.data.length === 0){
       document.getElementById("score1").innerHTML="No live match";
       return;
     }
 
-    // India wala match find karega automatically
+    // India match detect karega automatically
     const match = json.data.find(m =>
-      m.name && m.name.toLowerCase().includes("india")
+      m.name && (m.name.includes("IND") || m.name.includes("India"))
     );
 
     if(!match){
@@ -102,7 +101,7 @@ async function loadScore(){
       return;
     }
 
-    if(!match.score || match.score.length < 1){
+    if(!match.score || match.score.length === 0){
       document.getElementById("score1").innerHTML="Score updating...";
       return;
     }
@@ -111,11 +110,11 @@ async function loadScore(){
     const t2 = match.score[1];
 
     document.getElementById("score1").innerHTML =
-      match.teams[0] + " " + t1.r + "/" + t1.w + " (" + t1.o + ")";
+      match.teams[0] + " " + t1.r + "/" + t1.w + " (" + t1.o + " ov)";
 
     if(t2){
       document.getElementById("score2").innerHTML =
-        match.teams[1] + " " + t2.r + "/" + t2.w + " (" + t2.o + ")";
+        match.teams[1] + " " + t2.r + "/" + t2.w + " (" + t2.o + " ov)";
     }
 
   }catch(e){
