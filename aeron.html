@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+  <header class="border-b border-gray-800 p-4 flex items-center gap-3">
+
+<div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center font-bold">
+AI
+</div>
+
+<div>
+<div class="text-lg font-semibold">Aeron AI</div>
+<div class="text-xs text-gray-400">Built by Shan</div>
+</div>
+
+</header>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,33 +21,76 @@
 <title>Aeron AI</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+
+body{
+background:#0f0f0f;
+color:white;
+font-family:sans-serif;
+}
+
+.chat-scroll::-webkit-scrollbar{
+width:6px;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb{
+background:#444;
+border-radius:10px;
+}
+
+.typing{
+opacity:0.6;
+}
+
+  .message{
+animation:fadeUp 0.3s ease;
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(10px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+  
+</style>
 
 </head>
 
-<body class="bg-[#212121] text-gray-100 font-sans">
+<body>
 
-<div class="flex h-screen">
+<div class="flex h-screen overflow-hidden">
 
 <!-- Sidebar -->
 
-<aside class="w-64 bg-[#171717] p-4 hidden md:flex flex-col">
+<aside class="w-64 bg-[#111] p-4 flex flex-col">
 
 <button onclick="newChat()"
-class="flex items-center gap-3 border border-gray-600 rounded-lg p-3 hover:bg-[#2f2f2f]">
+class="border border-gray-700 rounded-lg p-3 mb-4 hover:bg-[#1c1c1c]">
 
-<i class="fa-solid fa-plus text-sm"></i>
-<span class="text-sm font-medium">New Chat</span>
++ New Chat
 
 </button>
 
 <div id="history"
-class="mt-6 space-y-2 overflow-y-auto flex-1"></div>
+class="space-y-2 overflow-y-auto flex-1"></div>
 
-<div class="text-xs text-gray-500 pt-4">
+<div class="pt-4 border-t border-gray-800">
+
+<div class="text-sm font-semibold">
+Aeron AI
+</div>
+
+<div class="text-xs text-gray-400">
 Built by Shan
+</div>
+
 </div>
 
 </aside>
@@ -43,62 +99,40 @@ Built by Shan
 
 <main class="flex-1 flex flex-col">
 
-<!-- Header -->
+<header class="border-b border-gray-800 p-4 flex items-center gap-3">
 
-<header class="flex items-center justify-between px-6 py-4 border-b border-gray-700 bg-[#171717]">
-
-<div class="flex items-center gap-3">
-
-<div class="w-9 h-9 rounded-xl bg-gradient-to-r from-purple-500 to-teal-400 flex items-center justify-center font-bold text-sm">
+<div class="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center font-bold">
 AI
 </div>
 
-<div class="flex flex-col leading-tight">
-<span class="font-semibold text-sm tracking-wide">Aeron AI</span>
-<span class="text-xs text-gray-400">Built by Shan</span>
+<div>
+
+<div class="font-semibold text-lg">
+Aeron AI
+</div>
+
+<div class="text-xs text-gray-400">
+Built by Shan
 </div>
 
 </div>
 
 </header>
 
-<!-- Chat -->
-
 <div id="chat"
-class="flex-1 overflow-y-auto p-6 space-y-6">
+class="flex-1 overflow-y-auto p-4 space-y-4 max-w-3xl mx-auto w-full chat-scroll"></div>
 
-<div class="flex gap-4 max-w-3xl mx-auto">
+<div class="border-t border-gray-800 p-4 bg-[#0f0f0f]">
 
-<div class="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-xs">
-AI
-</div>
-
-<div>Hello! Main Aeron AI hoon. Main aapki kaise madad kar sakta hoon?</div>
-
-</div>
-
-</div>
-
-<!-- Input -->
-
-<div class="p-6 border-t border-gray-700">
-
-<div class="max-w-3xl mx-auto relative">
+<div class="flex gap-2 max-w-3xl mx-auto">
 
 <textarea id="msg"
-
-class="w-full bg-[#2f2f2f] border border-gray-600 rounded-2xl p-4 pr-12 focus:outline-none resize-none"
-
 placeholder="Ask Aeron AI..."
-
-rows="1"></textarea>
+class="flex-1 bg-[#1c1c1c] p-3 rounded-xl resize-none border border-gray-700"></textarea>
 
 <button onclick="sendMessage()"
-
-class="absolute right-3 bottom-3 p-2 bg-gradient-to-r from-purple-500 to-teal-400 text-white rounded-lg hover:opacity-90">
-
-<i class="fa-solid fa-arrow-up"></i>
-
+class="bg-purple-600 px-5 rounded-xl transition transform hover:scale-105 hover:bg-purple-700">
+Send
 </button>
 
 </div>
@@ -108,46 +142,51 @@ class="absolute right-3 bottom-3 p-2 bg-gradient-to-r from-purple-500 to-teal-40
 </main>
 
 </div>
+  <script>
 
-<script>
-
-let chats = []
+let chats = JSON.parse(localStorage.getItem("aeron_chats") || "[]")
 
 let currentChat = []
 
-function newChat(){
-
-if(currentChat.length > 0){
-
-chats.push(currentChat)
+let lastUserMessage = ""
 
 renderHistory()
 
+function saveChats(){
+localStorage.setItem("aeron_chats", JSON.stringify(chats))
 }
 
-currentChat = []
+function newChat(){
 
+if(currentChat.length){
+chats.push(currentChat)
+saveChats()
+renderHistory()
+}
+
+currentChat=[]
 document.getElementById("chat").innerHTML=""
 
 }
 
 function renderHistory(){
 
-let history = document.getElementById("history")
-
+let history=document.getElementById("history")
 history.innerHTML=""
 
 chats.forEach((chat,i)=>{
 
-let item=document.createElement("div")
+let title = chat[0]?.text?.slice(0,30) || "New Chat"
 
-item.className="text-sm p-2 hover:bg-[#2f2f2f] rounded cursor-pointer truncate"
+let div=document.createElement("div")
 
-item.innerText="Chat "+(i+1)
+div.className="p-2 bg-[#1c1c1c] rounded cursor-pointer hover:bg-[#2a2a2a]"
 
-item.onclick=()=>loadChat(i)
+div.innerText=title
 
-history.appendChild(item)
+div.onclick=()=>loadChat(i)
+
+history.appendChild(div)
 
 })
 
@@ -155,16 +194,13 @@ history.appendChild(item)
 
 function loadChat(i){
 
-currentChat = chats[i]
+currentChat=chats[i]
 
-let chatBox=document.getElementById("chat")
-
-chatBox.innerHTML=""
+let chat=document.getElementById("chat")
+chat.innerHTML=""
 
 currentChat.forEach(m=>{
-
 addMessage(m.text,m.type,false)
-
 })
 
 }
@@ -173,99 +209,26 @@ function addMessage(text,type,save=true){
 
 let chat=document.getElementById("chat")
 
-let div=document.createElement("div")
+<div class="border-t border-gray-800 p-4 bg-[#0f0f0f]">
 
-if(type==="user"){
+<div class="flex gap-2 max-w-3xl mx-auto">
 
-div.className="flex gap-4 max-w-3xl mx-auto flex-row-reverse"
+<textarea id="msg"
+placeholder="Ask Aeron AI..."
+class="flex-1 bg-[#1c1c1c] p-3 rounded-xl resize-none border border-gray-700"></textarea>
 
-div.innerHTML=`
+<button onclick="sendMessage()"
+class="bg-purple-600 px-5 rounded-xl hover:bg-purple-700 text-white">
+Send
+</button>
 
-<div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-xs">U</div>
+</div>
 
-<div class="bg-[#2f2f2f] p-3 rounded-2xl max-w-[80%]">${text}</div>
+</div>
+  
+  document.getElementById("msg").addEventListener("keydown",function(e){
 
-`
-
-}
-
-else{
-
-div.className="flex gap-4 max-w-3xl mx-auto"
-
-div.innerHTML=`
-
-<div class="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-xs">AI</div>
-
-<div>${text}</div>
-
-`
-
-}
-
-chat.appendChild(div)
-
-chat.scrollTop=chat.scrollHeight
-
-if(save){
-
-currentChat.push({text,type})
-
-}
-
-}
-
-async function sendMessage(){
-
-let input=document.getElementById("msg")
-
-let message=input.value.trim()
-
-if(message==="") return
-
-addMessage(message,"user")
-
-input.value=""
-
-try{
-
-let res=await fetch("/api/chat",{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":"application/json"
-
-},
-
-body:JSON.stringify({
-
-message:message
-
-})
-
-})
-
-let data=await res.json()
-
-let reply=data.choices[0].message.content
-
-addMessage(reply,"ai")
-
-}
-
-catch{
-
-addMessage("AI server error","ai")
-
-}
-
-}
-
-document.getElementById("msg").addEventListener("keypress",function(e){
-
-if(e.key==="Enter"){
+if(e.key==="Enter" && !e.shiftKey){
 
 e.preventDefault()
 
@@ -275,7 +238,296 @@ sendMessage()
 
 })
 
-</script>
+if(type==="user"){
 
+div.innerHTML=`
+<div style="text-align:right">
+<div style="
+background:linear-gradient(45deg,#7c3aed,#9333ea);
+padding:10px;
+border-radius:12px;
+display:inline-block;
+max-width:80%;
+">
+${text}
+</div>
+</div>
+`
+
+}else{
+
+div.innerHTML=`
+<div>
+<div style="
+background:#1c1c1c;
+border:1px solid #2a2a2a;
+padding:12px;
+border-radius:12px;
+max-width:80%;
+">
+
+${marked.parse(text)}
+
+<div style="margin-top:6px;font-size:12px">
+
+<button onclick="navigator.clipboard.writeText(\`${text}\`)">
+Copy
+</button>
+
+<button onclick="regenerate()">
+Regenerate
+</button>
+
+</div>
+
+</div>
+</div>
+`
+
+}
+
+chat.appendChild(div)
+chat.scrollTop=chat.scrollHeight
+
+if(save){
+currentChat.push({text,type})
+}
+
+}
+
+function typing(){
+
+return `
+<div class="typing-dots">
+<span></span><span></span><span></span>
+</div>
+`
+
+}
+  .typing-dots span{
+display:inline-block;
+width:6px;
+height:6px;
+margin:0 2px;
+background:white;
+border-radius:50%;
+animation:blink 1.4s infinite both;
+}
+
+.typing-dots span:nth-child(2){
+animation-delay:0.2s;
+}
+
+.typing-dots span:nth-child(3){
+animation-delay:0.4s;
+}
+
+
+
+async function regenerate(){
+
+if(!lastUserMessage) return
+
+addMessage(typing(),"ai",false)
+
+let res=await fetch("/api/chat",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({message:lastUserMessage})
+})
+
+let data=await res.json()
+
+document.querySelector("#chat").lastChild.remove()
+
+let reply=data?.choices?.[0]?.message?.content || "AI reply unavailable"
+
+addMessage(reply,"ai")
+
+}
+
+document.getElementById("msg").addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+e.preventDefault()
+sendMessage()
+}
+
+})
+async function sendMessage(){
+
+let input=document.getElementById("msg")
+let message=input.value.trim()
+
+if(!message) return
+
+lastUserMessage=message
+
+addMessage(message,"user")
+
+input.value=""
+
+addMessage(typing(),"ai",false)
+
+try{
+
+let res=await fetch("/api/chat",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({message})
+})
+
+let data=await res.json()
+
+document.querySelector("#chat").lastChild.remove()
+
+let reply=data?.choices?.[0]?.message?.content || "AI reply unavailable"
+
+addMessage(reply,"ai")
+
+}catch{
+
+document.querySelector("#chat").lastChild.remove()
+
+addMessage("AI server error","ai")
+
+}
+
+}
+  document.getElementById("sendBtn").addEventListener("click", sendMessage);
+async function sendMessage(){
+
+let input=document.getElementById("msg")
+
+let message=input.value.trim()
+
+if(!message) return
+
+addMessage(message,"user")
+
+input.value=""
+
+addMessage("Typing...","ai",false)
+
+try{
+
+let res=await fetch("/api/chat",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({message})
+})
+
+let data=await res.json()
+
+document.querySelector("#chat").lastChild.remove()
+
+let reply=data?.choices?.[0]?.message?.content || "AI reply unavailable"
+
+addMessage(reply,"ai")
+
+}catch{
+
+document.querySelector("#chat").lastChild.remove()
+
+addMessage("AI server error","ai")
+
+}
+
+}
+</script>
+  <script>
+
+function addMessage(text,type){
+
+let chat=document.getElementById("chat")
+
+let div=document.createElement("div")
+
+if(type==="user"){
+
+div.innerHTML="<div style='text-align:right'><div style='background:#7c3aed;padding:10px;border-radius:10px;display:inline-block'>"+text+"</div></div>"
+
+}else{
+
+div.innerHTML="<div><div style='background:#1c1c1c;padding:10px;border-radius:10px'>"+text+"</div></div>"
+
+}
+
+chat.appendChild(div)
+
+chat.scrollTop=chat.scrollHeight
+
+}
+
+async function sendMessage(){
+
+let input=document.getElementById("msg")
+
+let message=input.value.trim()
+
+if(!message) return
+
+addMessage(message,"user")
+
+input.value=""
+
+addMessage("Typing...","ai")
+
+try{
+
+let res=await fetch("https://thebiharupdate.vercel.app/api/chat",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({message:message})
+
+})
+
+let data=await res.json()
+
+document.querySelector("#chat").lastChild.remove()
+
+let reply=data?.choices?.[0]?.message?.content || "AI reply unavailable"
+
+addMessage(reply,"ai")
+
+}catch{
+
+document.querySelector("#chat").lastChild.remove()
+
+addMessage("AI server error","ai")
+
+}
+
+}
+
+document.getElementById("msg").addEventListener("keydown",function(e){
+
+if(e.key==="Enter" && !e.shiftKey){
+
+e.preventDefault()
+
+sendMessage()
+
+}
+
+})
+
+  msg.addEventListener("input",()=>{
+msg.style.height="auto"
+msg.style.height=(msg.scrollHeight)+"px"
+})
+  
+</script>
 </body>
 </html>
