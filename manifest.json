@@ -1,0 +1,20 @@
+{
+"name": "Aeron AI",
+"short_name": "Aeron",
+"start_url": "/aeron.html",
+"display": "standalone",
+"background_color": "#0f0f0f",
+"theme_color": "#7c3aed",
+"icons": [
+{
+"src": "/icon.png",
+"sizes": "192x192",
+"type": "image/png"
+},
+{
+"src": "/aeron.png",
+"sizes": "512x512",
+"type": "image/png"
+}
+]
+}
