@@ -11,10 +11,11 @@ headers: {
 "Content-Type": "application/json"
 },
 body: JSON.stringify({
-model: "meta/llama3-70b-instruct",
+model: "meta/llama3-8b-instruct",
 messages: [
 { role: "user", content: "Hello" }
-]
+],
+max_tokens: 200
 })
 }
 );
