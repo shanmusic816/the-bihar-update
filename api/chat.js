@@ -1,8 +1,10 @@
 export default async function handler(req, res) {
 
+try {
+
 const API_KEY = "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";
 
-const { message } = req.body;
+const body = req.body ? req.body : { message: "Hello" };
 
 const response = await fetch(
 "https://integrate.api.nvidia.com/v1/chat/completions",
@@ -15,7 +17,7 @@ headers: {
 body: JSON.stringify({
 model: "meta/llama3-8b-instruct",
 messages: [
-{ role: "user", content: message }
+{ role: "user", content: body.message }
 ],
 max_tokens: 200
 })
@@ -25,5 +27,16 @@ max_tokens: 200
 const data = await response.json();
 
 res.status(200).json(data);
+
+}
+
+catch(error){
+
+res.status(500).json({
+error:"AI Server Error",
+details:error.toString()
+})
+
+}
 
 }
