@@ -6,7 +6,7 @@ return res.status(405).json({ error: "Only POST allowed" });
 
 try {
 
-const API_KEY = "c36f28a6-9bf1-40f5-afd2-7bfd21145982";
+const API_KEY = "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";
 
 const message = req.body?.message || "Hello";
 
