@@ -2,6 +2,8 @@ export default async function handler(req, res) {
 
 const API_KEY = "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";
 
+const { message } = req.body;
+
 const response = await fetch(
 "https://integrate.api.nvidia.com/v1/chat/completions",
 {
@@ -13,7 +15,7 @@ headers: {
 body: JSON.stringify({
 model: "meta/llama3-8b-instruct",
 messages: [
-{ role: "user", content: "Hello from Aeron AI" }
+{ role: "user", content: message }
 ],
 max_tokens: 200
 })
