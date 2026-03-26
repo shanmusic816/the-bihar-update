@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBL Admin | Tournament Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Yahan apna Firebase Config dalein
+        const firebaseConfig = {
+            apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw",
+            authDomain: "tournament-app-b77c0.firebaseapp.com",
+            projectId: "tournament-app-b77c0",
+            storageBucket: "tournament-app-b77c0.firebasestorage.app",
+            messagingSenderId: "925200484535",
+            appId: "1:925200484535:web:c15c87fcecb5e793bca532"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+// Updated Login Logic with Admin Check
+window.adminLogin = async () => {
+    const e = document.getElementById('ae').value;
+    const p = document.getElementById('ap').value;
+    try {
+        const res = await signInWithEmailAndPassword(auth, e, p);
+        const userDoc = await getDoc(doc(db, "users", res.user.uid));
+
+        if (userDoc.exists() && userDoc.data().role === 'admin') {
+            // Agar Admin hai toh dashboard dikhao
+            document.getElementById('admin-login').style.display = 'none';
+            document.getElementById('admin-dash').style.display = 'block';
+            listenTournaments();
+        } else {
+            // Agar Admin nahi hai toh Logout kar do
+            alert("Access Denied: You are not authorized as Admin!");
+            await signOut(auth);
+        }
+    } catch (err) {
+        alert("Login Error: " + err.message);
+    }
+};
+
+// Auth Status Change
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists() && userDoc.data().role === 'admin') {
+            document.getElementById('admin-login').style.display = 'none';
+            document.getElementById('admin-dash').style.display = 'block';
+            listenTournaments();
+        } else {
+            document.getElementById('admin-login').style.display = 'block';
+            document.getElementById('admin-dash').style.display = 'none';
+        }
+    } else {
+        document.getElementById('admin-login').style.display = 'block';
+        document.getElementById('admin-dash').style.display = 'none';
+    }
+});
+
+
+        // Create Tournament Logic
+        window.saveTournament = async () => {
+            const title = document.getElementById('t-title').value;
+            const fee = document.getElementById('t-fee').value;
+            const prize = document.getElementById('t-prize').value;
+            const time = document.getElementById('t-time').value;
+
+            if(!title || !fee) return alert("Please fill details");
+
+            try {
+                await addDoc(collection(db, "tournaments"), {
+                    title: title,
+                    fee: parseInt(fee),
+                    pool: prize,
+                    time: time,
+                    filled: 0,
+                    total: 100,
+                    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400"
+                });
+                alert("Tournament Created Successfully!");
+                document.getElementById('t-form').reset();
+            } catch(e) { alert(e.message); }
+        };
+
+        // Real-time List
+        function listenTournaments() {
+            onSnapshot(collection(db, "tournaments"), (snap) => {
+                const list = document.getElementById('admin-t-list');
+                list.innerHTML = '';
+                snap.forEach(d => {
+                    const t = d.data();
+                  // Tournament List display loop ke andar ye button daalein
+list.innerHTML += `
+    <div class="t-card" style="border-left: 5px solid #f59e0b;">
+        <div>
+            <strong>${t.title}</strong><br>
+            <small>Status: ${t.status || 'Pending'}</small>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <button onclick="updateRoomDetails('${d.id}')" style="background: #f59e0b; padding: 5px 10px; font-size: 12px;">
+                <i class="fa fa-key"></i> SET ID-PASS
+            </button>
+            <button onclick="deleteT('${d.id}')" style="background:red; padding: 5px 10px;">
+                <i class="fa fa-trash"></i>
+            </button>
+        </div>
+    </div>`;
+
+                    list.innerHTML += `
+                        <div class="t-card">
+                            <div>
+                                <strong>${t.title}</strong><br>
+                                <small>Fee: ₹${t.fee} | Prize: ${t.pool}</small>
+                            </div>
+                            <button onclick="deleteT('${d.id}')" style="background:red; padding:5px 10px;">Delete</button>
+                        </div>`;
+                });
+            });
+        }
+
+        window.deleteT = async (id) => {
+            if(confirm("Delete this tournament?")) await deleteDoc(doc(db, "tournaments", id));
+        };
+
+        window.logout = () => signOut(auth);
+    
+  // Room ID aur Password update karne ka function
+window.updateRoomDetails = async (tournamentId) => {
+    const roomId = prompt("Enter Room ID:");
+    const password = prompt("Enter Room Password:");
+
+    if (roomId && password) {
+        try {
+            const tRef = doc(db, "tournaments", tournamentId);
+            await updateDoc(tRef, {
+                roomId: roomId,
+                password: password,
+                status: "ROOM READY" // Status change takki user ko pata chale
+            });
+            alert("Room ID/Pass successfully updated!");
+        } catch (error) {
+            alert("Error: " + error.message);
+        }
+    } else {
+        alert("Dono cheezein dalna zaroori hai!");
+    }
+};
+
+  </script>
+
+    <style>
+        body { font-family: 'Poppins'; background: #000; color: #fff; margin: 0; padding: 20px; }
+        .container { max-width: 500px; margin: auto; }
+        .card { background: #111; padding: 20px; border-radius: 12px; border: 1px solid #333; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #22c55e; border: none; color: white; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .t-card { background: #1a1a1a; padding: 15px; margin-top: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #22c55e; }
+        h2 { color: #22c55e; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="admin-login" style="text-align: center; margin-top: 50px;">
+            <h1>🛡️ BBL ADMIN</h1>
+            <div class="card">
+                <input id="ae" placeholder="Admin Email">
+                <input id="ap" type="password" placeholder="Password">
+                <button onclick="adminLogin()" style="background: #6366f1;">LOGIN TO DASHBOARD</button>
+            </div>
+        </div>
+
+        <div id="admin-dash" style="display:none">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Admin Panel</h2>
+                <i class="fa fa-sign-out-alt" onclick="logout()" style="cursor:pointer; color: red;"></i>
+            </div>
+
+            <div class="card">
+                <h3>+ Create Tournament</h3>
+                <form id="t-form">
+                    <input id="t-title" placeholder="Game Title (e.g. BGMI Solo)">
+                    <input id="t-fee" type="number" placeholder="Entry Fee (₹)">
+                    <input id="t-prize" placeholder="Prize Pool (₹)">
+                    <input id="t-time" placeholder="Match Time (e.g. 09:00 PM)">
+                </form>
+                <button onclick="saveTournament()">PUBLISH TOURNAMENT</button>
+            </div>
+
+            <h3>Active Tournaments</h3>
+            <div id="admin-t-list">
+                </div>
+        </div>
+    </div>
+</body>
+</html>
