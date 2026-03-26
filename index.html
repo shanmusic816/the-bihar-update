@@ -1,1117 +1,700 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="google-adsense-account" content="ca-pub-9609754282340320">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9609754282304320"
-crossorigin="anonymous"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="./style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Bihari Battle League | User Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BDQ40HBX3S"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+        body {
+            background: linear-gradient(145deg, #0a0f1e 0%, #0b1120 100%);
+            min-height: 100vh;
+            padding: 16px;
+            color: #fff;
+        }
 
-  gtag('config', 'G-BDQ40HBX3S');
-</script>
-  
-<link rel="dns-prefetch" href="//www.googletagmanager.com">
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(12, 20, 30, 0.65);
+            backdrop-filter: blur(3px);
+            border-radius: 40px;
+            padding: 20px 18px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .logo h1 {
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo p {
+            font-size: 0.7rem;
+            color: #7e8c9e;
+        }
+
+        .user-badge {
+            background: #1e2a3e;
+            padding: 8px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .wallet-card {
+            background: linear-gradient(120deg, #0f212e, #07121c);
+            border-radius: 28px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            border: 1px solid #2c3e50;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .balance {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #facc15;
+        }
+
+        .btn {
+            border: none;
+            background: linear-gradient(95deg, #1e3c72, #2b4c7c);
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(95deg, #2d9cdb, #236bf0);
+            box-shadow: 0 5px 12px rgba(45,156,219,0.3);
+        }
+
+        .tournament-card {
+            background: #0f1825;
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 5px solid #2d9cdb;
+            transition: transform 0.2s;
+        }
+
+        .tournament-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 4px 12px;
+            border-radius: 30px;
+            background: #2c3e50;
+        }
+
+        .status-Live {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-Upcoming {
+            background: #f59e0b;
+        }
+
+        .status-Completed {
+            background: #6b7280;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mt-3 {
+            margin-top: 12px;
+        }
+
+        .room-box {
+            background: #00000066;
+            padding: 10px;
+            border-radius: 16px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            border: 1px solid #2d9cdb;
+        }
+
+        input {
+            background: #0f1a24;
+            border: 1px solid #2c3e50;
+            padding: 12px;
+            border-radius: 30px;
+            color: white;
+            width: 100%;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #2d9cdb;
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #1f2a3a;
+            padding-bottom: 8px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 8px 20px;
+            border-radius: 30px;
+            background: #0f1825;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: #2d9cdb;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            padding: 12px 24px;
+            border-radius: 60px;
+            z-index: 999;
+            font-size: 0.8rem;
+            box-shadow: 0 5px 15px black;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .transaction-item {
+            background: #0f1825;
+            padding: 12px;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .leaderboard-item {
+            background: #0f1825;
+            padding: 12px;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rank-1 {
+            background: linear-gradient(95deg, #f59e0b, #d97706);
+        }
+
+        .rank-2 {
+            background: linear-gradient(95deg, #94a3b8, #64748b);
+        }
+
+        .rank-3 {
+            background: linear-gradient(95deg, #cd7b4e, #b45309);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7e8c9e;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 500px) {
+            .app-container {
+                padding: 16px;
+            }
+            .btn {
+                padding: 8px 14px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<header>
-<h1>The Bihar Update</h1>
-<nav>
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
-<a href="contact.html">Contact</a>
-<a href="privacy.html">Privacy</a>
-<a href="disclaimer.html">Disclaimer</a>
-<a href="suggest-news.html">Send News Tip</a>
-</nav>
-  <div class="search-box">
-  <input type="text" id="searchInput" placeholder="Search news..." onkeyup="searchNews()">
-  </div>
-  <div class="rotate-text">
-  <span class="rtext active">The Bihar Update</span>
-  <span class="rtext">आपकी आवाज़ • आपकी खबर</span>
-  <span class="rtext">सच • सटीक • सबसे तेज</span>
-  <span class="rtext">Bihar News | Trusted Source</span>
-  </div>
-  <div class="download-wrap">
-  <a href="app.html" class="download-btn">
-    📱 Download App
-  </a>
-  </div>
-</header>
-
-  <section class="hero-banner">
-  <img src="images/the-bihar-update-banner.jpg" alt="The Bihar Update - Bihar News Education Government Updates" style="width:100%; height:auto;">
-  </section>
-  
-<main>
-<div class="live-market-box">
-
-  <a href="live-market.html" class="live-market-link">
-    <span class="live-dot"></span> Live Market
-  </a>
-
-<a href="bihar.html" class="live-market-link">
-  <span class="live-dot"></span> Bihar Knowledge Hub
-</a>
-
-</div>
-<!-- Welcome Section -->
-<article>
-<h2>Bihar News Update Today</h2>
-<p>Welcome to The Bihar Update. Here you will get the latest and verified news from Bihar including local updates, education, jobs and government schemes.</p>
-</article>
-
-<!-- News Card Start -->
-    <div class="news-card" data-date="2026-03-07">
-
-<a href="/raviraj-upsc-rank-20-nawada.html" style="text-decoration:none;color:black;">
-
-  <img src="raviraj-upsc.jpg" alt="Ravi Gupta congratulating Raviraj family Nawada">
-  
-
-<h2>
-UPSC में 20वीं रैंक लाकर इतिहास रचने वाले दृष्टिबाधित रविराज के घर पहुंचे भाजपा नेता रवि गुप्ता
-</h2>
-
-<p>
-नवादा जिले के दृष्टिबाधित प्रतिभाशाली युवक रविराज ने UPSC परीक्षा में 20वीं रैंक हासिल कर इतिहास रच दिया। उनकी इस उपलब्धि पर भाजपा नेता रवि गुप्ता उनके घर पहुंचकर बधाई दी।
-</p>
-
-<div class="news-meta">
-नवादा | 7 मार्च 2026
-</div>
-
-</a>
-
-    </div>
-  
-
-  <div class="news-card" data-date="2026-03-07">
-
-<img src="images/bihar-ration-card-33-lakh-name-cancel-2026.jpg" alt="Bihar ration card ekyc news">
-
-<div class="news-content">
-
-<h2>
-<a href="bihar-ration-ekyc-31-march.html">
-31 मार्च से पहले करा लें यह काम, नहीं तो बंद हो सकता है राशन, बिहार में 33 लाख नाम हटाने की तैयारी
-</a>
-</h2>
-
-<p>
-बिहार सरकार ने राशन कार्ड धारकों के लिए ई-KYC अनिवार्य कर दिया है। 
-जिन लोगों ने अभी तक ई-KYC नहीं कराया है उन्हें 31 मार्च 2026 तक यह प्रक्रिया पूरी करनी होगी। 
-समय सीमा के बाद राशन बंद होने की संभावना है।
-</p>
-
-</div>
-
-  </div>
-  
-<article style="background:#fff;margin:20px auto;max-width:900px;border-left:6px solid #c62828;box-shadow:0 2px 10px rgba(0,0,0,0.1);border-radius:8px;overflow:hidden;">
-
-<a href="2026-03-05-bihar-board-class-11-exam-routine.html" style="text-decoration:none;color:black;display:block;padding:15px;">
-
-<img src="images/exam.jpg" alt="Bihar Board Class 11 Exam Routine 2026" style="width:100%;border-radius:6px;">
-
-<h2 style="font-size:20px;margin-top:10px;color:#000;">
-बिहार बोर्ड कक्षा 11वीं परीक्षा रूटीन 2026 जारी, 16 मार्च से शुरू होगी परीक्षा
-</h2>
-
-<p style="color:#555;font-size:15px;">
-बिहार विद्यालय परीक्षा समिति (BSEB) ने कक्षा 11वीं की वार्षिक परीक्षा 2026 का कार्यक्रम जारी कर दिया है। परीक्षा 16 मार्च से शुरू होकर 24 मार्च तक चलेगी। जानें पूरा शेड्यूल, परीक्षा समय और महत्वपूर्ण निर्देश।
-</p>
-
-<p style="color:#1976d2;font-weight:bold;">
-05 March 2026
-</p>
-
-</a>
-
-</article>
-  
-  <!-- Holi Hospital High Alert News Card -->
-<article style="background:#fff; margin:20px auto; max-width:900px; border-left:6px solid #c62828; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
-
-<a href="holi-hospital-high-alert-2026.html" style="text-decoration:none; color:#000;">
-
-<img src="images/patna-holi-hospital-high-alert-2026.jpg" 
-alt="Patna Holi Hospital High Alert 2026"
-style="width:100%; height:auto;">
-
-<div style="padding:15px;">
-
-<h2 style="color:#c62828; margin:0 0 10px 0; font-size:20px;">
-होली में अस्पतालों में हाई अलर्ट, 85 बेड रिजर्व
-</h2>
-
-<p style="color:#555; font-size:14px; margin:0;">
-होली 2026 के मद्देनजर पटना के प्रमुख अस्पतालों को हाई अलर्ट पर रखा गया है। 
-डॉक्टरों की छुट्टियां रद्द, 85 बेड रिजर्व और हेल्पलाइन नंबर जारी।
-</p>
-
-<p style="color:#777; font-size:12px; margin-top:8px;">
-03 March 2026 | Patna
-</p>
-
-</div>
-
-</a>
-</article>
-  
-  <article style="background:#fff; margin:20px auto; max-width:900px; border-left:6px solid #c62828; box-shadow:0 2px 10px rgba(0,0,0,0.08); padding:15px;">
-
-  <a href="patna-woman-pds-dealer-murder-2026.html" 
-     style="text-decoration:none; color:#000;">
-    <h2 style="font-size:20px; margin-top:0;">
-      पटना में महिला पीडीएस डीलर की हत्या, घर में घुसकर चाकू से हमला
-    </h2>
-  </a>
-
-  <div style="font-size:13px; color:#777; margin-bottom:10px;">
-    March 1, 2026 | Patna
-  </div>
-
-  <img src="images/patna-crime-2026.jpg"
-       alt="Patna Crime News"
-       style="width:100%; border-radius:6px; margin-bottom:10px;"
-       loading="lazy" decoding="async">
-
-  <p style="font-size:15px; line-height:1.6;">
-    पटना के आलमगंज क्षेत्र में महिला पीडीएस डीलर की घर में घुसकर हत्या कर दी गई। पुलिस सीसीटीवी फुटेज खंगाल रही है और मामले की जांच जारी है।
-  </p>
-
-  <a href="patna-woman-pds-dealer-murder-2026.html"
-     style="color:#c62828; font-weight:bold; text-decoration:none;">
-     पूरा पढ़ें →
-  </a>
-
-  </article>
-  
-  <article style="background:#fff; margin:20px auto; max-width:850px; border-left:6px solid #c62828; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:15px;">
-
-  <a href="salman-ali-kakolat-mahotsav-nawada-27-feb-2026.html" 
-     style="text-decoration:none; color:#000;">
-    <h2 style="font-size:20px; margin-top:0;">
-      ककोलत महोत्सव में गूंजे सुर, नवादा के हरीशचंद्र स्टेडियम में सलमान अली ने बांधा समां
-    </h2>
-  </a>
-
-  <div style="font-size:13px; color:#777; margin-bottom:10px;">
-    नवादा | 27 फरवरी 2026
-  </div>
-
-  <img src="images/salman-ali-nawada-kakolat-2026.jpg"
-       alt="सलमान अली ककोलत महोत्सव नवादा 2026"
-       style="width:100%; border-radius:6px; margin-bottom:10px;"
-       loading="lazy" decoding="async">
-
-  <p style="font-size:15px; line-height:1.6;">
-    नवादा के हरीशचंद्र स्टेडियम में आयोजित ककोलत महोत्सव के दौरान प्रसिद्ध गायक सलमान अली की प्रस्तुति ने दर्शकों को मंत्रमुग्ध कर दिया। देर रात तक स्टेडियम सुरों की गूंज से भर गया।
-  </p>
-
-  <a href="salman-ali-kakolat-mahotsav-nawada-27-feb-2026.html"
-     style="color:#c62828; font-weight:bold; text-decoration:none;">
-     पूरा पढ़ें →
-  </a>
-
-  </article>
-  <!-- NEWS LIST START -->
-  <article style="background:#fff; margin:20px auto; max-width:800px; border-left:6px solid #c62828; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:15px;">
-
-    <a href="buxar-bride-shooting-feb-2026.html" style="text-decoration:none; color:#000;">
-        <h2 style="font-size:20px; margin-top:0;">
-            बक्सर में जयमाला के दौरान दुल्हन को गोली मारने की घटना, आरोपी गिरफ्तार
-        </h2>
-    </a>
-
-    <div style="font-size:13px; color:#777; margin-bottom:10px;">
-        बक्सर | 27 फरवरी 2026
-    </div>
-
-    <img src="images/buxar-bride-shooting-feb-2026.jpg" 
-         alt="बक्सर शादी समारोह घटना" 
-         style="width:100%; border-radius:6px; margin-bottom:10px;"
-         loading="lazy" decoding="async">
-
-    <p style="font-size:15px; line-height:1.6;">
-        बक्सर जिले में शादी समारोह के दौरान जयमाला की रस्म के समय दुल्हन को गोली मारने की घटना सामने आई है। पुलिस ने आरोपी युवक को गिरफ्तार कर लिया है और मामले की जांच जारी है।
-    </p>
-
-    <a href="buxar-bride-shooting-feb-2026.html" 
-       style="color:#c62828; font-weight:bold; text-decoration:none;">
-        पूरा पढ़ें →
-    </a>
-
-  </article>
-
-<div style="background:#fff;margin:20px auto;padding:20px;
-max-width:900px;border-left:5px solid #c62828;
-box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-
-  <!-- IMAGE -->
-  <a href="/2026-02-26-india-post-gds-result-2026.html">
-    <img 
-      src="images/india-post-gds-result-2026-merit-list.jpg"
-      alt="India Post GDS Result 2026"
-      loading="lazy"
-      style="width:100%;height:auto;border-radius:6px;margin-bottom:15px;">
-  </a>
-
-  <!-- TITLE -->
-  <h2 style="margin:0 0 10px 0;font-size:20px;">
-    <a href="/2026-02-26-india-post-gds-result-2026.html"
-       style="text-decoration:none;color:#000;">
-       India Post GDS Result 2026: पहली मेरिट लिस्ट कब जारी होगी, ऐसे देखें अपना नाम
-    </a>
-  </h2>
-
-  <!-- DATE -->
-  <p style="color:#777;font-size:14px;margin:0 0 10px 0;">
-    नई दिल्ली | 26 फरवरी 2026
-  </p>
-
-  <!-- SUMMARY -->
-  <p style="font-size:15px;color:#333;">
-    India Post GDS Result 2026 जल्द जारी हो सकता है। जानें पहली मेरिट लिस्ट कब आएगी,
-    चयन प्रक्रिया क्या है और रिजल्ट कैसे डाउनलोड करें।
-  </p>
-
-  <!-- BUTTON -->
-  <a href="/2026-02-26-india-post-gds-result-2026.html"
-     style="display:inline-block;margin-top:12px;
-     padding:8px 16px;background:#c62828;color:#fff;
-     text-decoration:none;border-radius:4px;font-size:14px;">
-     Read More →
-  </a>
-
-</div>
-
-  <!-- 📰 OLD NEWS BELOW -->
-  <!-- Yahan tum apni purani news cards paste karte rehna -->
-
-</div>
-
-<!-- NEWS LIST END -->
-  
-  <div class="news-card">
-  <a href="2026-02-25-kaimur-minor-marriage-case.html" style="text-decoration:none;color:inherit;">
-
-    <img src="images/kaimur-minor-marriage-case-2026.jpg" 
-         alt="कैमूर नाबालिग शादी मामला 2026"
-         style="width:100%;border-radius:6px;margin-bottom:10px;">
-
-    <h2 style="color:#c62828;margin:5px 0;">
-      बिहार में नाबालिग को 2 लाख में बेचकर कराई गई शादी, राजस्थान से आरोपी गिरफ्तार
-    </h2>
-
-    <p style="color:#777;font-size:14px;margin-bottom:8px;">
-      📍 कैमूर | 📅 25 फरवरी 2026
-    </p>
-
-    <p style="color:#333;font-size:16px;">
-      कैमूर जिले में नाबालिग लड़की को कथित तौर पर 2 लाख रुपये में शादी कराने के मामले में पुलिस ने राजस्थान से आरोपी को गिरफ्तार किया...
-    </p>
-
-  </a>
-  </div>
-  
-  <!-- Bhagalpur Road Accident News Card -->
-<div style="background:#ffffff;
-            margin-bottom:25px;
-            padding:18px;
-            border-left:6px solid #c62828;
-            border-radius:12px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-
-  <h2 style="margin-top:0; font-size:20px; line-height:1.4;">
-    <a href="2026-02-24-bhagalpur-road-accident.html"
-       style="text-decoration:none; color:#c62828;">
-       बिहार के भागलपुर में बड़ा सड़क हादसा, 4 की मौत
-    </a>
-  </h2>
-
-  <p style="color:#777; font-size:14px; margin:8px 0;">
-    📍 भागलपुर | 24 फरवरी 2026
-  </p>
-
-  <img src="/images/bhagalpur-road-accident-24-feb-2026.jpg"
-     alt="भागलपुर एनएच-31 सड़क हादसा"
-     loading="lazy"
-     style="width:100%;
-            height:auto;
-            border-radius:12px;
-            object-fit:cover;
-            display:block;
-            margin:15px 0;">
-
-  <p style="color:#444; line-height:1.6;">
-    भागलपुर के एनएच-31 पर तेज रफ्तार बस ने पिकअप व ई-रिक्शा को टक्कर मार दी।
-    हादसे में 4 लोगों की मौके पर ही मौत हो गई, जबकि 6 घायल बताए जा रहे हैं।
-  </p>
-
-  <a href="2026-02-24-bhagalpur-road-accident.html"
-     style="color:#c62828; font-weight:bold; text-decoration:none;">
-     Read Full News →
-  </a>
-
-</div>
-  
-  <!-- Mobile Screen Policy News Card -->
-<div style="background:#ffffff;
-            margin-bottom:25px;
-            padding:18px;
-            border-left:6px solid #c62828;
-            border-radius:12px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-
-  <h2 style="margin-top:0; font-size:20px; line-height:1.4;">
-    <a href="2026-02-23-mobile-screen-policy.html"
-       style="text-decoration:none; color:#c62828;">
-       मोबाइल कितनी देर देखें बच्च? बिहार सरकार ला सकती है नई नीति
-    </a>
-  </h2>
-
-  <p style="color:#777; font-size:14px; margin:8px 0;">
-    📍 पटना | 23 फरवरी 2026
-  </p>
-
-  <img src="images/mobile-screen-time-bihar-2026.jpg"
-       alt="बिहार मोबाइल स्क्रीन टाइम नीति"
-       loading="lazy"
-       style="width:100%; border-radius:10px; margin-bottom:10px;">
-
-  <p style="color:#444; line-height:1.6;">
-    बिहार सरकार बच्चों के मोबाइल स्क्रीन टाइम को नियंत्रित करने के लिए नई नीति लाने की तैयारी कर रही है। विशेषज्ञों से सलाह ली जा रही है और जल्द ही दिशा-निर्देश जारी हो सकते हैं।
-  </p>
-
-  <a href="2026-02-23-mobile-screen-policy.html"
-     style="color:#c62828; font-weight:bold; text-decoration:none;">
-     Read Full News →
-  </a>
-
-</div>
-  <!-- Nawada Dowry Death News Card -->
-
-  <div style="background:#ffffff;
-            margin-bottom:25px;
-            padding:18px;
-            border-left:6px solid #c62828;
-            border-radius:12px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-
-  <h2 style="margin-top:0; font-size:20px; line-height:1.4;">
-    <a href="nawada-dowry-death-fruity-kumari-2026.html"
-       style="text-decoration:none; color:#c62828;">
-       Nawada News: दहेज के लिए 3 लाख की मांग का आरोप, विवाहिता की संदिग्ध मौत
-    </a>
-  </h2>
-
-  <p style="color:#777; font-size:14px; margin:8px 0;">
-    📍 नवादा | 22 फरवरी 2026
-  </p>
-
-  <img src="images/nawada-dowry-case-2026.jpg"
-       style="width:100%; border-radius:10px; margin-bottom:10px;">
-
-  <p style="color:#444; line-height:1.6;">
-    नवादा जिले में 24 वर्षीय विवाहिता की संदिग्ध परिस्थितियों में मौत हो गई। मायके पक्ष ने ससुराल वालों पर 3 लाख रुपये की दहेज मांग और हत्या का आरोप लगाया है।
-  </p>
-
-  <a href="nawada-dowry-death-fruity-kumari-2026.html"
-     style="color:#c62828; font-weight:bold; text-decoration:none;">
-     Read Full News →
-  </a>
-
-  </div>
-<!-- Cyber Fraud News Card -->
-<div style="background:#ffffff;
-            margin-bottom:25px;
-            padding:18px;
-            border-left:6px solid #c62828;
-            border-radius:12px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-
-  <h2 style="margin-top:0; font-size:20px; line-height:1.4;">
-    <a href="bihar-cyber-fraud-alert-2026.html"
-       style="text-decoration:none; color:#c62828;">
-       बिहार में साइबर ठगी के मामलों में बढ़ोतरी, पुलिस ने जारी की एडवाइजरी
-    </a>
-  </h2>
-
-  <p style="color:#777; font-size:14px; margin:8px 0;">
-    📍 पटना | 21 फरवरी 2026
-  </p>
-
-  <img src="images/cyber-fraud-bihar-2026.jpg"
-       style="width:100%; border-radius:10px; margin-bottom:10px;">
-
-  <p style="color:#444; line-height:1.6;">
-    बिहार में साइबर अपराध तेजी से बढ़ रहे हैं। पुलिस ने अनजान कॉल, फर्जी लिंक और ओटीपी साझा करने से बचने की सलाह दी है।
-  </p>
-
-  <a href="bihar-cyber-fraud-alert-2026.html"
-     style="color:#c62828; font-weight:bold; text-decoration:none;">
-     Read Full News →
-  </a>
-
-</div>
-  
-<div class="container news-card" data-date="2026-02-19">
-  <div class="news-inner">
-
-    <a href="bihar-road-accident-daudnagar.html">
-      <img src="/images/bihar-road-accident-daudnagar-saurabh-kumar-19-feb-2026.png"
-           alt="Bihar Road Accident Daudnagar Aurangabad"
-           class="news-img"
-           loading="lazy">
-    </a>
-
-    <h2 class="news-title">
-      <a href="bihar-road-accident-daudnagar.html">
-        Bihar Road Accident: तिलक की खुशियां हुईं मातम में तब्दिल, तेज रफ्तार ट्रक ने छीनी 22 साल के युवक की ज़िंदगी
-      </a>
-    </h2>
-
-    <p class="news-desc">
-      औरंगाबाद के दाउदनगर में तिलक समारोह में शामिल होने आए 22 वर्षीय युवक की तेज रफ्तार ट्रक से दर्दनाक मौत। 
-      हादसे के बाद ग्रामीणों का फूटा गुस्सा, मुआवजे की मांग को लेकर सड़क जाम।
-    </p>
-
-  </div>
-</div>
-  
-<div class="container news-card" data-date="2026-02-18">
-<div class="news-inner">
-
-<a href="bhojpur-5-people-suspicious-death-18-feb-2026.html">
-<img src="dead body image.jpg"
-alt="Bhojpur 5 People Suspicious Death"
-class="news-img">
-</a>
-
-<h2 class="news-title">
-<a href="bhojpur-5-people-suspicious-death-18-feb-2026.html">
-दूल्हे के भाई समेत 5 की संदिग्ध मौत, भोजपुर में मचा हड़कंप
-</a>
-</h2>
-
-<p class="news-desc">
-भोजपुर जिले में शादी समारोह के बाद दूल्हे के भाई समेत पांच लोगों की संदिग्ध मौत से इलाके में सनसनी फैल गई। पुलिस और एक्साइज विभाग मामले की जांच में जुटे हैं।
-</p>
-
-</div>
-</div>
-  
-<div class="container news-card" data-date="2026-02-18">
-  <div class="news-inner">
-
-    <a href="patna-matric-exam-student-death-late-entry-2026.html">
-      <img src="images/exam.jpg"
-           alt="Patna Matric Exam 2026"
-           class="news-img">
-    </a>
-
-    <h2 class="news-title">
-      <a href="patna-matric-exam-student-death-late-entry-2026.html">
-        पटना में मैट्रिक परीक्षा के दौरान दुखद घटना, देर से पहुंचने पर नहीं मिली एंट्री
-      </a>
-    </h2>
-
-    <p class="news-desc">
-      पटना जिले के मसौढ़ी में मैट्रिक परीक्षा के दौरान देर से पहुंचने पर छात्रा को प्रवेश नहीं मिला।
-      घटना के बाद पूरे क्षेत्र में चिंता का माहौल है।
-    </p>
-
-  </div>
-</div>
-  
-<div class="container news-card" data-date="2026-02-17">
-  <div class="news-inner">
-
-    <a href="bseb-10th-exam-2026-guidelines-first-day">
-      <img src="images/exam.jpg"
-           alt="BSEB 10th Exam 2026 Bihar Board"
-           class="news-img">
-    </a>
-
-    <h2 class="news-title">
-      <a href="bseb-10th-exam-2026-guidelines-first-day">
-        BSEB 10th Exam 2026: 10वीं की परीक्षा आज से शुरू, जूता-मोजा पहनने पर मनाही
-      </a>
-    </h2>
-
-    <p class="news-desc">
-      बिहार बोर्ड मैट्रिक परीक्षा 17 फरवरी से शुरू। 1,699 केंद्रों पर 15 लाख से अधिक छात्र शामिल।
-      जानें परीक्षा के नियम और सुरक्षा व्यवस्था।
-    </p>
-
-  </div>
-</div>
-
-  <div class="container news-card" data-date="2026-02-14">
-  <div class="news-inner">
-
-    <a href="bihar-valentine-day-marriage-2026.html">
-      <img src="images/bihar-valentine-day-love-marriage-2026.jpg"
-           alt="बिहार वैलेंटाइन डे विवाह 2026"
-           class="news-img">
-    </a>
-
-    <h2 class="news-title">
-      <a href="bihar-valentine-day-marriage-2026.html">
-        बिहार में वैलेंटाइन डे पर मंदिर परिसर में सादगीपूर्ण विवाह संपन्न
-      </a>
-    </h2>
-
-    <p class="news-desc">
-      वैलेंटाइन डे के अवसर पर मंदिर परिसर में सादगीपूर्ण तरीके से विवाह आयोजित किया गया।
-      परिवार और स्थानीय लोगों की मौजूदगी में धार्मिक रीति-रिवाजों के साथ कार्यक्रम सम्पन्न हुआ।
-    </p>
-
-  </div>
-  </div>
-  
-<div class="container news-card" data-date="2026-02-16">
-  <div class="news-inner">
-
-    <a href="bihar-ration-card-33-lakh-card-cancel-2026.html">
-      <img src="images/bihar-ration-card-33-lakh-name-cancel-2026.jpg"
-           alt="बिहार में 33 लाख राशन कार्ड रद्द की तैयारी"
-           class="news-img">
-    </a>
-
-    <h2 class="news-title">
-      <a href="bihar-ration-card-33-lakh-card-cancel-2026.html">
-        बिहार में 33 लाख राशन कार्ड रद्द की तैयारी, चेक करें कहीं आपका नाम तो नहीं
-      </a>
-    </h2>
-
-    <p class="news-desc">
-      खाद्य एवं उपभोक्ता संरक्षण विभाग ने 33 लाख से अधिक राशन कार्डधारियों के नाम हटाने की प्रक्रिया शुरू कर दी है। संदिग्ध लाभुकों पर कार्रवाई तेज कर दी गई है और जिलों को सख्त निर्देश जारी किए गए हैं।
-    </p>
-
-  </div>
-</div>
-  
-  <div class="container news-card" data-date="2026-02-15">
-  <div class="news-inner">
-
-    <a href="nawada-govardhan-mandir-shivratri-2026.html">
-      <img src="images/nawada-govardhan-mandir-shivratri-2026.jpg"
-           alt="नवादा गोवर्धन मंदिर में महाशिवरात्रि 2026 पर उमड़ी श्रद्धालुओं की भीड़"
-           class="news-img">
-    </a>
-
-    <h2 class="news-title">
-      <a href="nawada-govardhan-mandir-shivratri-2026.html">
-        नवादा के गोवर्धन मंदिर में महाशिवरात्रि पर उमड़ी श्रद्धालुओं की भारी भीड़
-      </a>
-    </h2>
-
-    <p class="news-desc">
-      महाशिवरात्रि 2026 के अवसर पर नवादा के प्रसिद्ध गोवर्धन मंदिर में श्रद्धालुओं की भारी भीड़ देखने को मिली। सुबह से ही भक्तों की लंबी कतारें लगी रहीं और मंदिर परिसर भक्तिमय माहौल में डूबा नजर आया।
-    </p>
-
-  </div>
-</div>
-  
-  <div class="container news-card" data-date="2026-02-14">
-
-    <div class="news-inner">
-
-        <a href="patna-drain-accident-14-feb-2026.html">
-            <img src="images/patna-drain-accident-2026.webp"
-                 alt="Patna Drain Accident 14 February 2026"
-                 class="news-img">
-        </a>
-
-        <h2 class="news-title">
-            <a href="patna-drain-accident-14-feb-2026.html">
-                खुले नाले में गिरने से दो साल की बच्ची की मौत, पटना में दिल्ली जैसा हादसा
-            </a>
-        </h2>
-
-        <p class="news-desc">
-            पटना के फूलवारीशरीफ में खुले नाले में गिरने से दो साल की मासूम बच्ची की मौत।
-            सीसीटीवी फुटेज में घटना कैद, प्रशासन पर लापरवाही का आरोप।
-        </p>
-
-    </div>
-
-  </div>
-  
-  <div class="container news-card" data-date="2026-02-14">
-
-    <div class="news-inner">
-
-        <a href="pulwama-balidan-diwas-14-feb-2026.html">
-            <img src="images/pulwama-balidan-diwas-14-feb-2026.jpg" 
-                 alt="Pulwama Balidan Diwas 14 February 2026" 
-                 class="news-img">
-        </a>
-
-        <h2 class="news-title">
-            <a href="pulwama-balidan-diwas-14-feb-2026.html">
-                पुलवामा बलिदानी दिवस: ब्लैक डे नहीं, आतंकवाद के समूल नाश का शंखनाद
-            </a>
-        </h2>
-
-        <p class="news-desc">
-            14 फरवरी 2019 के पुलवामा हमले को सात वर्ष पूरे। बालाकोट एयरस्ट्राइक और अनुच्छेद 370 की समाप्ति के बाद 
-            जम्मू-कश्मीर में आतंकवाद के खिलाफ निर्णायक लड़ाई का यह दिन संकल्प दिवस बन चुका है…
-        </p>
-
-    </div>
-
-  </div>
-  
-  <div class="container news-card" data-date="2026-02-14">
-
-    <div class="news-inner">
-
-        <a href="katihar-instagram-blackmail-arrest-14-feb-2026.html">
-            <img src="images/katihar-instagram-blackmail-arrest-14-feb-2026.jpg" 
-                 alt="Katihar Instagram Blackmail Case" 
-                 class="news-img">
-        </a>
-
-        <h2 class="news-title">
-            <a href="katihar-instagram-blackmail-arrest-14-feb-2026.html">
-                इंस्टाग्राम पर हुआ प्यार, शादी से इनकार पर ब्लैकमेल, मंडप से दूल्हे की गिरफ्तारी
-            </a>
-        </h2>
-
-        <p class="news-desc">
-            कटिहार में इंस्टाग्राम से शुरू हुआ प्रेम संबंध ब्लैकमेल तक पहुंच गया। 
-            शादी से इनकार करने पर युवक ने फोटो वायरल करने की धमकी दी, 
-            जिसके बाद पुलिस ने मंडप से ही दूल्हे को गिरफ्तार कर लिया…
-        </p>
-
-    </div>
-
-  </div>
-
-  <div class="container news-card" data-date="2026-02-14">
-  <div class="news-inner">
-
-    <a href="bihar-valentine-day-marriage-2026.html">
-      <img src="images/nawada-govardhan-mandir-shivratri-2026.jpg"
-           alt="बिहार में वैलेंटाइन डे पर विवाह समारोह 2026"
-           class="news-img">
-    </a>
-
-    <h2 class="news-title">
-      <a href="bihar-valentine-day-marriage-2026.html">
-        बिहार में वैलेंटाइन डे पर अनोखी शादी, मंदिर परिसर में सादगी से हुआ विवाह
-      </a>
-    </h2>
-
-    <p class="news-desc">
-      बिहार में वैलेंटाइन डे के मौके पर सादगीपूर्ण तरीके से विवाह संपन्न हुआ।
-      धार्मिक रीति-रिवाजों के साथ कार्यक्रम आयोजित किया गया और स्थानीय लोगों ने नवविवाहित जोड़े को शुभकामनाएं दीं।
-    </p>
-
-  </div>
-  </div>
-  
-  <div class="news-card">
-    <div class="news-inner">
-
-        <img src="images/araria-nursing-home-13-feb-2026.webp" 
-             alt="Araria Nursing Home Clash" 
-             class="news-img">
-
-        <h2 class="news-title">
-            <a href="araria-nursing-home-13-feb-2026.html">
-                नर्सिंग होम में डिप्टी कलेक्टर और डॉक्टर के बीच झड़प, वीडियो वायरल
-            </a>
-        </h2>
-
-        <p class="news-desc">
-            अररिया के फारबिसगंज स्थित एक निजी नर्सिंग होम में प्रशासनिक जांच के दौरान डॉक्टर और डिप्टी कलेक्टर के बीच विवाद और धक्का-मुक्की का मामला सामने आया है। घटना का वीडियो सोशल मीडिया पर तेजी से वायरल हो रहा है…
-        </p>
-
-    </div>
-  </div>
-  
-  <div class="news-card">
-    <div class="news-inner">
-
-        <img src="images/13 Feb 2026.png" alt="Patna Murder News" class="news-img">
-
-        <h2 class="news-title">
-            <a href="patna-murder-13-feb-2026.html">
-                बीच सड़क भांजे ने मामा को चाकू से गोदा, पटना में खौफनाक मर्डर
-            </a>
-        </h2>
-
-        <p class="news-desc">
-            पटना में पारिवारिक विवाद के चलते भांजे ने अपने ही मामा पर बीच सड़क
-            चाकू से हमला कर दिया। घटना के बाद इलाके में दहशत फैल गई और
-            पुलिस ने आरोपी युवक को गिरफ्तार कर लिया है…
-        </p>
-
-    </div>
-  </div>
-  
-  <article class="news-item">
-  <a href="/nawada-doctor-murder-case-arrests.html">
-    <img src="/images/nawada-police.jpeg" alt="Nawada Doctor Murder Case" loading="lazy">
-  </a>
-
-  <h2>
-    <a href="/nawada-doctor-murder-case-arrests.html">
-      Nawada Crime: ग्रामीण डॉक्टर हत्याकांड में 9 आरोपी गिरफ्तार
-    </a>
-  </h2>
-
-  <p>
-    नवादा में ग्रामीण डॉक्टर की हत्या मामले में पुलिस ने 9 आरोपियों को गिरफ्तार किया है।
-    जांच में आर्थिक लेन-देन और तकनीकी साक्ष्य सामने आए हैं...
-  </p>
-  </article>
-  
-  <article class="news-item">
-  <a href="/bpsc-otr-registration-mandatory.html">
-    <img src="/images/BPSC.webp" alt="BPSC OTR Registration Mandatory" loading="lazy">
-  </a>
-
-  <h2>
-    <a href="/bpsc-otr-registration-mandatory.html">
-      BPSC परीक्षाओं में आवेदन से पहले OTR अनिवार्य, 5 स्टेप में पूरा करें रजिस्ट्रेशन
-    </a>
-  </h2>
-
-  <p>
-    बिहार लोक सेवा आयोग ने प्रतियोगी परीक्षाओं में आवेदन के लिए OTR और प्रोफाइल क्रिएशन अनिवार्य कर दिया है। जानें पूरी प्रक्रिया...
-  </p>
-  </article>
-  
-  <article class="news-item">
-  <a href="/bihar-weather-update.html">
-    <img src="/images/weather.jpg" alt="Bihar Weather Update" loading="lazy">
-  </a>
-
-  <h2>
-    <a href="/bihar-weather-update.html">
-      Bihar Weather: सुबह-शाम हल्की ठंड, जानें अपने जिले का हाल
-    </a>
-  </h2>
-
-  <p>
-    बिहार के कई जिलों में मौसम में बदलाव देखा जा रहा है। दिन में धूप तेज है
-    जबकि सुबह और शाम हल्की ठंड बनी हुई है...
-  </p>
-  </article>
-  
-<article class="news-item">
-
-  <a href="/bihar-railway-station-woman-harassment.html">
-    <img
-      src="/images/bihar-railway-station-woman-harassment-video.webp"
-      alt="बिहार रेलवे स्टेशन पर महिला से बदसलूकी का मामला"
-      loading="lazy"
-      style="width:100%;height:auto;border-radius:8px;">
-  </a>
-
-  <h2>
-    <a href="/bihar-railway-station-woman-harassment.html"
-       style="text-decoration:none;color:#000;">
-      बिहार रेलवे स्टेशन पर महिला से बदसलूकी, युवकों ने किया अभद्र व्यवहार
-    </a>
-  </h2>
-
-  <p>
-    बिहार के एक रेलवे स्टेशन से सामने आए वीडियो ने महिला सुरक्षा को लेकर
-    गंभीर सवाल खड़े कर दिए हैं…
-  </p>
-
-</article>
-  
-  <li class="news-card">
-  <a href="nawada-dowry-love-marriage-death-news.html">
-    <img src="dead body image.jpg" alt="नवादा दहेज हत्या मामला">
-    <h3>
-      बिहार: प्यार के बाद शादी, फिर भी अंजाम वही! दहेज न मिलने पर पति ने जहर पिलाकर मार डाला
-    </h3>
-  </a>
-  </li>
-  
-  <div class="news-card">
-  <a href="gaya-mobile-game-murder-news.html" style="text-decoration:none;">
-    <img src="gaya-mobile-game-murder-news.png" alt="गया मोबाइल गेम विवाद हत्या">
-    <h2>गया में मोबाइल गेम खेलने से रोकने पर युवक की पीट-पीटकर हत्या</h2>
-    <p>
-      गया जिले में मोबाइल गेम खेलने से मना करने पर हुए विवाद में एक व्यक्ति की
-      बेरहमी से पिटाई के बाद मौत हो गई, पुलिस ने दो आरोपियों को गिरफ्तार किया है…
-    </p>
-  </a>
-  </div>
-  
-  <div class="news-card">
-  <a href="bihar-road-development-news.html" style="text-decoration:none;">
-    <img src="bihar-road-development-news.jpg" alt="बिहार सड़क विकास योजना">
-    <h2>बिहार में सड़कों के सुधार को लेकर नई योजना, कई जिलों को मिलेगा फायदा</h2>
-    <p>
-      बिहार में सड़क नेटवर्क को मजबूत करने के लिए सरकार ने नई योजना पर काम तेज किया है…
-    </p>
-  </a>
-  </div>
-  
-  <div class="news-card">
-  <a href="bihar-education-e-shikshakosh-news.html" style="text-decoration:none;">
-    <img src="education-news.jpeg" alt="बिहार शिक्षा विभाग ई-शिक्षाकोष सैलरी अपडेट">
-    <h2>बिहार शिक्षा विभाग का बड़ा फैसला: ई-शिक्षाकोष से तय होगी शिक्षकों की सैलरी</h2>
-    <p>
-      बिहार में शिक्षकों की सैलरी को लेकर बड़ा बदलाव किया गया है।
-      अब वेतन ई-शिक्षाकोष पोर्टल के माध्यम से तय किया जाएगा…
-    </p>
-  </a>
-  </div>
-  
-<div class="news-card">
-  <a href="patna-fatuha-gun-fire-news.html" style="text-decoration:none">
-    <img src="patna-fatuha-gun-fire-news.webp" alt="Patna Fatuha Gun Fire News">
-    <h2>पटना फतुहा गोलीकांड: जमीन विवाद में युवक की गोली मारकर हत्या</h2>
-    <p>
-      पटना जिले के फतुहा थाना क्षेत्र में रविवार सुबह युवक की गोली मारकर हत्या कर दी गई।
-    </p>
-  </a>
-</div>
-  
-  <article>
-  <a href="nawada-district-judge-shilpi-soni-raj-death.html">
-    <img src="nawada-district-judge-shilpi-soni-raj-death.png"
-         alt="नवादा जिला जज शिल्पी सोनी राज की मौत"
-         class="news-img">
-  </a>
-
-  <h2>
-    <a href="nawada-district-judge-shilpi-soni-raj-death.html">
-      नवादा जिला जज शिल्पी सोनी राज की अचानक मौत, फॉरेंसिक टीम कर रही जांच
-    </a>
-  </h2>
-
-  <p>
-    नवादा की जिला एवं सत्र न्यायाधीश शिल्पी सोनी राज का बीती रात अचानक निधन हो गया।
-    तबीयत बिगड़ने पर निजी अस्पताल में भर्ती कराया गया था, मौत के कारणों की जांच जारी है।
-  </p>
-
-  <a href="nawada-district-judge-shilpi-soni-raj-death.html"
-     style="color:#b71c1c; font-weight:bold;">
-    पूरी खबर पढ़ें →
-  </a>
-  </article>
-  
-  <article class="news-item">
-  <a href="pariksha-kaksh-mein-beshosh-chhatra-nawada.html">
-    <img src="pariksha-kaksh-mein-beshosh-chhatra-nawada.png"
-         alt="नवादा में परीक्षा के दौरान बेहोश हुई छात्रा"
-         class="news-thumb">
-  </a>
-
-  <h2 class="news-title">
-    <a href="pariksha-kaksh-mein-beshosh-chhatra-nawada.html">
-      परीक्षा कक्ष में अचानक बिगड़ी छात्रा की तबीयत, कुर्सी से गिरकर हुई बेहोश
-    </a>
-  </h2>
-  </article>
-  
-  <article>
-    <div class="news-card">
-  <img src="ikouli-boy-murder-nawada.jpg" alt="इकौली हत्या">
-
-  <h3>
-    <a href="ikouli-boy-murder-nawada.html">
-      इकौली में बेटे की गला घोंटकर हत्या, खेत में मिला शव
-    </a>
-  </h3>
-
-  <p>नवादा जिले के इकौली गांव से दिल दहला देने वाली घटना सामने आई है…</p>
-
-  <a class="read-more" href="ikouli-boy-murder-nawada.html">
-    पूरी खबर पढ़ें →
-  </a>
-    </div>
-  </article>
-
-  <article>
-<div class="news-card">
-  <a href="nawada-beauty-parlor-murder-verdict.html">
-    <img src="beauty_parlour_news.png" alt="नवादा ब्यूटी पार्लर हत्याकांड">
-    <h3>नवादा ब्यूटी पार्लर हत्याकांड: तीन दोषियों को उम्रकैद, अदालत का बड़ा फैसला</h3>
-    <p>
-      नवादा में वर्ष 2024 में हुए चर्चित ब्यूटी पार्लर हत्याकांड मामले में
-      अदालत ने तीन दोषियों को आजीवन कारावास की सजा सुनाई है।
-    </p>
-  </a>
-</div>
-
-</article>
-  <article>
-  <h2>
-    <a href="nawada-inter-exam-munna-bhai-arrest.html">
-      दोस्त के बदले परीक्षा देने के लिए 14 हजार में हुआ सौदा,
-      इंटर परीक्षा में मुन्ना भाई गिरफ्तार
-    </a>
-  </h2>
-
-  <img src="nawada-inter-exam-munna-bhai-arrest.png"
-       class="news-img"
-       alt="इंटर परीक्षा में मुन्ना भाई गिरफ्तार">
-
-  <p>
-    नवादा में इंटरमीडिएट परीक्षा के दौरान एक युवक को
-    दूसरे परीक्षार्थी के स्थान पर परीक्षा देते हुए पकड़ा गया।
-  </p>
-
-  <a href="nawada-inter-exam-munna-bhai-arrest.html"
-     style="color:#b71c1c;font-weight:bold;">
-    पूरी खबर पढ़ें →
-  </a>
-  </article>
-  
-  <article>
-  <h2>
-    <a href="land-dispute-murder-verdict-nawada.html" style="text-decoration:none; color:#b71c1c;">
-      भूमि विवाद में रिश्तों का कत्ल: पिता और दो पुत्रों को उम्रकैद
-    </a>
-  </h2>
-
-  <img src="nawada-civil-court-verdict.png" class="news-img" alt="Nawada Civil Court Verdict">
-
-  <p>
-    नवादा जिले में भूमि विवाद को लेकर हुई हत्या के मामले में अदालत ने बड़ा फैसला सुनाया है।
-    पिता और उसके दो पुत्रों को दोषी मानते हुए न्यायालय ने उम्रकैद की सजा सुनाई है।
-  </p>
-
-  <a href="land-dispute-murder-verdict-nawada.html" style="color:#b71c1c; font-weight:bold;">
-    पूरा पढ़ें →
-  </a>
-  </article>
-  
-  <article>
-  <h2>
-    <a href="nawada-inter-exam-action.html">
-      नवादा इंटर परीक्षा में डीएम की सख्ती
-    </a>
-  </h2>
-
-  <img src="FB_IMG_1770259233434.jpg" class="news-img">
-
-  <p>
-    नवादा में इंटर परीक्षा के दौरान कदाचार में 3 परीक्षार्थी निष्कासित।
-  </p>
-
-  <a href="nawada-inter-exam-action.html">पूरा पढ़ें →</a>
-  </article>
-  
-  <article>
-  <h2>
-    <a href="nawada-murder-case.html" style="text-decoration:none; color:#b71c1c;">
-      सनसनीखेज खुलासा: नवादा में वृद्ध महिला की नृशंस हत्या
-    </a>
-  </h2>
-
-  <img src="murder-case.png" class="news-img" alt="Nawada Murder Case">
-
-  <p>
-    नवादा के राजेंद्र नगर में हुई वृद्ध महिला की नृशंस हत्या का पुलिस ने खुलासा कर दिया है।
-    जांच में बहू को साजिश का मास्टरमाइंड बताया गया है।
-  </p>
-
-  <a href="nawada-murder-case.html" style="color:#b71c1c; font-weight:bold;">
-    पूरा पढ़ें →
-  </a>
-  </article>
-  
-<article>
-<h2>
-<a href="news1.html" style="text-decoration:none; color:#b71c1c;">
-नवादा में आज चार घंटे का पावर कट
-</a>
-</h2>
-
-<img src="powercut.jpeg" class="news-img" alt="Power Cut">
-
-<p>सुबह 10 बजे से दोपहर 2 बजे तक नवादा जिले में बिजली आपूर्ति बाधित रहेगी। 132/33 केवी ग्रिड में मेंटेनेंस कार्य के कारण शटडाउन लिया जाएगा…</p>
-
-<a href="news1.html" style="color:#b71c1c; font-weight:bold;">पूरा पढ़ें →</a>
-</article>
-
-  <article>
-  <h2>
-    <a href="deepak-mishra-ias-posting.html">
-      काम से पहचान और भरोसे का इनाम: दीपक कुमार मिश्रा को मिली बड़ी जिम्मेदारी
-    </a>
-  </h2>
-
-  <img src="IMG_20260109_225357.jpg" class="news-img" alt="Deepak Kumar Mishra IAS">
-
-  <p>
-    2019 बैच के IAS अधिकारी दीपक कुमार मिश्रा को मुख्यमंत्री सचिवालय में संयुक्त सचिव बनाया गया है...
-  </p>
-
-  <a href="deepak-mishra-ias-posting.html" style="color:#b71c1c; font-weight:bold;">
-    पूरा पढ़ें →
-  </a>
-  </article>
-  
-</main>
-
-<footer>
-<p>© 2026 The Bihar Update | All Rights Reserved</p>
-</footer>
-
-  <script>
-function searchNews() {
-  let input = document.getElementById("searchInput").value.toLowerCase();
-  let articles = document.querySelectorAll("main article");
-
-  articles.forEach(function(article) {
-    let text = article.innerText.toLowerCase();
-    if (text.includes(input)) {
-    article.classList.remove("hidden-by-search");
-    article.style.display = "";
-} else {
-    article.classList.add("hidden-by-search");
-    article.style.display = "none";
+<div id="appRoot" class="app-container"></div>
+
+<script type="module">
+const firebaseConfig = {
+  apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw",
+  authDomain: "tournament-app-b77c0.firebaseapp.com",
+  databaseURL: "https://tournament-app-b77c0-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tournament-app-b77c0",
+  storageBucket: "tournament-app-b77c0.firebasestorage.app",
+  messagingSenderId: "925200484535",
+  appId: "1:925200484535:web:c15c87fcecb5e793bca532"
+};    
+    // IMPORTANT: Replace the above config with your actual Firebase project settings
+    
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, query, onSnapshot, addDoc, serverTimestamp, increment, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    
+    let currentUser = null;
+    let tournamentsUnsub = null;
+    let myMatchesUnsub = null;
+    let leaderboardUnsub = null;
+    let transactionsUnsub = null;
+    
+    const root = document.getElementById('appRoot');
+    
+    function showToast(msg, isError = false) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-msg';
+        toast.innerText = msg;
+        toast.style.background = isError ? '#dc2626' : '#2d9cdb';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2500);
     }
-}
-  </script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-  let rtexts = document.querySelectorAll(".rotate-text .rtext");
-  let rIndex = 0;
-
-  if (rtexts.length > 0) {
-    setInterval(function () {
-      rtexts[rIndex].classList.remove("active");
-      rIndex = (rIndex + 1) % rtexts.length;
-      rtexts[rIndex].classList.add("active");
-    }, 2500);
-  }
-
-});
+    
+    function render() {
+        if (!currentUser) {
+            renderAuthScreen();
+        } else {
+            renderUserDashboard();
+        }
+    }
+    function renderAuthScreen() {
+        root.innerHTML = `
+            <div class="header">
+                <div class="logo">
+                    <h1>🔥 BIHARI BATTLE LEAGUE</h1>
+                    <p>Free Fire Esports Tournament</p>
+                </div>
+            </div>
+            <div style="background:#0f1825; border-radius:32px; padding:24px;">
+                <h3 style="margin-bottom:20px;">⚡ Welcome to Battle Arena</h3>
+                <input type="email" id="authEmail" placeholder="Email Address" />
+                <input type="password" id="authPass" placeholder="Password" />
+                <button class="btn btn-primary" id="loginBtn" style="width:100%; margin-bottom:10px;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <button class="btn" id="signupBtn" style="width:100%;">
+                    <i class="fas fa-user-plus"></i> Create New Account
+                </button>
+                <div style="margin-top:20px; text-align:center; font-size:12px; color:#7e8c9e;">
+                    <i class="fas fa-gamepad"></i> Join tournaments & win prizes!
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('loginBtn')?.addEventListener('click', async () => {
+            const email = document.getElementById('authEmail').value;
+            const pwd = document.getElementById('authPass').value;
+            if (!email || !pwd) {
+                showToast("Please enter email and password", true);
+                return;
+            }
+            try {
+                await signInWithEmailAndPassword(auth, email, pwd);
+                showToast("Welcome back, warrior! 🎮");
+            } catch(e) {
+                if (e.code === 'auth/user-not-found') {
+                    showToast("User not found. Please sign up first!", true);
+                } else {
+                    showToast(e.message, true);
+                }
+            }
+        });
+        
+        document.getElementById('signupBtn')?.addEventListener('click', async () => {
+            const email = document.getElementById('authEmail').value;
+            const pwd = document.getElementById('authPass').value;
+            if (!email || !pwd) {
+                showToast("Please enter email and password", true);
+                return;
+            }
+            if (pwd.length < 6) {
+                showToast("Password should be at least 6 characters", true);
+                return;
+            }
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, email, pwd);
+                const userRef = doc(db, "users", cred.user.uid);
+                const snap = await getDoc(userRef);
+                if (!snap.exists()) {
+                    await setDoc(userRef, {
+                        name: email.split('@')[0],
+                        wallet: 500,
+                        email: email,
+                        createdAt: serverTimestamp()
+                    });
+                }
+                showToast("Account created! +500 coins bonus 💰");
+            } catch(e) {
+                if (e.code === 'auth/email-already-in-use') {
+                    showToast("Email already registered. Please login!", true);
+                } else {
+                    showToast(e.message, true);
+                }
+            }
+        });
+    }
+    
+    async function renderUserDashboard() {
+        if (!currentUser) return;
+        const uid = currentUser.uid;
+        const userDocRef = doc(db, "users", uid);
+        
+        let walletBalance = 0;
+        
+        const updateWalletDisplay = async () => {
+            const snap = await getDoc(userDocRef);
+            if (snap.exists()) {
+                walletBalance = snap.data().wallet || 0;
+                const walletSpan = document.getElementById('userWalletAmount');
+                if (walletSpan) walletSpan.innerText = walletBalance;
+            }
+        };
+        await updateWalletDisplay();
+        
+        // Tournaments List - Real-time updates
+        const tournamentsQuery = query(collection(db, "tournaments"), orderBy("time", "desc"));
+        if (tournamentsUnsub) tournamentsUnsub();
+        tournamentsUnsub = onSnapshot(tournamentsQuery, (snapshot) => {
+            const tournamentListDiv = document.getElementById('tournamentList');
+            if (tournamentListDiv) {
+                if (snapshot.empty) {
+                    tournamentListDiv.innerHTML = '<div style="text-align:center; padding:40px;">No tournaments available</div>';
+                    return;
+                }
+                
+                let html = '';
+                snapshot.forEach(docSnap => {
+                    const t = docSnap.data();
+                    const id = docSnap.id;
+                    const slotsFilled = t.players ? Object.keys(t.players).length : 0;
+                    const totalSlots = t.maxPlayers || 10;
+                    const status = t.status || 'Upcoming';
+                    const isJoined = t.players && t.players[uid];
+                    
+                    html += `
+                        <div class="tournament-card">
+                            <div class="flex-between">
+                                <h4><i class="fas fa-trophy"></i> ${t.title || 'Free Fire Battle'}</h4>
+                                <span class="status-badge status-${status}">${status}</span>
+                            </div>
+                            <div class="flex-between mt-3">
+                                <span>💰 Entry: ₹${t.fee}</span>
+                                <span>🏆 Prize: ₹${t.prize}</span>
+                            </div>
+                            <div>⏰ ${t.time}</div>
+                            <div>👥 Players: ${slotsFilled}/${totalSlots}</div>
+                            ${status === 'Live' && t.roomId ? `
+                                <div class="room-box">
+                                    <i class="fas fa-gamepad"></i> <strong>Room ID:</strong> ${t.roomId}<br>
+                                    <i class="fas fa-key"></i> <strong>Password:</strong> ${t.password || 'N/A'}
+                                </div>
+                            ` : ''}
+                            <div class="mt-3">
+                                ${status === 'Upcoming' && !isJoined && slotsFilled < totalSlots ? 
+                                    `<button class="btn btn-primary joinMatchBtn" data-id="${id}" data-fee="${t.fee}" style="width:100%;">Join Match ➕</button>` : 
+                                    status === 'Upcoming' && isJoined ? 
+                                    `<button class="btn" disabled style="width:100%;">✓ Already Joined</button>` : 
+                                    status === 'Live' && isJoined && !t.roomId ?
+                                    `<button class="btn" disabled style="width:100%;">⏳ Waiting for Room ID</button>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                tournamentListDiv.innerHTML = html;
+                
+                // Attach join button events
+                document.querySelectorAll('.joinMatchBtn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const matchId = btn.dataset.id;
+                        const fee = parseInt(btn.dataset.fee);
+                        const userData = await getDoc(userDocRef);
+                        const currentWallet = userData.data()?.wallet || 0;
+                        
+                        if (currentWallet < fee) {
+                            showToast("Insufficient balance! Add money first.", true);
+                            return;
+                        }
+                        
+                        const matchRef = doc(db, "tournaments", matchId);
+                        const matchSnap = await getDoc(matchRef);
+                        const players = matchSnap.data()?.players || {};
+                        
+                        if (players[uid]) {
+                            showToast("You've already joined this match!", true);
+                            return;
+                        }
+                        
+                        if (Object.keys(players).length >= (matchSnap.data()?.maxPlayers || 10)) {
+                            showToast("Match is full!", true);
+                            return;
+                        }
+                        
+                        try {
+                            await updateDoc(matchRef, { [`players.${uid}`]: true });
+                            await updateDoc(userDocRef, { wallet: increment(-fee) });
+                            await addDoc(collection(db, "transactions"), {
+                                uid: uid,
+                                type: "joined_tournament",
+                                amount: fee,
+                                matchId: matchId,
+                                timestamp: serverTimestamp()
+                            });
+                            showToast(`Successfully joined ${matchSnap.data()?.title}! -₹${fee}`);
+                            updateWalletDisplay();
+                        } catch(error) {
+                            showToast("Failed to join match", true);
+                        }
+                    });
+                });
+            }
+        });
+        
+        // My Matches - Real-time updates with room details
+        const myMatchesQuery = query(collection(db, "tournaments"));
+        if (myMatchesUnsub) myMatchesUnsub();
+        myMatchesUnsub = onSnapshot(myMatchesQuery, async (snapshot) => {
+            const myMatchesDiv = document.getElementById('myMatchesList');
+            if (myMatchesDiv) {
+                let html = '';
+                let hasMatches = false;
+                
+                for (const docSnap of snapshot.docs) {
+                    const t = docSnap.data();
+                    if (t.players && t.players[uid]) {
+                        hasMatches = true;
+                        html += `
+                            <div class="tournament-card">
+                                <div class="flex-between">
+                                    <span><b><i class="fas fa-gamepad"></i> ${t.title}</b></span>
+                                    <span class="status-badge status-${t.status}">${t.status}</span>
+                                </div>
+                                <div>⏰ ${t.time}</div>
+                                <div>💰 Entry: ₹${t.fee} | Prize: ₹${t.prize}</div>
+                                ${t.status === 'Live' && t.roomId ? `
+                                    <div class="room-box">
+                                        <i class="fas fa-door-open"></i> <strong>Room ID:</strong> ${t.roomId}<br>
+                                        <i class="fas fa-lock"></i> <strong>Password:</strong> ${t.password || 'No password'}
+                                    </div>
+                                ` : t.status === 'Live' && !t.roomId ? `
+                                    <div class="room-box" style="background:#f59e0b20;">
+                                        <i class="fas fa-hourglass-half"></i> Room details will appear when match starts
+                                    </div>
+                                ` : t.status === 'Completed' ? `
+                                    <div class="room-box" style="background:#6b728020;">
+                                        <i class="fas fa-check-circle"></i> Match completed. Check leaderboard for results!
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }
+                }
+                myMatchesDiv.innerHTML = hasMatches ? html : '<div style="text-align:center; padding:40px;">No matches joined yet</div>';
+            }
+        });
+        
+        // Leaderboard - Real-time updates
+        const leaderboardQuery = query(collection(db, "leaderboard"), orderBy("points", "desc"));
+        if (leaderboardUnsub) leaderboardUnsub();
+        leaderboardUnsub = onSnapshot(leaderboardQuery, (snapshot) => {
+            const leaderboardDiv = document.getElementById('leaderboardList');
+            if (leaderboardDiv) {
+                if (snapshot.empty) {
+                    leaderboardDiv.innerHTML = '<div style="text-align:center; padding:40px;">No rankings yet</div>';
+                    return;
+                }
+                
+                let rank = 1;
+                let html = '';
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    let rankClass = '';
+                    if (rank === 1) rankClass = 'rank-1';
+                    else if (rank === 2) rankClass = 'rank-2';
+                    else if (rank === 3) rankClass = 'rank-3';
+                    
+                    html += `
+                        <div class="leaderboard-item ${rankClass}">
+                            <div><span style="font-weight:bold;">#${rank}</span> ${data.name}</div>
+                            <div><i class="fas fa-fire"></i> ${data.points} pts</div>
+                        </div>
+                    `;
+                    rank++;
+                });
+                leaderboardDiv.innerHTML = html;
+            }
+        });
+        
+        // Transaction History - Real-time updates
+        const transactionsQuery = query(collection(db, "transactions"), where("uid", "==", uid), orderBy("timestamp", "desc"));
+        if (transactionsUnsub) transactionsUnsub();
+        transactionsUnsub = onSnapshot(transactionsQuery, (snapshot) => {
+            const historyDiv = document.getElementById('transactionHistory');
+            if (historyDiv) {
+                if (snapshot.empty) {
+                    historyDiv.innerHTML = '<div style="text-align:center; padding:40px;">No transactions yet</div>';
+                    return;
+                }
+                
+                let html = '';
+                snapshot.forEach(docSnap => {
+                    const t = docSnap.data();
+                    const date = t.timestamp ? new Date(t.timestamp.toDate()).toLocaleString() : 'Just now';
+                    const icon = t.type === 'joined_tournament' ? 'fa-gamepad' : 'fa-plus-circle';
+                    const color = t.type === 'joined_tournament' ? '#f97316' : '#10b981';
+                    html += `
+                        <div class="transaction-item">
+                            <div><i class="fas ${icon}" style="color:${color};"></i> ${t.type.replace('_', ' ')}</div>
+                            <div>₹${t.amount}</div>
+                            <div style="font-size:11px; color:#7e8c9e;">${date}</div>
+                        </div>
+                    `;
+                });
+                historyDiv.innerHTML = html;
+            }
+        });
+        
+        root.innerHTML = `
+            <div class="header">
+                <div class="logo">
+                    <h1>🔥 BIHARI BATTLE</h1>
+                    <p>Free Fire Tournament</p>
+                </div>
+                <div class="user-badge">
+                    <i class="fas fa-user-circle"></i> ${currentUser.email.split('@')[0]}
+                    <button id="logoutBtn" class="btn" style="padding:4px 12px;">Exit</button>
+                </div>
+            </div>
+            
+            <div class="wallet-card">
+                <div class="flex-between">
+                    <span><i class="fas fa-wallet"></i> Wallet Balance</span>
+                    <span class="balance" id="userWalletAmount">${walletBalance}</span>
+                </div>
+                <button id="addMoneyBtn" class="btn btn-primary" style="margin-top:12px; width:100%;">
+                    <i class="fas fa-plus-circle"></i> Add ₹200 (Demo)
+                </button>
+            </div>
+            
+            <div class="tab-bar">
+                <div class="tab active" data-tab="tournaments">🏆 Tournaments</div>
+                <div class="tab" data-tab="mymatches">🎮 My Matches</div>
+                <div class="tab" data-tab="leaderboard">📊 Leaderboard</div>
+                <div class="tab" data-tab="history">💰 History</div>
+            </div>
+            
+            <div id="tournamentsPanel">
+                <h3><i class="fas fa-fire"></i> Active Tournaments</h3>
+                <div id="tournamentList" class="loading">Loading tournaments...</div>
+            </div>
+            
+            <div id="mymatchesPanel" style="display:none;">
+                <h3><i class="fas fa-calendar-check"></i> My Joined Matches</h3>
+                <div id="myMatchesList" class="loading">Loading your matches...</div>
+            </div>
+            
+            <div id="leaderboardPanel" style="display:none;">
+                <h3><i class="fas fa-chart-line"></i> Global Leaderboard</h3>
+                <div id="leaderboardList" class="loading">Loading leaderboard...</div>
+            </div>
+            
+            <div id="historyPanel" style="display:none;">
+                <h3><i class="fas fa-history"></i> Transaction History</h3>
+                <div id="transactionHistory" class="loading">Loading transactions...</div>
+            </div>
+        `;
+        
+        document.getElementById('logoutBtn')?.addEventListener('click', () => {
+            signOut(auth);
+            currentUser = null;
+            render();
+        });
+        
+        document.getElementById('addMoneyBtn')?.addEventListener('click', async () => {
+            try {
+                await updateDoc(userDocRef, { wallet: increment(200) });
+                await addDoc(collection(db, "transactions"), {
+                    uid: uid,
+                    type: "deposit",
+                    amount: 200,
+                    timestamp: serverTimestamp()
+                });
+                showToast("₹200 added to wallet!");
+                updateWalletDisplay();
+            } catch(error) {
+                showToast("Failed to add money", true);
+            }
+        });
+        
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+                document.getElementById('tournamentsPanel').style.display = target === 'tournaments' ? 'block' : 'none';
+                document.getElementById('mymatchesPanel').style.display = target === 'mymatches' ? 'block' : 'none';
+                document.getElementById('leaderboardPanel').style.display = target === 'leaderboard' ? 'block' : 'none';
+                document.getElementById('historyPanel').style.display = target === 'history' ? 'block' : 'none';
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    }
+    
+    onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        render();
+    });
 </script>
-<!-- PAGINATION SCRIPT START -->
-<script>
-document.querySelectorAll("img").forEach(img=>{
-  img.setAttribute("loading","lazy");
-  img.setAttribute("decoding","async");
-});
-</script>
-<!-- PAGINATION SCRIPT END -->
 </body>
 </html>
