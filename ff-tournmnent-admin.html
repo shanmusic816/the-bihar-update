@@ -1,205 +1,1267 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBL Admin | Tournament Manager</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Yahan apna Firebase Config dalein
-        const firebaseConfig = {
-            apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw",
-            authDomain: "tournament-app-b77c0.firebaseapp.com",
-            projectId: "tournament-app-b77c0",
-            storageBucket: "tournament-app-b77c0.firebasestorage.app",
-            messagingSenderId: "925200484535",
-            appId: "1:925200484535:web:c15c87fcecb5e793bca532"
-        };
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    <title>Bihari Battle League | Admin Panel</title>
 
-// Updated Login Logic with Admin Check
-window.adminLogin = async () => {
-    const e = document.getElementById('ae').value;
-    const p = document.getElementById('ap').value;
-    try {
-        const res = await signInWithEmailAndPassword(auth, e, p);
-        const userDoc = await getDoc(doc(db, "users", res.user.uid));
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-        if (userDoc.exists() && userDoc.data().role === 'admin') {
-            // Agar Admin hai toh dashboard dikhao
-            document.getElementById('admin-login').style.display = 'none';
-            document.getElementById('admin-dash').style.display = 'block';
-            listenTournaments();
-        } else {
-            // Agar Admin nahi hai toh Logout kar do
-            alert("Access Denied: You are not authorized as Admin!");
-            await signOut(auth);
-        }
-    } catch (err) {
-        alert("Login Error: " + err.message);
-    }
-};
-
-// Auth Status Change
-onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists() && userDoc.data().role === 'admin') {
-            document.getElementById('admin-login').style.display = 'none';
-            document.getElementById('admin-dash').style.display = 'block';
-            listenTournaments();
-        } else {
-            document.getElementById('admin-login').style.display = 'block';
-            document.getElementById('admin-dash').style.display = 'none';
-        }
-    } else {
-        document.getElementById('admin-login').style.display = 'block';
-        document.getElementById('admin-dash').style.display = 'none';
-    }
-});
-
-
-        // Create Tournament Logic
-        window.saveTournament = async () => {
-            const title = document.getElementById('t-title').value;
-            const fee = document.getElementById('t-fee').value;
-            const prize = document.getElementById('t-prize').value;
-            const time = document.getElementById('t-time').value;
-
-            if(!title || !fee) return alert("Please fill details");
-
-            try {
-                await addDoc(collection(db, "tournaments"), {
-                    title: title,
-                    fee: parseInt(fee),
-                    pool: prize,
-                    time: time,
-                    filled: 0,
-                    total: 100,
-                    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400"
-                });
-                alert("Tournament Created Successfully!");
-                document.getElementById('t-form').reset();
-            } catch(e) { alert(e.message); }
-        };
-
-        // Real-time List
-        function listenTournaments() {
-            onSnapshot(collection(db, "tournaments"), (snap) => {
-                const list = document.getElementById('admin-t-list');
-                list.innerHTML = '';
-                snap.forEach(d => {
-                    const t = d.data();
-                  // Tournament List display loop ke andar ye button daalein
-list.innerHTML += `
-    <div class="t-card" style="border-left: 5px solid #f59e0b;">
-        <div>
-            <strong>${t.title}</strong><br>
-            <small>Status: ${t.status || 'Pending'}</small>
-        </div>
-        <div style="display:flex; gap:10px;">
-            <button onclick="updateRoomDetails('${d.id}')" style="background: #f59e0b; padding: 5px 10px; font-size: 12px;">
-                <i class="fa fa-key"></i> SET ID-PASS
-            </button>
-            <button onclick="deleteT('${d.id}')" style="background:red; padding: 5px 10px;">
-                <i class="fa fa-trash"></i>
-            </button>
-        </div>
-    </div>`;
-
-                    list.innerHTML += `
-                        <div class="t-card">
-                            <div>
-                                <strong>${t.title}</strong><br>
-                                <small>Fee: ₹${t.fee} | Prize: ${t.pool}</small>
-                            </div>
-                            <button onclick="deleteT('${d.id}')" style="background:red; padding:5px 10px;">Delete</button>
-                        </div>`;
-                });
-            });
-        }
-
-        window.deleteT = async (id) => {
-            if(confirm("Delete this tournament?")) await deleteDoc(doc(db, "tournaments", id));
-        };
-
-        window.logout = () => signOut(auth);
-    
-  // Room ID aur Password update karne ka function
-window.updateRoomDetails = async (tournamentId) => {
-    const roomId = prompt("Enter Room ID:");
-    const password = prompt("Enter Room Password:");
-
-    if (roomId && password) {
-        try {
-            const tRef = doc(db, "tournaments", tournamentId);
-            await updateDoc(tRef, {
-                roomId: roomId,
-                password: password,
-                status: "ROOM READY" // Status change takki user ko pata chale
-            });
-            alert("Room ID/Pass successfully updated!");
-        } catch (error) {
-            alert("Error: " + error.message);
-        }
-    } else {
-        alert("Dono cheezein dalna zaroori hai!");
-    }
-};
-
-  </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
-        body { font-family: 'Poppins'; background: #000; color: #fff; margin: 0; padding: 20px; }
-        .container { max-width: 500px; margin: auto; }
-        .card { background: #111; padding: 20px; border-radius: 12px; border: 1px solid #333; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #22c55e; border: none; color: white; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .t-card { background: #1a1a1a; padding: 15px; margin-top: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #22c55e; }
-        h2 { color: #22c55e; }
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+            font-family: 'Poppins', sans-serif;
+
+        }
+
+
+
+        body {
+
+            background: linear-gradient(145deg, #0a0f1e 0%, #0b1120 100%);
+
+            min-height: 100vh;
+
+            padding: 16px;
+
+            color: #fff;
+
+        }
+
+
+
+        .app-container {
+
+            max-width: 800px;
+
+            margin: 0 auto;
+
+            background: rgba(12, 20, 30, 0.65);
+
+            backdrop-filter: blur(3px);
+
+            border-radius: 40px;
+
+            padding: 20px 18px;
+
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
+
+        }
+
+
+
+        .header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 24px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+
+        .logo h1 {
+
+            font-size: 1.6rem;
+
+            background: linear-gradient(135deg, #ef4444, #f59e0b);
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
+
+        }
+
+
+
+        .logo p {
+
+            font-size: 0.7rem;
+
+            color: #7e8c9e;
+
+        }
+
+
+
+        .btn {
+
+            border: none;
+
+            background: linear-gradient(95deg, #1e3c72, #2b4c7c);
+
+            padding: 10px 20px;
+
+            border-radius: 60px;
+
+            font-weight: 600;
+
+            color: white;
+
+            cursor: pointer;
+
+            transition: all 0.2s ease;
+
+            font-size: 0.85rem;
+
+        }
+
+
+
+        .btn-primary {
+
+            background: linear-gradient(95deg, #ef4444, #f97316);
+
+        }
+
+
+
+        .btn-success {
+
+            background: linear-gradient(95deg, #10b981, #059669);
+
+        }
+
+
+
+        .btn-warning {
+
+            background: linear-gradient(95deg, #f59e0b, #d97706);
+
+        }
+
+
+
+        .admin-section {
+
+            background: #0f1825;
+
+            border-radius: 28px;
+
+            padding: 20px;
+
+            margin-bottom: 24px;
+
+            border: 1px solid #2c3e50;
+
+        }
+
+
+
+        .admin-section h3 {
+
+            margin-bottom: 16px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+
+
+        input, select, textarea {
+
+            background: #0f1a24;
+
+            border: 1px solid #2c3e50;
+
+            padding: 12px;
+
+            border-radius: 30px;
+
+            color: white;
+
+            width: 100%;
+
+            margin-bottom: 12px;
+
+            outline: none;
+
+        }
+
+
+        .tournament-card {
+
+            background: #07121e;
+
+            border-radius: 20px;
+
+            padding: 16px;
+
+            margin-bottom: 16px;
+
+            border-left: 4px solid #ef4444;
+
+        }
+
+
+
+        .flex-between {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+        }
+
+
+
+        .mt-3 {
+
+            margin-top: 12px;
+
+        }
+
+
+
+        .status-badge {
+
+            font-size: 0.7rem;
+
+            padding: 4px 12px;
+
+            border-radius: 30px;
+
+            display: inline-block;
+
+        }
+
+
+
+        .status-Upcoming {
+
+            background: #f59e0b;
+
+        }
+
+
+
+        .status-Live {
+
+            background: #10b981;
+
+        }
+
+
+
+        .status-Completed {
+
+            background: #6b7280;
+
+        }
+
+
+
+        .players-list {
+
+            background: #0a0f1a;
+
+            padding: 12px;
+
+            border-radius: 16px;
+
+            margin-top: 10px;
+
+            max-height: 200px;
+
+            overflow-y: auto;
+
+        }
+
+
+
+        .player-item {
+
+            padding: 8px;
+
+            border-bottom: 1px solid #1e2a3a;
+
+            font-size: 0.85rem;
+
+        }
+
+
+
+        .toast-msg {
+
+            position: fixed;
+
+            bottom: 20px;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            background: #1e293b;
+
+            padding: 12px 24px;
+
+            border-radius: 60px;
+
+            z-index: 999;
+
+            font-size: 0.8rem;
+
+            animation: slideUp 0.3s ease;
+
+        }
+
+
+
+        @keyframes slideUp {
+
+            from {
+
+                transform: translateX(-50%) translateY(100px);
+
+                opacity: 0;
+
+            }
+
+            to {
+
+                transform: translateX(-50%) translateY(0);
+
+                opacity: 1;
+
+            }
+
+        }
+
+
+
+        .grid-2 {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 12px;
+
+        }
+
+
+
+        @media (max-width: 600px) {
+
+            .grid-2 {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+
+
+        .result-input {
+
+            background: #0f1a24;
+
+            padding: 12px;
+
+            border-radius: 16px;
+
+            margin-top: 10px;
+
+        }
+
+
+        .modal {
+
+            display: none;
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background: rgba(0,0,0,0.8);
+
+            z-index: 1000;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+
+
+        .modal-content {
+
+            background: #0f1825;
+
+            padding: 24px;
+
+            border-radius: 32px;
+
+            max-width: 400px;
+
+            width: 90%;
+
+            max-height: 80vh;
+
+            overflow-y: auto;
+
+        }
+
     </style>
+
 </head>
+
 <body>
-    <div class="container">
-        <div id="admin-login" style="text-align: center; margin-top: 50px;">
-            <h1>🛡️ BBL ADMIN</h1>
-            <div class="card">
-                <input id="ae" placeholder="Admin Email">
-                <input id="ap" type="password" placeholder="Password">
-                <button onclick="adminLogin()" style="background: #6366f1;">LOGIN TO DASHBOARD</button>
-            </div>
-        </div>
 
-        <div id="admin-dash" style="display:none">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2>Admin Panel</h2>
-                <i class="fa fa-sign-out-alt" onclick="logout()" style="cursor:pointer; color: red;"></i>
-            </div>
+<div id="appRoot" class="app-container"></div>
 
-            <div class="card">
-                <h3>+ Create Tournament</h3>
-                <form id="t-form">
-                    <input id="t-title" placeholder="Game Title (e.g. BGMI Solo)">
-                    <input id="t-fee" type="number" placeholder="Entry Fee (₹)">
-                    <input id="t-prize" placeholder="Prize Pool (₹)">
-                    <input id="t-time" placeholder="Match Time (e.g. 09:00 PM)">
-                </form>
-                <button onclick="saveTournament()">PUBLISH TOURNAMENT</button>
-            </div>
 
-            <h3>Active Tournaments</h3>
-            <div id="admin-t-list">
+
+<script type="module">
+
+    // ============================================
+
+    // FIREBASE CONFIGURATION - REPLACE WITH YOUR OWN
+
+    // ============================================
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw",
+
+  authDomain: "tournament-app-b77c0.firebaseapp.com",
+
+  databaseURL: "https://tournament-app-b77c0-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+  projectId: "tournament-app-b77c0",
+
+  storageBucket: "tournament-app-b77c0.firebasestorage.app",
+
+  messagingSenderId: "925200484535",
+
+  appId: "1:925200484535:web:c15c87fcecb5e793bca532"
+
+};    
+
+    // IMPORTANT: Replace the above config with your actual Firebase project settings
+
+    
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, serverTimestamp, getDocs, query, orderBy, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    
+
+    const app = initializeApp(firebaseConfig);
+
+    const db = getFirestore(app);
+
+    
+
+    let adminLoggedIn = false;
+
+    const root = document.getElementById('appRoot');
+
+    
+
+    function showToast(msg, isError = false) {
+
+        const toast = document.createElement('div');
+
+        toast.className = 'toast-msg';
+
+        toast.innerText = msg;
+
+        toast.style.background = isError ? '#dc2626' : '#ef4444';
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => toast.remove(), 2500);
+
+    }
+
+    
+
+    function render() {
+
+        if (!adminLoggedIn) {
+
+            renderAdminLogin();
+
+        } else {
+
+            renderAdminPanel();
+
+        }
+
+    }
+
+    
+
+    function renderAdminLogin() {
+
+        root.innerHTML = `
+
+            <div class="header">
+
+                <div class="logo">
+
+                    <h1>👑 ADMIN PANEL</h1>
+
+                    <p>Bihari Battle League Management</p>
+
                 </div>
-        </div>
-    </div>
+
+            </div>
+
+            <div class="admin-section">
+
+                <h3><i class="fas fa-shield-alt"></i> Admin Access</h3>
+
+                <input type="password" id="adminPass" placeholder="Enter Admin Password" />
+
+                <button class="btn btn-primary" id="adminLoginBtn" style="width:100%;">
+
+                    <i class="fas fa-unlock-alt"></i> Login
+
+                </button>
+
+                <div style="margin-top: 20px; text-align: center; font-size: 12px; color: #7e8c9e;">
+
+                    <i class="fas fa-info-circle"></i> Default password: admin123
+
+                </div>
+
+            </div>
+
+        `;
+        document.getElementById('adminLoginBtn')?.addEventListener('click', () => {
+
+            const pwd = document.getElementById('adminPass').value;
+
+            if (pwd === "admin123") {
+
+                adminLoggedIn = true;
+
+                render();
+
+                showToast("Welcome Admin!");
+
+            } else {
+
+                showToast("Wrong password!", true);
+
+            }
+
+        });
+
+    }
+
+    async function renderAdminPanel() {
+
+        // Fetch all tournaments
+
+        const tournamentsQuery = query(collection(db, "tournaments"), orderBy("time", "desc"));
+
+        const tournamentsSnap = await getDocs(tournamentsQuery);
+
+        
+
+        let tournamentsHtml = '';
+
+        
+
+        for (const docSnap of tournamentsSnap.docs) {
+
+            const t = docSnap.data();
+
+            const id = docSnap.id;
+
+            const playersCount = t.players ? Object.keys(t.players).length : 0;
+
+            
+
+            // Get player names
+
+            let playersHtml = '';
+
+            if (t.players && Object.keys(t.players).length > 0) {
+
+                const playerIds = Object.keys(t.players);
+
+                for (const pid of playerIds) {
+
+                    const userDoc = await getDoc(doc(db, "users", pid));
+
+                    const userName = userDoc.exists() ? userDoc.data().name : pid.slice(0, 8);
+
+                    playersHtml += `<div class="player-item"><i class="fas fa-user"></i> ${userName}</div>`;
+
+                }
+
+            } else {
+
+                playersHtml = '<div class="player-item">No players joined yet</div>';
+
+            }
+
+            
+
+            tournamentsHtml += `
+
+                <div class="tournament-card" data-id="${id}">
+
+                    <div class="flex-between">
+
+                        <h4><i class="fas fa-trophy"></i> ${t.title || 'Free Fire Battle'}</h4>
+
+                        <span class="status-badge status-${t.status}">${t.status}</span>
+
+                    </div>
+
+                    <div class="flex-between mt-3">
+
+                        <span>💰 Entry: ₹${t.fee}</span>
+
+                        <span>🏆 Prize: ₹${t.prize}</span>
+
+                    </div>
+
+                    <div>⏰ ${t.time}</div>
+
+                    <div>👥 Players: ${playersCount}/${t.maxPlayers || 10}</div>
+
+                    
+
+                    <div class="mt-3">
+
+                        <select id="statusSelect-${id}" class="status-select">
+
+                            <option value="Upcoming" ${t.status === 'Upcoming' ? 'selected' : ''}>Upcoming</option>
+
+                            <option value="Live" ${t.status === 'Live' ? 'selected' : ''}>Live</option>
+
+                            <option value="Completed" ${t.status === 'Completed' ? 'selected' : ''}>Completed</option>
+
+                        </select>
+
+                        <button class="btn updateStatusBtn" data-id="${id}">Update Status</button>
+
+                        <button class="btn btn-warning roomBtn" data-id="${id}" data-room="${t.roomId || ''}" data-pass="${t.password || ''}">
+
+                            <i class="fas fa-door-open"></i> Set Room
+
+                        </button>
+
+                        <button class="btn btn-success resultBtn" data-id="${id}">
+
+                            <i class="fas fa-chart-simple"></i> Set Results
+
+                        </button>
+
+                    </div>
+
+                    
+
+                    <div class="mt-3">
+
+                        <details>
+
+                            <summary style="cursor:pointer; color:#2d9cdb;">👥 View Players (${playersCount})</summary>
+
+                            <div class="players-list">${playersHtml}</div>
+
+                        </details>
+
+                    </div>
+
+                    
+
+                    ${t.status === 'Live' && t.roomId ? `
+
+                        <div class="room-box mt-3" style="background:#10b98120;">
+
+                            <i class="fas fa-gamepad"></i> <strong>Current Room:</strong> ${t.roomId}<br>
+
+                            <i class="fas fa-key"></i> <strong>Password:</strong> ${t.password || 'N/A'}
+
+                        </div>
+
+                    ` : ''}
+
+                </div>
+
+            `;
+
+        }
+
+        
+
+        // Fetch all users for wallet approval
+
+        const usersQuery = query(collection(db, "users"));
+
+        const usersSnap = await getDocs(usersQuery);
+
+        let usersHtml = '';
+
+        usersSnap.forEach(docSnap => {
+
+            const user = docSnap.data();
+
+            usersHtml += `
+
+                <div class="flex-between" style="margin-bottom: 10px; padding: 8px; background: #0a0f1a; border-radius: 16px;">
+
+                    <span><i class="fas fa-user"></i> ${user.name}</span>
+
+                    <span>💰 ₹${user.wallet || 0}</span>
+
+                    <button class="btn approveUserBtn" data-id="${docSnap.id}" data-name="${user.name}" style="padding: 4px 12px;">+ ₹500</button>
+
+                </div>
+
+            `;
+
+        });
+
+        
+
+        root.innerHTML = `
+
+            <div class="header">
+
+                <div class="logo">
+
+                    <h1>👑 ADMIN DASHBOARD</h1>
+
+                    <p>Bihari Battle League Control Center</p>
+
+                </div>
+
+                <button id="adminLogoutBtn" class="btn">Exit Admin</button>
+
+            </div>
+
+            
+
+            <div class="admin-section">
+
+                <h3><i class="fas fa-plus-circle"></i> Create New Tournament</h3>
+
+                <div class="grid-2">
+
+                    <input type="text" id="tourneyTitle" placeholder="Tournament Title" />
+
+                    <input type="number" id="tourneyFee" placeholder="Entry Fee (₹)" />
+
+                    <input type="number" id="tourneyPrize" placeholder="Prize Pool (₹)" />
+
+                    <input type="text" id="tourneyTime" placeholder="Time (e.g., Sunday 8 PM)" />
+
+                    <input type="number" id="tourneyMax" placeholder="Max Players" value="10" />
+
+                </div>
+
+                <button id="createTourneyBtn" class="btn btn-primary" style="width:100%;">
+
+                    <i class="fas fa-trophy"></i> Create Tournament
+
+                </button>
+
+            </div>
+
+            
+
+            <div class="admin-section">
+
+                <h3><i class="fas fa-wallet"></i> Wallet Management</h3>
+
+                <div style="max-height: 300px; overflow-y: auto;">
+
+                    ${usersHtml || '<div>No users found</div>'}
+
+                </div>
+
+                <button id="refreshUsersBtn" class="btn" style="margin-top: 12px; width:100%;">
+
+                    <i class="fas fa-refresh"></i> Refresh Users
+
+                </button>
+
+            </div>
+
+            
+
+            <div class="admin-section">
+
+                <h3><i class="fas fa-gamepad"></i> Manage Tournaments</h3>
+
+                <div id="tournamentsList">
+
+                    ${tournamentsHtml || '<div style="text-align:center; padding:40px;">No tournaments created yet</div>'}
+
+                </div>
+
+            </div>
+
+        `;
+
+        
+
+        // Create Tournament
+
+        document.getElementById('createTourneyBtn')?.addEventListener('click', async () => {
+
+            const title = document.getElementById('tourneyTitle').value;
+
+            const fee = parseInt(document.getElementById('tourneyFee').value);
+
+            const prize = parseInt(document.getElementById('tourneyPrize').value);
+
+            const time = document.getElementById('tourneyTime').value;
+
+            const maxPlayers = parseInt(document.getElementById('tourneyMax').value);
+
+            
+
+            if (!title || isNaN(fee) || isNaN(prize) || !time) {
+
+                showToast("Please fill all fields!", true);
+
+                return;
+
+            }
+
+            
+
+            try {
+
+                await addDoc(collection(db, "tournaments"), {
+
+                    title: title,
+
+                    fee: fee,
+
+                    prize: prize,
+
+                    time: time,
+
+                    maxPlayers: maxPlayers || 10,
+
+                    status: "Upcoming",
+
+                    players: {},
+
+                    roomId: "",
+
+                    password: "",
+
+                    createdAt: serverTimestamp()
+
+                });
+
+                showToast(`Tournament "${title}" created successfully!`);
+
+                renderAdminPanel();
+
+            } catch(error) {
+
+                showToast("Failed to create tournament", true);
+
+            }
+
+        });
+
+            // Update Status
+
+        document.querySelectorAll('.updateStatusBtn').forEach(btn => {
+
+            btn.addEventListener('click', async () => {
+
+                const id = btn.dataset.id;
+
+                const newStatus = document.getElementById(`statusSelect-${id}`).value;
+
+                try {
+
+                    await updateDoc(doc(db, "tournaments", id), { status: newStatus });
+
+                    showToast(`Status updated to ${newStatus}`);
+
+                    renderAdminPanel();
+
+                } catch(error) {
+
+                    showToast("Failed to update status", true);
+
+                }
+
+            });
+
+        });
+
+        
+
+        // Set Room ID & Password
+
+        document.querySelectorAll('.roomBtn').forEach(btn => {
+
+            btn.addEventListener('click', async () => {
+
+                const id = btn.dataset.id;
+
+                const newRoom = prompt("Enter Room ID:");
+
+                if (!newRoom) return;
+
+                const newPass = prompt("Enter Room Password:");
+
+                
+
+                try {
+
+                    await updateDoc(doc(db, "tournaments", id), { 
+
+                        roomId: newRoom, 
+
+                        password: newPass || "",
+
+                        status: "Live"  // Automatically set to Live when room is added
+
+                    });
+
+                    showToast(`Room ID added! Match is now LIVE`);
+
+                    renderAdminPanel();
+
+                } catch(error) {
+
+                    showToast("Failed to set room", true);
+
+                }
+
+            });
+
+        });
+
+        
+
+        // Set Results (Kills & Rank)
+
+        document.querySelectorAll('.resultBtn').forEach(btn => {
+
+            btn.addEventListener('click', async () => {
+
+                const id = btn.dataset.id;
+
+                const matchRef = doc(db, "tournaments", id);
+
+                const matchSnap = await getDoc(matchRef);
+
+                const matchData = matchSnap.data();
+
+                const players = matchData?.players || {};
+
+                const playerIds = Object.keys(players);
+
+                
+
+                if (playerIds.length === 0) {
+
+                    showToast("No players in this tournament!", true);
+
+                    return;
+
+                }
+
+                
+
+                // Create modal for results input
+
+                const modal = document.createElement('div');
+
+                modal.className = 'modal';
+
+                modal.style.display = 'flex';
+
+                
+
+                let resultsHtml = '<h3>Enter Match Results</h3>';
+
+                for (const pid of playerIds) {
+
+                    const userDoc = await getDoc(doc(db, "users", pid));
+
+                    const userName = userDoc.exists() ? userDoc.data().name : pid.slice(0, 8);
+
+                    resultsHtml += `
+
+                        <div class="result-input">
+
+                            <strong>${userName}</strong>
+
+                            <div class="grid-2" style="margin-top: 8px;">
+
+                                <input type="number" id="kills-${pid}" placeholder="Kills" value="0" />
+
+                                <input type="number" id="rank-${pid}" placeholder="Rank (1,2,3...)" value="1" />
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+
+                resultsHtml += `
+
+                    <button class="btn btn-primary" id="submitResultsBtn" style="width:100%; margin-top: 12px;">Submit Results</button>
+
+                    <button class="btn" id="closeModalBtn" style="width:100%; margin-top: 8px;">Cancel</button>
+
+                `;
+
+                
+
+                modal.innerHTML = `<div class="modal-content">${resultsHtml}</div>`;
+
+                document.body.appendChild(modal);
+
+                
+
+                document.getElementById('submitResultsBtn')?.addEventListener('click', async () => {
+
+                    for (const pid of playerIds) {
+
+                        const kills = parseInt(document.getElementById(`kills-${pid}`).value) || 0;
+
+                        const rank = parseInt(document.getElementById(`rank-${pid}`).value) || 1;
+
+                        
+
+                        // Calculate points: kills * 10 + rank bonus
+
+                        let rankBonus = 0;
+
+                        if (rank === 1) rankBonus = 50;
+
+                        else if (rank === 2) rankBonus = 30;
+
+                        else if (rank === 3) rankBonus = 20;
+
+                        else rankBonus = 0;
+
+                        
+
+                        const points = (kills * 10) + rankBonus;
+
+                        
+                        const userDoc = await getDoc(doc(db, "users", pid));
+
+                        const userName = userDoc.exists() ? userDoc.data().name : pid.slice(0, 8);
+
+                        
+
+                        const leaderRef = doc(db, "leaderboard", pid);
+
+                        const existing = await getDoc(leaderRef);
+
+                        
+
+                        if (existing.exists()) {
+
+                            await updateDoc(leaderRef, {
+
+                                points: (existing.data().points || 0) + points,
+
+                                kills: (existing.data().kills || 0) + kills,
+
+                                name: userName,
+
+                                lastRank: rank
+
+                            });
+
+                        } else {
+
+                            await setDoc(leaderRef, {
+
+                                name: userName,
+
+                                kills: kills,
+
+                                points: points,
+
+                                rank: rank
+
+                            });
+
+                        }
+
+                    }
+
+                    
+
+                    await updateDoc(matchRef, { status: "Completed" });
+
+                    showToast("Results submitted & leaderboard updated!");
+
+                    modal.remove();
+
+                    renderAdminPanel();
+
+                });
+
+                
+
+                document.getElementById('closeModalBtn')?.addEventListener('click', () => {
+
+                    modal.remove();
+
+                });
+
+            });
+
+        });
+
+        
+
+        // Approve user deposits
+
+        document.querySelectorAll('.approveUserBtn').forEach(btn => {
+
+            btn.addEventListener('click', async () => {
+
+                const userId = btn.dataset.id;
+
+                const userName = btn.dataset.name;
+
+                
+
+                try {
+
+                    const userRef = doc(db, "users", userId);
+
+                    await updateDoc(userRef, {
+
+                        wallet: increment(500)
+
+                    });
+
+                    await addDoc(collection(db, "transactions"), {
+
+                        uid: userId,
+
+                        type: "admin_deposit_approved",
+
+                        amount: 500,
+
+                        timestamp: serverTimestamp()
+
+                    });
+
+                    showToast(`Added ₹500 to ${userName}'s wallet`);
+
+                    renderAdminPanel();
+
+                } catch(error) {
+
+                    showToast("Failed to add money", true);
+
+                }
+
+            });
+
+        });
+
+        
+
+        // Refresh users
+
+        document.getElementById('refreshUsersBtn')?.addEventListener('click', () => {
+
+            renderAdminPanel();
+
+        });
+
+        
+
+        document.getElementById('adminLogoutBtn')?.addEventListener('click', () => {
+
+            adminLoggedIn = false;
+
+            render();
+
+            showToast("Logged out from admin panel");
+
+        });
+
+    }
+
+    
+
+    // Helper function for increment (since we need to import it)
+
+    function increment(value) {
+
+        return value;
+
+    }
+
+    
+
+    // Override increment to work with Firestore
+
+    window.increment = (value) => {
+
+        return value;
+
+    };
+
+    
+
+    render();
+
+</script>
+
 </body>
+
 </html>
