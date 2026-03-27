@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Esports Arena | Player Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.7.1/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.7.1/firebase-auth-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.7.1/firebase-firestore-compat.min.js"></script>
+    <style>
+        :root { --bg: #05070a; --blue: #3b82f6; --purple: #8b5cf6; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .rajdhani { font-family: 'Rajdhani', sans-serif; text-transform: uppercase; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .neon-blue { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); border: 1px solid var(--blue); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .app-container { max-width: 448px; margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 90px; }
+        .diamond-btn { transform: rotate(45deg); width: 52px; height: 52px; background: linear-gradient(135deg, var(--blue), var(--purple)); border-radius: 14px; cursor: pointer; }
+        .diamond-btn span { transform: rotate(-45deg); display: block; }
+        input { background: rgba(0,0,0,0.5) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; outline: none; }
+    </style>
+</head>
+<body class="bg-[#05070a]">
+<div class="app-container">
+        <div id="auth-screen" class="fixed inset-0 z-[100] bg-[#05070a] flex flex-col items-center justify-center p-6">
+            <div class="mb-8 w-20 h-20 glass rounded-3xl flex items-center justify-center font-bold text-3xl rajdhani text-blue-500 neon-blue">GX</div>
+            <div class="w-full space-y-4">
+                <h2 id="auth-title" class="text-3xl font-bold rajdhani text-center text-blue-400 tracking-widest">Sign In</h2>
+                <div id="signup-fields" class="hidden space-y-4">
+                    <input type="text" id="auth-username" placeholder="Gamertag" class="w-full p-4 rounded-2xl">
+                </div>
+                <input type="email" id="auth-email" placeholder="Email" class="w-full p-4 rounded-2xl">
+                <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 rounded-2xl">
+                <button onclick="processAuth()" id="auth-btn" class="w-full bg-blue-600 py-4 rounded-2xl font-bold rajdhani tracking-widest neon-blue">ENTER ARENA</button>
+                <p class="text-center text-sm text-white/40 cursor-pointer" onclick="toggleAuthMode()">Toggle Login / Signup</p>
+            </div>
+        </div>
+
+        <div id="main-app" class="hidden">
+            <header class="fixed top-0 left-0 right-0 z-50 glass max-w-[448px] mx-auto">
+                <div class="flex justify-between items-center p-4">
+                    <div class="rajdhani font-bold text-xl text-blue-500" id="brand-name">ESPORTS PRO</div>
+                    <div class="glass px-3 py-1 rounded-xl text-[10px] font-bold">₹<span id="wallet-val">0</span></div>
+                </div>
+            </header>
+<main class="pt-24 p-4">
+                <section id="tab-home" class="tab-content active space-y-6">
+                    <div id="match-list" class="space-y-6">
+                        </div>
+                </section>
+
+                <section id="tab-profile" class="tab-content text-center space-y-4">
+                    <div class="glass p-8 rounded-[40px]">
+                        <img id="prof-img" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-blue-500">
+                        <h3 id="prof-name" class="text-2xl font-bold rajdhani">---</h3>
+                        <button onclick="logout()" class="text-red-500 text-xs font-bold mt-6">LOGOUT</button>
+                    </div>
+                </section>
+            </main>
+
+            <div id="player-modal" class="fixed inset-0 z-[120] bg-black/95 hidden flex items-center justify-center p-6">
+                <div class="glass w-full max-w-sm p-6 rounded-3xl border border-white/10">
+                    <h3 class="text-lg font-bold rajdhani text-blue-400 mb-4">Joined Players</h3>
+                    <div id="player-names-list" class="space-y-2 text-sm max-h-60 overflow-y-auto no-scrollbar"></div>
+                    <button onclick="document.getElementById('player-modal').classList.add('hidden')" class="w-full mt-6 text-white/20 text-[10px] font-bold uppercase">Close</button>
+                </div>
+            </div>
+
+            <div id="join-modal" class="fixed inset-0 z-[110] bg-black/90 hidden flex items-center justify-center p-6">
+                <div class="glass w-full rounded-3xl p-6 border-blue-500/50 border neon-blue space-y-4">
+                    <h3 class="text-xl font-bold rajdhani text-blue-400">Join Match</h3>
+                    <input type="text" id="player-uid" placeholder="Enter Character ID" class="w-full p-4 rounded-2xl">
+                    <button id="confirm-join-btn" onclick="executeJoin()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold rajdhani tracking-widest">PAY & JOIN</button>
+                    <button onclick="document.getElementById('join-modal').classList.add('hidden')" class="w-full text-white/30 text-xs py-2">CANCEL</button>
+                </div>
+            </div>
+
+            <nav class="fixed bottom-0 left-0 right-0 glass p-4 flex justify-around items-center max-w-[448px] mx-auto z-50 rounded-t-[35px] border-t border-white/10">
+                <button onclick="switchTab('home')" id="btn-home">HOME</button>
+                <div class="diamond-btn flex items-center justify-center neon-blue" onclick="switchTab('home')"><span class="rajdhani text-white text-[10px] font-bold">PLAY</span></div>
+                <button onclick="switchTab('profile')" id="btn-profile">USER</button>
+            </nav>
+        </div>
+    </div>
+<script>
+        const firebaseConfig = { apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw", authDomain: "tournament-app-b77c0.firebaseapp.com", projectId: "tournament-app-b77c0", storageBucket: "tournament-app-b77c0.firebasestorage.app", messagingSenderId: "925200484535", appId: "1:925200484535:web:c15c87fcecb5e793bca532" };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth(); const db = firebase.firestore();
+        let isSignup = false; let selectedMatchId = null; let currentEntryFee = 0;
+
+        function toggleAuthMode() { isSignup = !isSignup; document.getElementById('auth-title').innerText = isSignup ? 'Register' : 'Sign In'; document.getElementById('signup-fields').classList.toggle('hidden', !isSignup); }
+
+        async function processAuth() {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-pass').value;
+            try {
+                if (isSignup) {
+                    const nick = document.getElementById('auth-username').value;
+                    const res = await auth.createUserWithEmailAndPassword(email, pass);
+                    await db.collection('users').doc(res.user.uid).set({uid: res.user.uid, username: nick, email, wallet: 0});
+                } else { await auth.signInWithEmailAndPassword(email, pass); }
+            } catch (err) { alert(err.message); }
+        }
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('main-app').classList.remove('hidden');
+                loadUserData(user.uid);
+            } else { document.getElementById('auth-screen').style.display = 'flex'; }
+        });
+
+        function loadUserData(uid) {
+            db.collection('users').doc(uid).onSnapshot(doc => {
+                const d = doc.data(); if(!d) return;
+                document.getElementById('wallet-val').innerText = d.wallet || 0;
+                document.getElementById('prof-name').innerText = d.username;
+                const av = `https://api.dicebear.com/7.x/avataaars/svg?seed=${d.username}`;
+                document.getElementById('prof-img').src = av; document.getElementById('header-avatar').src = av;
+            });
+            
+            db.collection('matches').orderBy('createdAt', 'desc').onSnapshot(snap => {
+                const list = document.getElementById('match-list'); list.innerHTML = '';
+                snap.forEach(async doc => {
+                    const m = doc.data();
+                    const participantSnap = await db.collection('matches').doc(doc.id).collection('participants').doc(auth.currentUser.uid).get();
+                    const hasJoined = participantSnap.exists;
+
+                    list.innerHTML += `
+                        <div class="glass rounded-[2.5rem] overflow-hidden border border-white/10 relative">
+                            <img src="${m.img}" class="w-full h-44 object-cover opacity-60">
+                            <div class="p-6 space-y-4">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-bold rajdhani text-xl leading-none">${m.title}</h4>
+                                    <span class="text-blue-400 font-bold rajdhani text-lg">₹${m.prizePool}</span>
+                                </div>
+                                <div class="flex justify-between text-[9px] font-bold text-white/40 uppercase tracking-widest">
+                                    <span>${m.startTime}</span>
+                                    <span onclick="showPlayers('${doc.id}')" class="text-blue-500 cursor-pointer">View Players List</span>
+                                </div>
+                                ${hasJoined ? 
+                                    `<div class="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded-2xl text-center">
+                                        <p class="text-[9px] text-green-400 font-bold uppercase mb-1">ID: ${m.roomId || 'Wait..'} | PASS: ${m.roomPass || 'Wait..'}</p>
+                                    </div>` : 
+                                    `<button onclick="openJoinModal('${doc.id}', ${m.entryFee})" class="w-full py-4 rounded-2xl bg-blue-600/10 border border-blue-500/40 text-blue-400 font-bold rajdhani text-xs">JOIN ARENA • ₹${m.entryFee}</button>`
+                                }
+                            </div>
+                        </div>`;
+                });
+            });
+        }
+
+        async function showPlayers(id) {
+            const players = await db.collection('matches').doc(id).collection('participants').get();
+            const pList = document.getElementById('player-names-list'); pList.innerHTML = '';
+            players.forEach(p => pList.innerHTML += `<div class="p-3 glass rounded-xl border border-white/5 flex justify-between"><span>${p.data().gameUid}</span><span class="text-blue-500 text-[8px] font-bold">JOINED</span></div>`);
+            document.getElementById('player-modal').classList.remove('hidden');
+        }
+
+        function openJoinModal(id, fee) { selectedMatchId = id; currentEntryFee = fee; document.getElementById('join-modal').classList.remove('hidden'); }
+
+        async function executeJoin() {
+            const uid = document.getElementById('player-uid').value;
+            if(!uid) return alert("Enter Game ID!");
+            const btn = document.getElementById('confirm-join-btn');
+            btn.innerText = "Joining..."; btn.disabled = true;
+
+            const userRef = db.collection('users').doc(auth.currentUser.uid);
+            const matchRef = db.collection('matches').doc(selectedMatchId);
+
+            try {
+                await db.runTransaction(async (t) => {
+                    const uDoc = await t.get(userRef);
+                    if(uDoc.data().wallet < currentEntryFee) throw "Insufficient Balance!";
+                    t.update(userRef, { wallet: uDoc.data().wallet - currentEntryFee });
+                    t.update(matchRef, { joined: firebase.firestore.FieldValue.increment(1) });
+                    t.set(matchRef.collection('participants').doc(auth.currentUser.uid), { gameUid: uid, joinedAt: Date.now() });
+                });
+                alert("Match Joined!"); document.getElementById('join-modal').classList.add('hidden');
+            } catch (e) { alert(e); } finally { btn.innerText = "PAY & JOIN"; btn.disabled = false; }
+        }
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('tab-' + t).classList.add('active');
+        }
+        function logout() { auth.signOut(); }
+    </script>
+</body>
+</html>
