@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esports Admin | Control Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.7.1/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.7.1/firebase-firestore-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.7.1/firebase-auth-compat.min.js"></script>
+    <style>
+        :root { --bg: #05070a; --blue: #3b82f6; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .rajdhani { font-family: 'Rajdhani', sans-serif; text-transform: uppercase; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .neon-border { border: 1px solid var(--blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+        .tab-content { display: none; animation: slideUp 0.4s ease forwards; }
+        .tab-content.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        input, select { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; outline: none; }
+    </style>
+</head>
+<body class="pb-20">
+<div id="auth-screen" class="fixed inset-0 z-[100] bg-[#05070a] flex items-center justify-center p-6">
+        <div class="glass p-8 rounded-[2.5rem] w-full max-w-md neon-border text-center">
+            <h2 class="text-3xl font-bold rajdhani mb-8 text-blue-400">Master Terminal</h2>
+            <input type="password" id="admin-pass-input" placeholder="Enter Password" class="w-full p-4 rounded-2xl text-center mb-4">
+            <button onclick="checkPass()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold rajdhani tracking-widest hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/30">Unlock Terminal</button>
+        </div>
+    </div>
+
+    <div id="admin-main" class="hidden">
+        <header class="p-6 glass sticky top-0 z-50 flex justify-between items-center border-b border-white/5">
+            <h1 class="text-2xl font-bold rajdhani text-blue-400 tracking-tighter">Control Center</h1>
+            <button onclick="logout()" class="text-red-500 text-xs font-bold rajdhani border border-red-500/20 px-4 py-2 rounded-full">Logout</button>
+        </header>
+
+        <main class="p-6 max-w-6xl mx-auto space-y-8">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold rajdhani">Active Tournaments</h2>
+                <button onclick="document.getElementById('m-modal').classList.remove('hidden')" class="bg-blue-600 px-6 py-2 rounded-xl text-xs font-bold">+ CREATE NEW</button>
+            </div>
+            <div id="match-container" class="grid lg:grid-cols-2 gap-6"></div>
+        </main>
+<div id="m-modal" class="fixed inset-0 z-[110] bg-black/95 hidden flex items-center justify-center p-6 overflow-y-auto">
+        <div class="glass w-full max-w-md p-8 rounded-[2.5rem] border-blue-500/30 border space-y-4 my-auto">
+            <h3 class="text-xl font-bold rajdhani text-blue-400">Setup Match</h3>
+            <input type="text" id="m-title" placeholder="Match Title" class="w-full p-3 rounded-xl text-sm">
+            <input type="text" id="m-img" placeholder="Tournament Image URL (Direct Link)" class="w-full p-3 rounded-xl text-sm">
+            <div class="grid grid-cols-2 gap-3">
+                <input type="number" id="m-entry" placeholder="Entry Fee" class="p-3 rounded-xl text-sm">
+                <input type="number" id="m-prize" placeholder="Prize Pool" class="p-3 rounded-xl text-sm">
+            </div>
+            <input type="datetime-local" id="m-time" class="w-full p-3 rounded-xl text-sm">
+            <button onclick="saveMatch()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold rajdhani tracking-widest">Publish Match</button>
+            <button onclick="document.getElementById('m-modal').classList.add('hidden')" class="w-full text-white/20 text-[10px] font-bold uppercase">Cancel</button>
+        </div>
+    </div>
+
+    <div id="players-modal" class="fixed inset-0 z-[120] bg-black/95 hidden flex items-center justify-center p-6">
+        <div class="glass w-full max-w-sm p-6 rounded-3xl border border-white/10">
+            <h3 class="text-lg font-bold rajdhani text-blue-400 mb-4">Joined Players List</h3>
+            <div id="player-names-list" class="space-y-2 text-sm max-h-60 overflow-y-auto pr-2">
+                </div>
+            <button onclick="document.getElementById('players-modal').classList.add('hidden')" class="w-full mt-6 text-white/20 text-[10px] font-bold uppercase">Close</button>
+        </div>
+    </div>
+<script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw",
+            authDomain: "tournament-app-b77c0.firebaseapp.com",
+            databaseURL: "https://tournament-app-b77c0-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "tournament-app-b77c0",
+            storageBucket: "tournament-app-b77c0.firebasestorage.app",
+            messagingSenderId: "925200484535",
+            appId: "1:925200484535:web:c15c87fcecb5e793bca532"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // PASSWORD PROTECTION
+        function checkPass() {
+            const pass = document.getElementById('admin-pass-input').value;
+            if(pass === "admin@123") {
+                localStorage.setItem('admin_session', 'true');
+                showDashboard();
+            } else { alert("Incorrect Password!"); }
+        }
+        function showDashboard() {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('admin-main').classList.remove('hidden');
+            loadMatches();
+        }
+        if(localStorage.getItem('admin_session') === 'true') showDashboard();
+        function logout() { localStorage.removeItem('admin_session'); location.reload(); }
+
+        // TOURNAMENT ACTIONS
+        function saveMatch() {
+            const data = {
+                title: document.getElementById('m-title').value,
+                img: document.getElementById('m-img').value || "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800",
+                entryFee: Number(document.getElementById('m-entry').value),
+                prizePool: Number(document.getElementById('m-prize').value),
+                startTime: document.getElementById('m-time').value,
+                joined: 0, status: 'Upcoming', createdAt: Date.now()
+            };
+            db.collection('matches').add(data).then(() => {
+                alert("Match Published!");
+                document.getElementById('m-modal').classList.add('hidden');
+            });
+        }
+
+        function loadMatches() {
+            db.collection('matches').orderBy('createdAt', 'desc').onSnapshot(snap => {
+                const container = document.getElementById('match-container');
+                container.innerHTML = '';
+                snap.forEach(doc => {
+                    const m = doc.data();
+                    container.innerHTML += `
+                        <div class="glass p-5 rounded-[2rem] border-l-4 border-blue-500 space-y-4">
+                            <div class="flex gap-4">
+                                <img src="${m.img}" class="w-16 h-16 rounded-xl object-cover border border-white/10">
+                                <div><h4 class="font-bold rajdhani">${m.title}</h4><p class="text-[10px] text-white/40">Joined: ${m.joined || 0}</p></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" placeholder="Room ID" value="${m.roomId||''}" onchange="db.collection('matches').doc('${doc.id}').update({roomId:this.value})" class="p-2 text-[10px] rounded-lg">
+                                <input type="text" placeholder="Pass" value="${m.roomPass||''}" onchange="db.collection('matches').doc('${doc.id}').update({roomPass:this.value})" class="p-2 text-[10px] rounded-lg">
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="fetchPlayers('${doc.id}')" class="flex-1 bg-white/5 py-2 rounded-xl text-[10px] font-bold uppercase rajdhani">View Players</button>
+                                <button onclick="db.collection('matches').doc('${doc.id}').delete()" class="p-2 text-red-500 glass rounded-lg">Del</button>
+                            </div>
+                        </div>`;
+                });
+            });
+        }
+
+        async function fetchPlayers(id) {
+            const list = document.getElementById('player-names-list');
+            list.innerHTML = 'Loading...';
+            document.getElementById('players-modal').classList.remove('hidden');
+            const players = await db.collection('matches').doc(id).collection('participants').get();
+            list.innerHTML = '';
+            if(players.empty) list.innerHTML = 'No players joined yet.';
+            players.forEach(p => {
+                list.innerHTML += `<div class="p-2 glass rounded-lg flex justify-between"><span>${p.data().gameUid}</span><span class="text-blue-500 text-[8px] uppercase font-bold">Joined</span></div>`;
+            });
+        }
+    </script>
+</body>
+</html>
