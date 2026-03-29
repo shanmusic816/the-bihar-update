@@ -137,7 +137,7 @@
                             <img src="${m.img || 'https://via.placeholder.com/400x180'}" class="w-full h-32 object-cover">
                             <div class="p-6">
                                 <h4 class="text-xl font-bold bbl-logo-text mb-2">${m.title}</h4>
-                                <div class="flex justify-between text-[10px] mb-4 text-orange-500 font-bold"><span>Prize: ₹${m.prizePool}</span><span>Entry: ₹${m.fee}</span></div>
+                                <div class="flex justify-between text-[10px] mb-4 text-orange-500 font-bold"><span>Prize Pool: ₹${m.prizePool}</span><span>Entry: ₹${m.fee}</span></div>
                                 ${hasJoined ? `<div class="bg-orange-500/10 p-4 rounded-xl border border-orange-500/20 mb-3 text-center text-xs">ID: ${m.roomId || 'Wait'} | Pass: ${m.roomPass || 'Wait'}</div><button onclick="openResultUI()" class="neon-btn !bg-green-600/20 !text-green-500 border border-green-500/20 !p-3">Upload Win Result</button>` : `<button onclick="joinMatch('${mId}', ${m.fee})" class="neon-btn !p-3 !text-[10px]">Join Match</button>`}
                             </div></div>`;
                         list.innerHTML += cardHTML; if(hasJoined) myList.innerHTML += cardHTML;
