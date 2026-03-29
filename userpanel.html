@@ -108,25 +108,27 @@
         function toggleAuthMode() { isSignup = !isSignup; document.getElementById('signup-fields').classList.toggle('hidden', !isSignup); document.getElementById('auth-btn').innerText = isSignup ? "CREATE ACCOUNT" : "ENTER ARENA"; }
 
         async function processAuth() {
-            const email = document.getElementById('auth-email').value.trim();
-            const pass = document.getElementById('auth-pass').value.trim();
-            if(!email || !pass) return alert("Fill Details!");
-            try {
-                if (isSignup) {
-                    const nick = document.getElementById('auth-username').value;
-                    const res = await auth.createUserWithEmailAndPassword(email, pass);
-                    await db.collection('users').doc(res.user.uid).set({ uid: res.user.uid, username: nick, wallet: 0 });
-                } else { await auth.signInWithEmailAndPassword(email, pass); }
-            } catch (err) { alert(err.message); }
-        }
+    const email = document.getElementById('auth-email').value.trim();
+    const pass = document.getElementById('auth-pass').value.trim();
 
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('welcome-node').style.display = 'none'; document.getElementById('auth-screen').style.display = 'none';
-                document.querySelectorAll('#main-header, #main-content, #bottom-nav').forEach(el => el.classList.remove('hidden'));
-                loadData(user.uid);
-            }
-        });
+    if(!email || !pass) return alert("Bhai, Details dalo!");
+
+    try {
+        // Login command
+        const res = await auth.signInWithEmailAndPassword(email, pass);
+        
+        // LOGIN HONE KE BAAD SCREEN BADALNE KE LIYE:
+        document.getElementById('auth-screen').classList.add('hidden'); // Login screen chhupao
+        document.getElementById('main-header').classList.remove('hidden'); // Header dikhao
+        document.getElementById('main-content').classList.remove('hidden'); // Main content dikhao
+        document.getElementById('bottom-nav').classList.remove('hidden'); // Bottom nav dikhao
+
+        alert("Welcome Back!");
+    } catch (e) {
+        alert("Error: " + e.message);
+    }
+        }
+        
 
         function loadData(uid) {
             db.collection('users').doc(uid).onSnapshot(doc => {
