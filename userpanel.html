@@ -3,280 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BBL | Bharat Battle League</title>
+    <title>BBL | Bihar Battle League</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        :root { --neon: #ff6b00; --bg: #030508; --glass: rgba(255, 255, 255, 0.03); }
-        body { background-color: var(--bg); color: #f1f5f9; font-family: 'Outfit', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; margin:0; }
-        .brand-font { font-family: 'Syncopate', sans-serif; text-transform: uppercase; letter-spacing: -1px; }
-        
-        /* High-End Page System */
-        .app-page { display: none; min-height: 100vh; width: 100%; background: var(--bg); position: fixed; top:0; left:0; overflow-y: auto; padding-bottom: 30px; }
-        .app-page.active { display: block; z-index: 100; animation: pageFade 0.4s ease-out; }
-        @keyframes pageFade { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-
-        .u-glass { background: var(--glass); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; }
-        .neon-btn { background: linear-gradient(90deg, #ff6b00, #ff9100); color: white; font-weight: 900; border-radius: 16px; padding: 18px; text-transform: uppercase; letter-spacing: 2px; font-size: 11px; width: 100%; border: none; cursor: pointer; display: block; text-align: center; box-shadow: 0 10px 25px rgba(255, 107, 0, 0.2); }
-        
-        /* Professional Arena Dock */
-        .nav-dock { position: fixed; bottom: 25px; left: 20px; right: 20px; height: 65px; background: rgba(10, 15, 25, 0.95); backdrop-filter: blur(25px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); z-index: 1000; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.5); }
-        .nav-node { opacity: 0.3; transition: 0.3s; display: flex; flex-direction: column; align-items: center; background: none; border: none; color: white; font-size: 8px; font-weight: bold; }
-        .nav-node.active { opacity: 1; color: var(--neon); }
-        
-        .main-trophy { width: 62px; height: 62px; background: linear-gradient(135deg, #ff6b00, #ff9100); border-radius: 20px; transform: rotate(45deg); position: relative; top: -28px; border: 4px solid var(--bg); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(255,107,0,0.3); }
-        .main-trophy img { transform: rotate(-45deg); width: 28px; }
-
-        .tab-content { display: none; width: 100%; }
-        .tab-content.active { display: block; }
-        .id-badge { font-size: 8px; color: #666; font-family: monospace; background: rgba(255,255,255,0.04); padding: 4px 8px; border-radius: 6px; margin-top: 8px; display: inline-block; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.05); }
+        :root { --bbl: #f97316; --dark: #020617; }
+        body { background-color: var(--dark); color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        .bg-mesh { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #020408 100%); opacity: 0.6; }
+        .glass-panel { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 35px; }
+        .bbl-logo-text { font-family: 'Orbitron', sans-serif; background: linear-gradient(to bottom, #fff, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.3)); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeInUp 0.4s ease-out; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .diamond-nav { width: 56px; height: 56px; background: linear-gradient(135deg, #f97316, #d946ef); transform: rotate(45deg); border-radius: 14px; box-shadow: 0 0 20px rgba(249, 115, 22, 0.5); cursor: pointer; position: relative; top: -25px; border: 2px solid rgba(255,255,255,0.2); transition: 0.3s; }
+        .diamond-nav span { transform: rotate(-45deg); display: block; font-weight: 800; font-size: 9px; color: white; }
+        .nav-icon { transition: 0.3s; opacity: 0.4; filter: grayscale(1); }
+        .nav-icon.active { opacity: 1; filter: grayscale(0); transform: translateY(-3px); }
+        .badge-joined { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); padding: 4px 12px; border-radius: 12px; font-size: 10px; font-weight: bold; position: absolute; top: 1rem; left: 1rem; z-index: 20; box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
     </style>
 </head>
-<body>
-
-    <div id="p-welcome" class="app-page active px-7 pt-24">
-        <h1 class="brand-font text-4xl leading-tight mb-2">Bharat<br><span class="text-[#ff6b00]">Battle League</span></h1>
-        <p class="text-[10px] text-white/20 tracking-[4px] font-bold mb-12 uppercase">Elite Network Portal</p>
-        
-        <div class="space-y-4 mb-20">
-            <div class="u-glass p-7 border-l-2 border-orange-500">
-                <h3 class="text-[10px] font-bold uppercase text-orange-500 mb-2 tracking-widest">Platform DNA</h3>
-                <p class="text-sm text-white/60 leading-relaxed">India's supreme Esports ecosystem. Real-time competitive tracking, secured credits, and daily high-stakes matches.</p>
-            </div>
-            <div class="flex gap-2">
-                <a href="https://www.instagram.com/biharbattleleague?igsh=MXFidHk2YXA3YXhvaw==" target="_blank" class="u-glass flex-1 py-4 flex items-center justify-center gap-2">
-                    <img src="https://img.icons8.com/material-outlined/24/ffffff/instagram-new.png" class="w-4 opacity-70">
-                    <span class="text-[10px] font-bold uppercase">Instagram</span>
-                </a>
-                <a href="https://youtube.com/@songheartstation?si=bFhqpW8OKjmjqRxU" target="_blank" class="u-glass flex-1 py-4 flex items-center justify-center gap-2">
-                    <img src="https://img.icons8.com/material-outlined/24/ffffff/youtube-play.png" class="w-4 opacity-70">
-                    <span class="text-[10px] font-bold uppercase">YouTube</span>
-                </a>
-            </div>
-        </div>
-        <button onclick="goto('auth')" class="neon-btn">Enter System Node</button>
-    </div>
-
-    <div id="p-auth" class="app-page px-9 flex flex-col justify-center">
-        <div class="u-glass p-10 text-center relative overflow-hidden">
-            <h2 class="brand-font text-xl mb-10" id="auth-head">Sync Identity</h2>
-            <div class="space-y-4">
-                <div id="reg-fields" class="hidden space-y-4">
-                    <input type="text" id="a-name" placeholder="GAMER NAME" class="w-full p-4 u-glass border-none outline-none text-center text-xs text-white">
-                    <input type="text" id="a-gid" placeholder="CHARACTER UID (FIXED)" class="w-full p-4 u-glass border-none outline-none text-center text-xs font-bold text-orange-500">
+<body class="bg-[#020617]">
+    <div class="bg-mesh"></div>
+    <div class="max-w-[450px] mx-auto min-h-screen relative">
+        <div id="auth-screen" class="fixed inset-0 z-[200] bg-[#020617] flex items-center justify-center p-8 text-center">
+            <div class="w-full max-w-sm glass-panel p-10 border-orange-500/20 border">
+                <h1 class="text-5xl bbl-logo-text italic mb-1">BBL</h1>
+                <p class="text-[8px] text-white/40 tracking-[0.5em] uppercase mb-12 font-bold">Bihar Battle League</p>
+                <div class="space-y-4">
+                    <div id="signup-fields" class="hidden"><input type="text" id="auth-username" placeholder="Character Name" class="w-full p-4 bg-black/40 rounded-2xl border border-white/5 outline-none text-center text-sm mb-4"></div>
+                    <input type="email" id="auth-email" placeholder="Email" class="w-full p-4 bg-black/40 rounded-2xl border border-white/5 outline-none text-center text-sm">
+                    <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 bg-black/40 rounded-2xl border border-white/5 outline-none text-center text-sm">
+                    <button onclick="processAuth()" id="auth-btn" class="w-full bg-gradient-to-r from-orange-600 to-orange-400 py-4 rounded-2xl font-bold uppercase tracking-widest shadow-lg">ENTER ARENA</button>
+                    <p id="toggle-text" class="text-[10px] text-white/30 uppercase mt-6 cursor-pointer py-2" onclick="toggleAuthMode()">New Player? <span class="text-orange-500 font-bold">Register</span></p>
                 </div>
-                <input type="email" id="a-email" placeholder="EMAIL ADDRESS" class="w-full p-4 u-glass border-none outline-none text-center text-xs text-white">
-                <input type="password" id="a-pass" placeholder="SECURITY KEY" class="w-full p-4 u-glass border-none outline-none text-center text-xs text-white">
-                <button onclick="authAction()" id="a-btn" class="neon-btn">Link Node</button>
-                <p class="text-[10px] text-white/20 mt-8 cursor-pointer uppercase font-bold tracking-widest" onclick="toggleReg()">New User? <span class="text-white">Register Node</span></p>
-                <button onclick="goto('welcome')" class="text-[9px] text-white/10 mt-6 block mx-auto uppercase underline tracking-tighter opacity-40">Abort Access</button>
             </div>
         </div>
-    </div>
-        <div id="p-arena" class="app-page">
-        <header class="sticky top-0 z-[100] bg-[#030508]/95 backdrop-blur-xl px-7 py-6 flex justify-between items-center border-b border-white/5">
-            <h2 class="brand-font text-lg text-orange-500">BBL</h2>
-            <div class="u-glass px-3 py-1.5 flex items-center gap-3 border border-white/5">
-                <p class="text-xs font-black text-white">₹<span id="u-bal">0</span></p>
-                <div class="w-7 h-7 rounded-full bg-zinc-900 overflow-hidden"><img id="h-av" class="w-full h-full"></div>
+
+        <header id="main-header" class="hidden sticky top-0 z-[100] bg-[#020617]/90 backdrop-blur-xl px-6 py-5 flex justify-between items-center border-b border-white/5">
+            <div><h2 class="text-xl font-bold italic bbl-logo-text">BIHAR BATTLE LEAGUE</h2><p class="text-[8px] text-green-500 font-bold uppercase">● Nawada Server</p></div>
+            <div class="glass-panel px-3 py-1.5 rounded-2xl border-orange-500/20 flex items-center gap-3">
+                <div class="text-right"><p class="text-[7px] text-white/40 uppercase font-bold leading-none">Wallet</p><p class="text-xs font-bold text-orange-400">₹<span id="u-bal">0</span></p></div>
+                <img id="h-av" class="w-8 h-8 rounded-full border border-orange-500 shadow-lg">
             </div>
         </header>
-
-        <main class="p-6 pb-36">
-            <div id="t-home" class="tab-content active space-y-6"><div id="m-list" class="space-y-6"></div></div>
-            <div id="t-play" class="tab-content space-y-6"><h2 class="brand-font text-[10px] text-center opacity-30 mt-10 tracking-[3px]">Active Assignments</h2><div id="my-m-list" class="space-y-6"></div></div>
-            
-            <div id="t-wins" class="tab-content text-center space-y-6">
-                <h2 class="brand-font text-xs mb-4 mt-6">League Standings</h2>
-                <select id="l-select" onchange="loadWins(this.value)" class="w-full p-4 u-glass text-xs font-bold text-orange-500 outline-none uppercase text-center appearance-none border border-orange-500/20"><option value="">Select Completed Match</option></select>
-                <div id="l-results" class="space-y-3 mt-6"></div>
-            </div>
-
-            <div id="t-wallet" class="tab-content text-center space-y-8">
-                <div class="u-glass p-10 mt-10 border-t border-orange-500/20 shadow-2xl">
-                    <p class="text-white/20 text-[10px] font-bold uppercase mb-2 tracking-[4px]">Vault Credits</p>
-                    <h3 class="brand-font text-5xl">₹<span id="w-display">0</span></h3>
-                    <div class="id-badge">FOR ADMIN: <span id="p-doc-id" class="text-white/60">---</span></div>
-                    <div class="mt-12 space-y-4">
-                        <input type="number" id="c-amt" placeholder="ENTER AMOUNT" class="w-full p-4 u-glass text-center font-bold text-white outline-none text-xl border-none">
-                        <button onclick="requestCash()" class="neon-btn">Initialize Refill</button>
+        <main id="main-content" class="hidden p-5 pb-32">
+            <section id="tab-home" class="tab-content active space-y-8"><div id="match-list" class="space-y-8"></div></section>
+            <section id="tab-my-matches" class="tab-content space-y-8 text-center"><h2 class="text-xl font-bold bbl-logo-text italic mb-6">Registered Battles</h2><div id="my-match-list" class="space-y-8"></div></section>
+            <section id="tab-wallet" class="tab-content text-center space-y-6">
+                <div class="glass-panel p-10 border-l-4 border-orange-500 shadow-2xl relative overflow-hidden text-center">
+                    <p class="text-white/30 text-[10px] uppercase font-bold tracking-[0.3em] mb-2">Available Balance</p>
+                    <h3 class="text-6xl font-bold rajdhani text-orange-500">₹<span id="wallet-display">0</span></h3>
+                    <div class="mt-10 space-y-4">
+                        <input type="number" id="cash-amount" placeholder="Amount (₹)" class="w-full p-4 bg-black/40 rounded-2xl border border-white/10 text-center font-bold text-orange-400 outline-none">
+                        <button onclick="requestCash('Deposit')" class="w-full bg-green-600/20 text-green-500 py-4 rounded-2xl font-bold uppercase text-[10px]">Add Cash</button>
                     </div>
                 </div>
-            </div>
-
-            <div id="t-user" class="tab-content text-center space-y-6">
-                <div class="u-glass p-10 mt-10 border-b border-white/5">
-                    <div class="w-24 h-24 rounded-full mx-auto mb-6 border-4 border-orange-500/20 overflow-hidden shadow-2xl"><img id="p-av" class="w-full h-full"></div>
-                    <h3 id="p-name" class="brand-font text-2xl mb-2 tracking-tighter">---</h3>
-                    <div class="p-5 u-glass text-left border border-white/5 space-y-4">
-                        <div><p class="text-[7px] text-white/30 uppercase font-bold mb-1">Authenticated UID</p><p id="p-gid" class="text-sm font-mono font-bold text-orange-500">---</p></div>
-                        <div class="border-t border-white/5 pt-3"><p class="text-[7px] text-white/30 uppercase font-bold mb-1">System Node ID (Admin)</p><p id="p-fuid" class="text-[9px] font-mono text-white/40">---</p></div>
+            </section>
+            <section id="tab-profile" class="tab-content text-center space-y-6">
+                <div class="glass-panel p-10">
+                    <img id="p-av" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-orange-500 p-1">
+                    <h3 id="p-name" class="text-3xl font-bold italic text-orange-500 uppercase">---</h3>
+                    <div class="mt-8 p-4 bg-black/40 rounded-3xl border border-white/5 text-left">
+                        <p class="text-[7px] text-white/30 uppercase font-bold mb-1 tracking-widest">Player UID</p>
+                        <p id="p-uid" class="text-[10px] font-mono font-bold text-orange-200 uppercase break-all">---</p>
                     </div>
-                    <button onclick="logout()" class="mt-12 text-[10px] font-bold text-white/20 uppercase tracking-[5px] w-full border border-white/5 py-4 rounded-2xl hover:text-red-500 transition-all">Terminate Link</button>
+                    <button onclick="logout()" class="w-full mt-6 py-4 text-red-500 font-bold text-[10px] uppercase border border-red-500/10 rounded-2xl tracking-[0.2em]">Logout</button>
                 </div>
-            </div>
+            </section>
         </main>
 
-        <nav class="nav-dock">
-            <button onclick="tab('home')" id="n-home" class="nav-node active"><img src="https://img.icons8.com/material-rounded/24/ffffff/home.png"><span>ARENA</span></button>
-            <button onclick="tab('play')" id="n-play" class="nav-node"><img src="https://img.icons8.com/material-rounded/24/ffffff/controller.png"><span>PLAY</span></button>
-            <div class="main-trophy" onclick="tab('wins')"><img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png"></div>
-            <button onclick="tab('wallet')" id="n-wallet" class="nav-node ml-12"><img src="https://img.icons8.com/material-rounded/24/ffffff/wallet.png"><span>VAULT</span></button>
-            <button onclick="tab('user')" id="n-user" class="nav-node"><img src="https://img.icons8.com/material-rounded/24/ffffff/user.png"><span>NODE</span></button>
+        <div id="join-modal" class="fixed inset-0 z-[300] bg-black/95 hidden flex items-center justify-center p-6 backdrop-blur-md">
+            <div class="glass-panel w-full p-8 border border-orange-500/30 shadow-2xl">
+                <h3 class="text-xl font-bold rajdhani text-orange-500 mb-2 italic uppercase tracking-widest">Join Battle</h3>
+                <p id="modal-match-title" class="text-[10px] text-white/40 mb-6 uppercase font-bold tracking-widest"></p>
+                <input type="text" id="game-uid-input" placeholder="Enter Character ID" class="w-full p-4 bg-black/50 rounded-2xl border border-white/10 outline-none text-white mb-6 text-center tracking-widest">
+                <button id="final-join-btn" class="w-full bg-gradient-to-r from-orange-600 to-orange-400 py-4 rounded-2xl font-bold rajdhani tracking-[0.2em] shadow-lg">CONFIRM ENTRY</button>
+                <button onclick="document.getElementById('join-modal').classList.add('hidden')" class="w-full mt-4 text-white/20 text-[10px] font-bold uppercase tracking-widest">Cancel</button>
+            </div>
+        </div>
+
+        <nav id="bottom-nav" class="hidden fixed bottom-0 left-0 right-0 h-20 bg-[#05070a]/95 backdrop-blur-2xl border-t border-white/5 flex justify-around items-center z-[150] px-4">
+            <button onclick="switchTab('home')" class="flex flex-col items-center gap-1"><img id="ico-home" src="https://img.icons8.com/material-rounded/24/f97316/home.png" class="w-5 nav-icon active"><span class="text-[7px] font-bold text-orange-500 uppercase">Home</span></button>
+            <button onclick="switchTab('my-matches')" class="flex flex-col items-center gap-1"><img id="ico-my-matches" src="https://img.icons8.com/material-rounded/24/ffffff/controller.png" class="w-5 nav-icon"><span class="text-[7px] font-bold text-white/40 uppercase">My Play</span></button>
+            <div class="diamond-nav flex items-center justify-center" onclick="switchTab('home')"><span>PLAY</span></div>
+            <button onclick="switchTab('wallet')" class="flex flex-col items-center gap-1"><img id="ico-wallet" src="https://img.icons8.com/material-rounded/24/ffffff/wallet.png" class="w-5 nav-icon"><span class="text-[7px] font-bold text-white/40 uppercase">Cash</span></button>
+            <button onclick="switchTab('profile')" class="flex flex-col items-center gap-1"><img id="ico-profile" src="https://img.icons8.com/material-rounded/24/ffffff/user.png" class="w-5 nav-icon"><span class="text-[7px] font-bold text-white/40 uppercase">User</span></button>
         </nav>
     </div>
-
-    <div id="j-modal" class="fixed inset-0 z-[2000] bg-black/95 hidden flex items-center justify-center p-8 backdrop-blur-3xl">
-        <div class="u-glass w-full p-10 text-center border border-orange-500/30">
-            <h3 class="brand-font text-lg text-orange-500 mb-2 uppercase tracking-tighter">Deploy mission</h3>
-            <p id="modal-match-title" class="text-[10px] text-white/30 mb-8 uppercase tracking-[3px]"></p>
-            <div class="bg-black/50 p-6 rounded-[2rem] mb-10 border border-white/5">
-                <p class="text-[8px] text-white/20 uppercase font-bold mb-1">Authenticated UID</p>
-                <p id="m-gid" class="text-xl font-mono font-bold text-white tracking-widest">---</p>
-            </div>
-            <button id="final-j-btn" class="neon-btn">Link Character</button>
-            <button onclick="document.getElementById('j-modal').classList.add('hidden')" class="text-[9px] text-white/10 mt-8 block mx-auto uppercase font-black">Cancel</button>
-        </div>
-    </div>
-
 <script>
-    const firebaseConfig = { apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw", authDomain: "tournament-app-b77c0.firebaseapp.com", projectId: "tournament-app-b77c0", storageBucket: "tournament-app-b77c0.firebasestorage.app", messagingSenderId: "925200484535", appId: "1:925200484535:web:c15c87fcecb5e793bca532" };
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw", 
+        authDomain: "tournament-app-b77c0.firebaseapp.com", 
+        databaseURL: "https://tournament-app-b77c0-default-rtdb.asia-southeast1.firebasedatabase.app", 
+        projectId: "tournament-app-b77c0", 
+        storageBucket: "tournament-app-b77c0.firebasestorage.app", 
+        messagingSenderId: "925200484535", 
+        appId: "1:925200484535:web:c15c87fcecb5e793bca532" 
+    };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth(); const db = firebase.firestore();
-    let isReg = false; let selM = { id: null, fee: 0 }; let userGID = "";
 
-    function goto(pId) {
-        document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
-        const target = document.getElementById('p-' + pId);
-        if(target) target.classList.add('active');
-        window.scrollTo(0,0);
+    let isSignup = false;
+    let selectedMatch = { id: null, fee: 0 };
+
+    function formatBBLDate(dateStr) {
+        if(!dateStr) return "TBD"; const date = new Date(dateStr);
+        return date.toLocaleDateString('en-IN', {day:'numeric', month:'short'}) + " | " + date.toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
     }
 
-    function toggleReg() { 
-        isReg = !isReg; 
-        document.getElementById('reg-fields').classList.toggle('hidden', !isReg); 
-        document.getElementById('auth-head').innerText = isReg ? "New Node" : "Sync Identity";
-        document.getElementById('a-btn').innerText = isReg ? "Register" : "Initiate"; 
+    function toggleAuthMode() {
+        isSignup = !isSignup;
+        document.getElementById('signup-fields').classList.toggle('hidden', !isSignup);
+        document.getElementById('auth-btn').innerText = isSignup ? "CREATE ACCOUNT" : "ENTER ARENA";
+        document.getElementById('toggle-text').innerHTML = isSignup ? 'Already a Player? <span class="text-orange-500 font-bold">Login</span>' : 'New Player? <span class="text-orange-500 font-bold">Register</span>';
     }
 
-    async function authAction() {
-        const e = document.getElementById('a-email').value.trim();
-        const p = document.getElementById('a-pass').value.trim();
-        if(!e || !p) return alert("Credentials Missing!");
+    async function processAuth() {
+        const email = document.getElementById('auth-email').value;
+        const pass = document.getElementById('auth-pass').value;
+        if(!email || !pass) return alert("Fill details!");
         try {
-            if (isReg) {
-                const n = document.getElementById('a-name').value.trim();
-                const g = document.getElementById('a-gid').value.trim();
-                if(!n || !g) return alert("Character Data Required!");
-                const res = await auth.createUserWithEmailAndPassword(e, p);
-                await db.collection('users').doc(res.user.uid).set({uid: res.user.uid, username: n, gameId: g, email: e, wallet: 0, createdAt: Date.now()});
-            } else { await auth.signInWithEmailAndPassword(e, p); }
+            if (isSignup) {
+                const nick = document.getElementById('auth-username').value;
+                const res = await auth.createUserWithEmailAndPassword(email, pass);
+                await db.collection('users').doc(res.user.uid).set({uid: res.user.uid, username: nick, email, wallet: 0, createdAt: Date.now()});
+            } else { await auth.signInWithEmailAndPassword(email, pass); }
         } catch (err) { alert(err.message); }
     }
 
     auth.onAuthStateChanged(user => {
         if (user) {
-            goto('arena'); 
+            document.getElementById('auth-screen').style.display = 'none';
+            document.querySelectorAll('#main-header, #main-content, #bottom-nav').forEach(el => el.classList.remove('hidden'));
+            document.getElementById('p-uid').innerText = user.uid;
             loadData(user.uid);
-            loadArena(user.uid);
-            loadResList();
-        } else {
-            if(!document.getElementById('p-welcome').classList.contains('active') && !document.getElementById('p-auth').classList.contains('active')) {
-                goto('welcome');
-            }
-        }
+        } else { document.getElementById('auth-screen').style.display = 'flex'; }
     });
 
     function loadData(uid) {
+        // User Profile Sync
         db.collection('users').doc(uid).onSnapshot(doc => {
-            const d = doc.data(); if(!d) return;
-            userGID = d.gameId;
-            document.getElementById('u-bal').innerText = d.wallet;
-            document.getElementById('w-display').innerText = d.wallet;
-            document.getElementById('p-name').innerText = d.username;
-            document.getElementById('p-gid').innerText = d.gameId;
-            document.getElementById('p-fuid').innerText = uid;
-            document.getElementById('p-doc-id').innerText = uid;
-            const av = `https://api.dicebear.com/7.x/avataaars/svg?seed=${d.username}`;
-            document.getElementById('h-av').src = av;
-            document.getElementById('p-av').src = av;
+            if(!doc.exists) return; const d = doc.data();
+            document.getElementById('p-name').innerText = d.username || 'Player';
+            document.getElementById('u-bal').innerText = d.wallet || 0;
+            document.getElementById('wallet-display').innerText = d.wallet || 0;
+            const av = `https://api.dicebear.com/7.x/avataaars/svg?seed=${d.username || 'BBL'}`;
+            document.getElementById('h-av').src = av; document.getElementById('p-av').src = av;
         });
-    }
 
-    function loadArena(uid) {
+        // Matches Sync - No Async Loop (Instant Refresh)
         db.collection('matches').orderBy('createdAt', 'desc').onSnapshot(snap => {
-            const list = document.getElementById('m-list'); const myList = document.getElementById('my-m-list');
+            const list = document.getElementById('match-list');
+            const myList = document.getElementById('my-match-list');
             list.innerHTML = ""; myList.innerHTML = "";
+
             snap.forEach(doc => {
-                const m = doc.data(); const mId = doc.id;
-                db.collection('matches').doc(mId).collection('participants').doc(uid).get().then(pDoc => {
-                    const joined = pDoc.exists;
-                    const date = m.startTime ? new Date(m.startTime).toLocaleString('en-IN', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : "TBD";
-                    const card = `<div class="u-glass overflow-hidden mb-6 border border-white/5"><div class="h-44 relative"><img src="${m.img}" class="w-full h-full object-cover opacity-60"><div class="absolute bottom-4 left-6"><h4 class="brand-font text-lg leading-none">${m.title}</h4><p class="text-[9px] text-orange-500 font-bold uppercase mt-1 tracking-widest">${date}</p></div></div><div class="p-6 space-y-4 text-white"><div class="flex justify-between text-[10px] font-bold opacity-30 uppercase tracking-widest"><span>Prize Pool: ₹${m.prizePool}</span><span>Fee: ₹${m.entryFee}</span></div>${joined ? `<div class="grid grid-cols-2 gap-3 p-4 bg-orange-500/10 rounded-2xl border border-orange-500/20 text-xs font-bold text-orange-400"><div><p class="text-[7px] text-white/30 uppercase mb-1">Room ID</p>${m.roomId || 'Wait'}</div><div><p class="text-[7px] text-white/30 uppercase mb-1">Pass</p>${m.roomPass || 'Wait'}</div></div>` : `<button onclick="openJoinUI('${mId}', ${m.entryFee}, '${m.title}')" class="neon-btn py-3 text-[10px] shadow-none">Initialize Deploy</button>`}</div></div>`;
-                    list.innerHTML += card; if(joined) myList.innerHTML += card;
+                const m = doc.data();
+                const mId = doc.id;
+
+                // Checking Registered Status
+                db.collection('matches').doc(mId).collection('participants').doc(uid).onSnapshot(pDoc => {
+                    const hasJoined = pDoc.exists;
+                    const cardID = `card-${mId}`;
+                    const existingCard = document.getElementById(cardID);
+
+                    const cardHTML = `
+                        <div id="${cardID}" class="glass-panel overflow-hidden border-white/5 relative mb-8">
+                            <div class="h-44 relative">
+                                <img src="${m.img || 'https://via.placeholder.com/400x200'}" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent"></div>
+                                ${hasJoined ? '<div class="badge-joined tracking-widest uppercase">REGISTERED</div>' : ''}
+                                <div class="absolute bottom-4 left-6">
+                                    <h4 class="text-2xl font-bold italic bbl-logo-text leading-none uppercase">${m.title}</h4>
+                                    <p class="text-[9px] text-orange-500 font-bold mt-1 uppercase">${formatBBLDate(m.startTime)}</p>
+                                </div>
+                            </div>
+                            <div class="p-6 pt-2 text-left">
+                                <div class="flex justify-between items-center mb-6">
+                                    <div class="text-[10px] font-bold text-orange-500 uppercase bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">₹${m.prizePool} Prize</div>
+                                    <div class="text-[10px] font-bold text-white/40 uppercase">Entry: ₹${m.entryFee}</div>
+                                </div>
+                                ${hasJoined ? 
+                                    `<div class="grid grid-cols-2 gap-3 p-4 bg-orange-500/10 rounded-2xl border border-orange-500/20 text-xs font-bold text-orange-400">
+                                        <div><p class="text-[7px] text-white/40 uppercase font-bold mb-1">Room ID</p>${m.roomId || 'Wait..'}</div>
+                                        <div><p class="text-[7px] text-white/40 uppercase font-bold mb-1">Pass</p>${m.roomPass || 'Wait..'}</div>
+                                    </div>` : 
+                                    `<button onclick="openJoinUI('${mId}', ${m.entryFee}, '${m.title}')" class="w-full bg-orange-600 py-4 rounded-2xl font-bold uppercase tracking-[0.2em] text-xs shadow-lg active:scale-95 transition-all">Join Battle</button>`
+                                }
+                            </div>
+                        </div>`;
+
+                    // Update Main List
+                    if(existingCard) existingCard.outerHTML = cardHTML;
+                    else list.innerHTML += cardHTML;
+
+                    // Update My Matches List
+                    if(hasJoined) {
+                        const myCardID = `my-${cardID}`;
+                        const existingMyCard = document.getElementById(myCardID);
+                        const myCardHTML = cardHTML.replace(cardID, myCardID);
+                        if(existingMyCard) existingMyCard.outerHTML = myCardHTML;
+                        else myList.innerHTML += myCardHTML;
+                    }
                 });
             });
         });
     }
 
-    function loadResList() {
-        db.collection('matches').where('status', '==', 'Finished').onSnapshot(snap => {
-            const s = document.getElementById('l-select');
-            s.innerHTML = '<option value="">Select Match Report</option>';
-            snap.forEach(doc => { s.innerHTML += `<option value="${doc.id}">${doc.data().title}</option>`; });
-        });
-    }
+    window.openJoinUI = (id, fee, title) => {
+        selectedMatch = { id, fee };
+        document.getElementById('modal-match-title').innerText = title;
+        document.getElementById('join-modal').classList.remove('hidden');
+    };
 
-    function loadWins(mId) {
-        if(!mId) return;
-        db.collection('matches').doc(mId).collection('participants').orderBy('rank', 'asc').onSnapshot(snap => {
-            const resList = document.getElementById('l-results'); resList.innerHTML = "";
-            snap.forEach(doc => {
-                const p = doc.data();
-                if(p.status === 'Verified') {
-                    resList.innerHTML += `<div class="u-glass p-5 flex justify-between items-center"><div class="flex items-center gap-5 text-white"><span class="text-xl font-bold w-8">${p.rank==1?'🥇':'#'+p.rank}</span><h4 class="text-xs font-bold uppercase">${p.gameId}</h4></div><div class="text-right leading-none"><p class="text-[7px] text-white/20 uppercase font-bold mb-1">Kills</p><p class="text-lg font-bold text-orange-500">${p.kills}</p></div></div>`;
-                }
-            });
-        });
-    }
-
-    window.openJoinUI = (id, fee, title) => { selM = { id, fee }; document.getElementById('m-gid').innerText = userGID; document.getElementById('modal-match-title').innerText = title; document.getElementById('j-modal').classList.remove('hidden'); };
-
-    document.getElementById('final-j-btn').onclick = async () => {
+    document.getElementById('final-join-btn').onclick = async () => {
+        const gUid = document.getElementById('game-uid-input').value.trim();
+        if(!gUid) return alert("Character ID required!");
+        const btn = document.getElementById('final-join-btn'); btn.innerText = "Processing..."; btn.disabled = true;
         try {
             const uRef = db.collection('users').doc(auth.currentUser.uid);
             await db.runTransaction(async (t) => {
                 const uDoc = await t.get(uRef);
-                if (uDoc.data().wallet < selM.fee) throw "Low Balance!";
-                t.update(uRef, { wallet: uDoc.data().wallet - selM.fee });
-                t.set(db.collection('matches').doc(selM.id).collection('participants').doc(auth.currentUser.uid), { gameId: userGID, status: 'Joined', rank: 0, kills: 0, time: Date.now() });
+                if (uDoc.data().wallet < selectedMatch.fee) throw "Insufficient Balance!";
+                t.update(uRef, { wallet: uDoc.data().wallet - selectedMatch.fee });
+                t.set(db.collection('matches').doc(selectedMatch.id).collection('participants').doc(auth.currentUser.uid), { gameUid: gUid, time: Date.now() });
             });
-            alert("Mission Synchronized!");
-            document.getElementById('j-modal').classList.add('hidden');
-        } catch (e) { alert(e); }
+            alert("Match Registered!"); document.getElementById('join-modal').classList.add('hidden');
+            document.getElementById('game-uid-input').value = "";
+        } catch (e) { alert(e); } finally { btn.innerText = "CONFIRM ENTRY"; btn.disabled = false; }
     };
 
-    async function requestCash() {
-        const amt = document.getElementById('c-amt').value;
-        if(!amt || amt < 10) return alert("Min ₹10!");
-        try {
-            await db.collection('requests').add({ uid: auth.currentUser.uid, username: document.getElementById('p-name').innerText, amount: Number(amt), type: 'Deposit', status: 'Pending', createdAt: Date.now() });
-            alert("Broadcast Success!");
-            document.getElementById('c-amt').value = "";
-        } catch (e) { alert(e.message); }
-    }
-
-    function tab(t) {
+    function switchTab(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('t-' + t).classList.add('active');
-        document.querySelectorAll('.nav-node').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('n-' + t).classList.add('active');
+        document.getElementById('tab-' + t).classList.add('active');
+        ['home', 'my-matches', 'wallet', 'profile'].forEach(id => {
+            const ico = document.getElementById('ico-' + id);
+            if(ico) {
+                if(id === t) { ico.classList.add('active'); ico.nextElementSibling.style.color = '#f97316'; }
+                else { ico.classList.remove('active'); ico.nextElementSibling.style.color = 'rgba(255,255,255,0.4)'; }
+            }
+        });
     }
 
-    function logout() { auth.signOut().then(() => location.reload()); }
+    async function requestCash(type) {
+        const amt = Number(document.getElementById('cash-amount').value);
+        if(amt < 10) return alert("Min ₹10");
+        await db.collection('requests').add({ uid: auth.currentUser.uid, username: document.getElementById('p-name').innerText, amount: amt, type, status: 'Pending', createdAt: Date.now() });
+        alert("Deposit Request Sent!"); document.getElementById('cash-amount').value = '';
+    }
+
+    function logout() { auth.signOut(); location.reload(); }
 </script>
 </body>
 </html>
