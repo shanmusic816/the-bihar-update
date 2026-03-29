@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBL | Reward Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { background: #020406; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .u-glass { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; width: 100%; max-width: 400px; padding: 35px; text-align: center; }
+        .brand-font { font-family: 'Syncopate', sans-serif; text-transform: uppercase; font-style: italic; letter-spacing: 1px; }
+        .input-node { width: 100%; padding: 14px; background: #111; border: 1px solid #333; border-radius: 12px; outline: none; color: white; margin-bottom: 12px; font-size: 13px; text-align: center; }
+        .neon-btn { background: #ff6b00; color: white; font-weight: 900; border-radius: 12px; padding: 18px; width: 100%; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 10px 30px rgba(255, 107, 0, 0.2); }
+        .success-screen { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="u-glass">
+        <div id="claim-form">
+            <h1 class="brand-font text-orange-500 text-[14px] mb-2">BHARAT BATTLE LEAGUE</h1>
+            <h2 style="font-weight: 900; font-style: italic; font-size: 22px; margin-bottom: 30px; letter-spacing: -1px;">CLAIM YOUR REWARD</h2>
+
+            <input type="text" id="u-name" placeholder="Full Name" class="input-node">
+            <input type="text" id="u-uid" placeholder="Player UID" class="input-node">
+            <input type="email" id="u-email" placeholder="Email Address" class="input-node">
+            <input type="text" id="u-upi" placeholder="UPI ID (name@ybl)" class="input-node">
+
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label style="font-size: 10px; opacity: 0.4; font-weight: bold; margin-left: 5px;">RANK SCREENSHOT</label>
+                <input type="file" id="u-file" accept="image/*" class="input-node" style="font-size: 10px; padding: 10px; margin-top: 5px;">
+            </div>
+            
+            <button onclick="handleSubmission()" id="sub-btn" class="neon-btn">Submit Proof</button>
+            
+            <button onclick="window.history.back()" style="margin-top: 25px; font-size: 10px; opacity: 0.3; text-decoration: underline; background: none; border: none; color: white; cursor: pointer;">CANCEL & RETURN</button>
+        </div>
+
+        <div id="success-node" class="success-screen">
+            <div style="font-size: 60px; color: #22c55e; margin-bottom: 20px;">✓</div>
+            <h2 class="brand-font text-[14px] text-orange-500 mb-2 italic">BHARAT BATTLE LEAGUE</h2>
+            <h3 style="font-weight: 900; font-style: italic; font-size: 20px; margin-bottom: 10px;">CLAIM SUBMITTED</h3>
+            <p style="font-size: 12px; opacity: 0.5; margin-bottom: 30px; line-height: 1.6;">Your details and screenshot have been sent to Bharat Admin. Reward will be sent within 2 hours.</p>
+            <button onclick="window.history.back()" class="neon-btn" style="background: #22c55e; box-shadow: 0 10px 30px rgba(34, 197, 94, 0.2);">GO TO LOBBY</button>
+        </div>
+
+        <p id="status" style="font-size: 10px; margin-top: 15px; color: #ff6b00; font-weight: bold;"></p>
+    </div>
+
+<script>
+    // --- SERVER CONFIG ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyDiHxA8XHVTAKFSU1UMobZMY_Kw7612fw",
+        authDomain: "tournament-app-b77c0.firebaseapp.com",
+        projectId: "tournament-app-b77c0",
+        databaseURL: "https://tournament-app-b77c0-default-rtdb.asia-southeast1.firebasedatabase.app",
+        appId: "1:925200484535:web:c15c87fcecb5e793bca532"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // --- GITHUB STORAGE CONFIG ---
+    const GH_TOKEN = "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"; 
+    const GH_REPO = "shanmusic816/biharbattleleague"; 
+
+    async function handleSubmission() {
+        const file = document.getElementById('u-file').files[0];
+        const btn = document.getElementById('sub-btn');
+        const status = document.getElementById('status');
+
+        if(!file || !document.getElementById('u-uid').value) return alert("Bhai, Details aur Screenshot bharna zaroori hai!");
+
+        btn.disabled = true;
+        btn.innerText = "UPLOADING...";
+        status.innerText = "SYNCING WITH BHARAT SERVER...";
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async () => {
+            const base64Content = reader.result.split(',')[1];
+            const fileName = Date.now() + "_" + file.name.replace(/\s/g, "_");
+            const url = `https://api.github.com/repos/${GH_REPO}/contents/proofs/${fileName}`;
+
+            try {
+                const res = await fetch(url, {
+                    method: "PUT",
+                    headers: { "Authorization": `token ${GH_TOKEN}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: "reward claim", content: base64Content })
+                });
+
+                if(!res.ok) throw new Error("GitHub Upload Failed");
+
+                const finalImgUrl = `https://raw.githubusercontent.com/${GH_REPO}/main/proofs/${fileName}`;
+                
+                await db.collection("payout_claims").add({
+                    name: document.getElementById('u-name').value,
+                    uid: document.getElementById('u-uid').value,
+                    email: document.getElementById('u-email').value,
+                    upi: document.getElementById('u-upi').value,
+                    screenshot: finalImgUrl,
+                    status: "Pending",
+                    createdAt: Date.now()
+                });
+
+                document.getElementById('claim-form').style.display = 'none';
+                document.getElementById('success-node').style.display = 'block';
+                status.innerText = "";
+
+            } catch (e) {
+                alert("Error: " + e.message);
+                btn.disabled = false;
+                btn.innerText = "Submit Proof";
+                status.innerText = "";
+            }
+        };
+    }
+</script>
+</body>
+</html>
