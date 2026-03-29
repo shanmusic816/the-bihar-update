@@ -146,7 +146,7 @@
         const fee = Number(document.getElementById('m-f').value);
         const prize = Number(document.getElementById('m-p').value);
         const img = document.getElementById('m-i').value;
-        if(!title || !fee) return alert("Bhai, Details bhariye!");
+        if (!title || fee === "") return alert("Bhai, Details bhariye!");
         await db.collection('matches').add({ title, fee, prizePool: prize, img, createdAt: Date.now(), roomId: '', roomPass: '' });
         alert("Match Published!");
     }
