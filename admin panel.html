@@ -3,163 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBL Admin | Master Control</title>
+    <title>BBL | Bharat Control Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.7.1/firebase-app-compat.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.7.1/firebase-firestore-compat.min.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --bg: #05070a; --blue: #3b82f6; }
-        body { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        input, select { background: #000 !important; border: 1px solid #333 !important; color: white !important; outline: none; }
-        .neon-border { border: 1px solid var(--blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
-        /* Scrollbar styling */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+        :root { --neon: #ff6b00; --bg: #020406; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .brand-font { font-family: 'Syncopate', sans-serif; text-transform: uppercase; }
+        .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; }
+        .input-node { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px; border-radius: 12px; width: 100%; outline: none; font-size: 11px; color: white; margin-bottom: 10px; }
+        .tab-btn { opacity: 0.4; transition: 0.3s; padding-bottom: 10px; font-size: 10px; font-weight: 900; text-transform: uppercase; border-bottom: 2px solid transparent; }
+        .tab-btn.active { opacity: 1; color: var(--neon); border-bottom: 2px solid var(--neon); }
+        .a-section { display: none; }
+        .a-section.active { display: block; }
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="pb-20">
-    <div id="auth-screen" class="fixed inset-0 z-[500] bg-[#05070a] flex items-center justify-center p-6 text-center">
-        <div class="glass p-8 rounded-[2.5rem] w-full max-w-md neon-border text-white">
-            <h2 class="text-3xl font-bold mb-8 text-blue-400 italic tracking-tighter uppercase">Master Terminal</h2>
-            <input type="password" id="admin-pass-input" placeholder="Admin Password" class="w-full p-4 rounded-2xl text-center mb-4 bg-black">
-            <button onclick="checkPass()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-blue-500 transition-all">Unlock Terminal</button>
+<body class="p-6">
+
+    <div id="admin-auth" class="fixed inset-0 bg-black z-[3000] flex items-center justify-center p-6 text-center">
+        <div class="glass p-10 w-full max-w-sm border-orange-500/20">
+            <h2 class="brand-font text-orange-500 text-sm mb-8 italic">Bharat Master Access</h2>
+            <input type="password" id="adm-pass" placeholder="Security Key" class="input-node text-center mb-6">
+            <button onclick="checkAdm()" class="w-full bg-orange-600 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest shadow-2xl">Authorize Node</button>
         </div>
     </div>
 
-    <div id="admin-main" class="hidden text-white">
-        <header class="p-6 glass sticky top-0 z-50 flex justify-between items-center border-b border-white/5">
-            <h1 class="text-2xl font-bold text-blue-400 italic">BBL CONTROL</h1>
-            <button onclick="logout()" class="text-red-500 text-xs font-bold border border-red-500/20 px-4 py-2 rounded-full uppercase">Logout</button>
+    <div id="admin-main" class="hidden">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="brand-font text-orange-500 italic text-lg leading-none">Bharat Control</h1>
+            <button onclick="location.reload()" class="text-[8px] opacity-30 font-black uppercase italic underline">Refresh Hub</button>
         </header>
 
-        <main class="p-6 max-w-6xl mx-auto space-y-8">
-            <div class="flex justify-between items-center">
-                <h2 class="text-xl font-bold uppercase italic text-white/80">Tournament Manager</h2>
-                <button onclick="document.getElementById('m-modal').classList.remove('hidden')" class="bg-blue-600 px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg shadow-blue-500/20">+ Create Match</button>
+        <nav class="flex gap-6 mb-8 border-b border-white/5 overflow-x-auto pb-1">
+            <button onclick="aTab('matches')" class="tab-btn active" id="btn-matches">Matches</button>
+            <button onclick="aTab('finance')" class="tab-btn" id="btn-finance">Finances</button>
+            <button onclick="aTab('claims')" class="tab-btn" id="btn-claims">Claims</button>
+        </nav>
+
+        <div id="sec-matches" class="a-section active">
+            <div class="glass p-6 mb-8 border-orange-500/20">
+                <h3 class="text-[9px] font-black opacity-30 uppercase mb-4 tracking-widest">Create Tournament</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="text" id="m-t" placeholder="Title" class="input-node">
+                    <input type="number" id="m-f" placeholder="Fee (₹)" class="input-node">
+                    <input type="number" id="m-p" placeholder="Prize (₹)" class="input-node">
+                    <input type="text" id="m-i" placeholder="Banner URL" class="input-node">
+                    <button onclick="createM()" class="col-span-2 bg-green-600 py-4 rounded-xl font-black uppercase text-[10px] italic">Launch Match</button>
+                </div>
             </div>
-            <div id="match-container" class="grid lg:grid-cols-2 gap-6"></div>
-        </main>
-    </div>
-        <div id="players-modal" class="fixed inset-0 z-[120] bg-black/95 hidden flex items-center justify-center p-6">
-        <div class="glass w-full max-w-sm p-6 rounded-3xl border border-white/10 text-white">
-            <h3 class="text-lg font-bold text-blue-400 mb-4 uppercase italic">Joined Players</h3>
-            <div id="player-names-list" class="space-y-2 text-sm max-h-60 overflow-y-auto pr-2"></div>
-            <button onclick="document.getElementById('players-modal').classList.add('hidden')" class="w-full mt-6 text-white/20 text-[10px] font-bold uppercase tracking-widest">Close Panel</button>
+            <div id="admin-m-list" class="space-y-4"></div>
+        </div>
+
+        <div id="sec-finance" class="a-section">
+            <div class="space-y-8">
+                <div>
+                    <h3 class="brand-font text-[9px] text-green-500 mb-4 italic">Pending Deposits (Add Cash)</h3>
+                    <div id="deposit-box" class="space-y-3"></div>
+                </div>
+                <hr class="border-white/5">
+                <div>
+                    <h3 class="brand-font text-[9px] text-red-500 mb-4 italic">Pending Payouts (Withdraw)</h3>
+                    <div id="withdraw-box" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="sec-claims" class="a-section">
+            <div id="claims-box" class="space-y-6"></div>
         </div>
     </div>
 
-    <div id="result-modal" class="fixed inset-0 z-[600] bg-black/98 hidden flex flex-col p-6 overflow-y-auto text-white">
-        <div class="max-w-4xl mx-auto w-full pb-20">
-            <div class="flex justify-between items-center mb-10 sticky top-0 bg-black/80 backdrop-blur py-4 border-b border-white/5">
-                <h3 id="res-title" class="text-2xl font-bold text-orange-500 italic uppercase">Leaderboard Editor</h3>
-                <button onclick="document.getElementById('result-modal').classList.add('hidden')" class="bg-white/10 p-3 rounded-full text-[10px] font-bold">CLOSE X</button>
-            </div>
-            <div id="player-edit-list" class="space-y-4"></div>
-        </div>
-    </div>
+<script>
+    // --- BHARAT SERVER CONFIG ---
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDlHxa8FJHVTXKF5U1UMobZMY_Rw7G12fw", 
+        authDomain: "tournament-app-b77c0.firebaseapp.com",
+        projectId: "tournament-app-b77c0",
+        storageBucket: "tournament-app-b77c0.appspot.com",
+        messagingSenderId: "383562657313",
+        appId: "1:383562657313:web:9b97b102a90102" 
+    };
 
-    <div id="m-modal" class="fixed inset-0 z-[110] bg-black/95 hidden flex items-center justify-center p-6 text-white text-center">
-        <div class="glass w-full max-w-md p-8 rounded-[2.5rem] border border-blue-500/30 space-y-4">
-            <h3 class="text-xl font-bold text-blue-400 italic uppercase">Match Setup</h3>
-            <input type="text" id="m-title" placeholder="Match Title" class="w-full p-3 rounded-xl bg-black border border-white/10">
-            <input type="text" id="m-img" placeholder="Poster URL (Direct Link)" class="w-full p-3 rounded-xl bg-black border border-white/10">
-            <div class="grid grid-cols-2 gap-3">
-                <input type="number" id="m-entry" placeholder="Fee (₹)" class="p-3 rounded-xl bg-black border border-white/10 text-sm">
-                <input type="number" id="m-prize" placeholder="Prize (₹)" class="p-3 rounded-xl bg-black border border-white/10 text-sm">
-            </div>
-            <input type="datetime-local" id="m-time" class="w-full p-3 rounded-xl bg-black border border-white/10 text-white/50">
-            <button onclick="saveMatch()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold uppercase tracking-widest shadow-lg">Publish Match</button>
-            <button onclick="document.getElementById('m-modal').classList.add('hidden')" class="w-full text-white/20 text-[10px] font-bold uppercase tracking-widest mt-2">Cancel</button>
-        </div>
-    </div>
-    <script>
-    const firebaseConfig = { apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw", authDomain: "tournament-app-b77c0.firebaseapp.com", projectId: "tournament-app-b77c0", storageBucket: "tournament-app-b77c0.firebasestorage.app", messagingSenderId: "925200484535", appId: "1:925200484535:web:c15c87fcecb5e793bca532" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    function checkPass() { if(document.getElementById('admin-pass-input').value === "admin@123") { document.getElementById('auth-screen').style.display='none'; document.getElementById('admin-main').classList.remove('hidden'); loadMatches(); } else { alert("Wrong Password!"); } }
-
-    function saveMatch() {
-        const data = { title: document.getElementById('m-title').value, img: document.getElementById('m-img').value, entryFee: Number(document.getElementById('m-entry').value), prizePool: Number(document.getElementById('m-prize').value), startTime: document.getElementById('m-time').value, status: 'Upcoming', createdAt: Date.now() };
-        db.collection('matches').add(data).then(() => location.reload());
+    function checkAdm() {
+        // Default Pass: admin@123
+        if(document.getElementById('adm-pass').value === "admin@123") {
+            document.getElementById('admin-auth').classList.add('hidden');
+            document.getElementById('admin-main').classList.remove('hidden');
+            loadAdmMatches();
+        } else { alert("Access Denied!"); }
     }
 
-    function loadMatches() {
+    // --- MATCH MANAGEMENT ---
+    async function createM() {
+        const title = document.getElementById('m-t').value;
+        const fee = document.getElementById('m-f').value;
+        const prize = document.getElementById('m-p').value;
+        const img = document.getElementById('m-i').value;
+        if(!title || !fee) return alert("Fill data!");
+        await db.collection('matches').add({ 
+            title, fee: Number(fee), prizePool: Number(prize), img, createdAt: Date.now(), roomId: '', roomPass: '' 
+        });
+        alert("Published to Bharat Server!");
+        location.reload();
+    }
+
+    function loadAdmMatches() {
         db.collection('matches').orderBy('createdAt', 'desc').onSnapshot(snap => {
-            const container = document.getElementById('match-container'); container.innerHTML = '';
+            const list = document.getElementById('admin-m-list'); list.innerHTML = "";
             snap.forEach(doc => {
-                const m = doc.data(); const mId = doc.id;
-                container.innerHTML += `
-                    <div class="glass p-6 rounded-[2.5rem] border-l-4 border-blue-500 mb-4 text-white">
-                        <div class="flex justify-between items-start mb-4">
-                            <h4 class="font-bold uppercase italic text-lg tracking-tighter">${m.title}</h4>
-                            <select onchange="db.collection('matches').doc('${mId}').update({status:this.value})" class="text-[9px] p-2 rounded-xl font-bold uppercase bg-black border border-white/10">
-                                <option ${m.status==='Upcoming'?'selected':''}>Upcoming</option>
-                                <option ${m.status==='Live'?'selected':''}>Live</option>
-                                <option ${m.status==='Finished'?'selected':''}>Finished</option>
-                            </select>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3 mb-5">
-                            <input type="text" placeholder="Room ID" value="${m.roomId||''}" onchange="db.collection('matches').doc('${mId}').update({roomId:this.value})" class="p-3 text-xs rounded-xl bg-black border border-white/5">
-                            <input type="text" placeholder="Password" value="${m.roomPass||''}" onchange="db.collection('matches').doc('${mId}').update({roomPass:this.value})" class="p-3 text-xs rounded-xl bg-black border border-white/5">
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <div class="flex gap-2">
-                                <button onclick="fetchPlayers('${mId}')" class="flex-1 bg-white/5 py-3 rounded-xl text-[9px] font-bold uppercase border border-white/5 tracking-widest">View Players</button>
-                                <button onclick="openResultManager('${mId}', '${m.title}')" class="flex-1 bg-orange-600/20 text-orange-500 py-3 rounded-xl text-[9px] font-bold uppercase border border-orange-500/10 tracking-widest">Update Result</button>
-                            </div>
-                            <button onclick="db.collection('matches').doc('${mId}').delete()" class="w-full py-2 text-red-500 glass rounded-xl text-[8px] font-bold uppercase opacity-30 hover:opacity-100 transition-all">Delete Tournament</button>
-                        </div>
-                    </div>`;
-            });
-        });
-    }
-
-    async function fetchPlayers(id) {
-        const list = document.getElementById('player-names-list');
-        list.innerHTML = '<p class="text-center py-4 text-xs opacity-50 uppercase tracking-widest animate-pulse">Syncing Warriors...</p>';
-        document.getElementById('players-modal').classList.remove('hidden');
-        const players = await db.collection('matches').doc(id).collection('participants').get();
-        list.innerHTML = players.empty ? '<p class="text-center py-4 text-xs opacity-20 uppercase font-bold">No entries yet</p>' : '';
-        players.forEach(p => {
-            list.innerHTML += `<div class="p-3 glass rounded-xl flex justify-between items-center mb-2 border border-white/5"><span class="text-xs font-bold uppercase tracking-tight">${p.data().gameUid}</span><span class="text-[7px] text-blue-500 font-bold uppercase border border-blue-500/30 px-2 py-1 rounded-full">Joined</span></div>`;
-        });
-    }
-
-    async function openResultManager(mId, title) {
-        document.getElementById('res-title').innerText = title + " Rankings"; 
-        document.getElementById('result-modal').classList.remove('hidden');
-        db.collection('matches').doc(mId).collection('participants').onSnapshot(snap => {
-            const list = document.getElementById('player-edit-list'); list.innerHTML = "";
-            snap.forEach(doc => {
-                const p = doc.data(); const uId = doc.id;
+                const m = doc.data(); const id = doc.id;
                 list.innerHTML += `
-                    <div class="glass p-5 rounded-[2.5rem] flex items-center justify-between border border-white/5 text-white">
-                        <h4 class="text-xs font-bold uppercase italic text-blue-400 w-1/3 break-all tracking-tighter">${p.gameUid}</h4>
-                        <div class="flex gap-4">
-                            <div class="text-center"><p class="text-[7px] text-white/30 uppercase mb-1 font-bold">Rank</p>
-                                <input type="number" id="rank-${uId}" value="${p.rank||0}" placeholder="Rank" class="w-14 p-2 text-center text-xs rounded-xl bg-black border border-orange-500/20 text-orange-500 font-bold outline-none">
-                            </div>
-                            <div class="text-center"><p class="text-[7px] text-white/30 uppercase mb-1 font-bold">Kills</p>
-                                <input type="number" id="kills-${uId}" value="${p.kills||0}" placeholder="Kills" class="w-14 p-2 text-center text-xs rounded-xl bg-black border border-orange-500/20 text-orange-500 font-bold outline-none">
-                            </div>
-                        </div>
-                        <button onclick="setStats('${mId}', '${uId}')" class="bg-green-600/20 text-green-500 px-6 py-3 rounded-xl text-[9px] font-bold uppercase border border-green-500/10">Set</button>
-                    </div>`;
+                <div class="glass p-5 border border-white/5">
+                    <div class="flex justify-between mb-4">
+                        <h4 class="font-black text-[10px] uppercase text-orange-500">${m.title}</h4>
+                        <button onclick="deleteM('${id}')" class="text-red-500 text-xs">🗑️</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <input type="text" id="rid-${id}" placeholder="Room ID" value="${m.roomId || ''}" class="input-node mb-0">
+                        <input type="text" id="rps-${id}" placeholder="Pass" value="${m.roomPass || ''}" class="input-node mb-0">
+                    </div>
+                    <button onclick="updateRoom('${id}')" class="w-full bg-white/5 py-2 rounded-lg text-[9px] font-black uppercase border border-white/10 italic">Update Room Details</button>
+                </div>`;
             });
         });
     }
 
-    async function setStats(mId, uId) {
-        const r = Number(document.getElementById(`rank-${uId}`).value);
-        const k = Number(document.getElementById(`kills-${uId}`).value);
-        await db.collection('matches').doc(mId).collection('participants').doc(uId).update({ rank: r, kills: k, status: 'Verified' });
-        alert("Ranking Locked for " + uId);
+    async function updateRoom(id) {
+        const rid = document.getElementById('rid-' + id).value;
+        const rps = document.getElementById('rps-' + id).value;
+        await db.collection('matches').doc(id).update({ roomId: rid, roomPass: rps });
+        alert("Sync Complete!");
     }
 
-    function logout() { localStorage.removeItem('admin_session'); location.reload(); }
+    async function deleteM(id) { if(confirm("Delete Match?")) await db.collection('matches').doc(id).delete(); }
+
+    // --- FINANCE MANAGEMENT ---
+    function loadFinance() {
+        // Load Deposits (Add Cash)
+        db.collection('deposits').where('status', '==', 'Pending').onSnapshot(snap => {
+            const box = document.getElementById('deposit-box'); box.innerHTML = "";
+            if(snap.empty) box.innerHTML = "<p class='opacity-20 text-[10px]'>No pending deposits</p>";
+            snap.forEach(doc => {
+                const d = doc.data();
+                box.innerHTML += `
+                <div class="glass p-4 border-green-500/20 flex justify-between items-center">
+                    <div><p class="text-[11px] font-black text-green-500">₹${d.amount}</p><p class="text-[7px] opacity-30 uppercase">${d.uid.slice(0,10)}</p></div>
+                    <div class="flex gap-2">
+                        <button onclick="approveDep('${doc.id}','${d.uid}',${d.amount})" class="bg-green-600 px-4 py-2 rounded text-[9px] font-black uppercase">Approve</button>
+                        <button onclick="rejectDep('${doc.id}')" class="bg-red-600/20 text-red-500 px-4 py-2 rounded text-[9px] font-black uppercase">Reject</button>
+                    </div>
+                </div>`;
+            });
+        });
+
+        // Load Payouts (Withdraw)
+        db.collection('payouts').where('status', '==', 'Pending').onSnapshot(snap => {
+            const box = document.getElementById('withdraw-box'); box.innerHTML = "";
+            if(snap.empty) box.innerHTML = "<p class='opacity-20 text-[10px]'>No pending withdrawals</p>";
+            snap.forEach(doc => {
+                const w = doc.data();
+                box.innerHTML += `
+                <div class="glass p-4 border-red-500/20 flex justify-between items-center">
+                    <div><p class="text-[11px] font-black text-red-500">₹${w.amount}</p><p class="text-[8px] text-blue-400">${w.upi}</p></div>
+                    <div class="flex gap-2">
+                        <button onclick="approvePayout('${doc.id}','${w.uid}',${w.amount})" class="bg-green-600 px-4 py-2 rounded text-[9px] font-black uppercase">Paid</button>
+                        <button onclick="rejectPayout('${doc.id}')" class="bg-red-600/20 text-red-500 px-4 py-2 rounded text-[9px] font-black uppercase">Reject</button>
+                    </div>
+                </div>`;
+            });
+        });
+    }
+
+    async function approveDep(docId, uid, amt) {
+        const uRef = db.collection('users').doc(uid);
+        await db.runTransaction(async (t) => {
+            const uDoc = await t.get(uRef);
+            const newBal = (uDoc.data().wallet || 0) + amt;
+            t.update(uRef, { wallet: newBal });
+            t.update(db.collection('deposits').doc(docId), { status: 'Approved' });
+        });
+        alert("Money Credited!");
+    }
+
+    async function approvePayout(docId, uid, amt) {
+        const uRef = db.collection('users').doc(uid);
+        await db.runTransaction(async (t) => {
+            const uDoc = await t.get(uRef);
+            const newBal = (uDoc.data().wallet || 0) - amt;
+            t.update(uRef, { wallet: newBal });
+            t.update(db.collection('payouts').doc(docId), { status: 'Completed' });
+        });
+        alert("Marked as Paid!");
+    }
+
+    async function rejectDep(id) { await db.collection('deposits').doc(id).update({status:'Rejected'}); alert("Rejected"); }
+    async function rejectPayout(id) { await db.collection('payouts').doc(id).update({status:'Rejected'}); alert("Rejected"); }
+
+    // --- CLAIMS MANAGEMENT ---
+    function loadClaims() {
+        const box = document.getElementById('claims-box');
+        db.collectionGroup('participants').where('status', '==', 'Claimed').onSnapshot(snap => {
+            box.innerHTML = "";
+            if(snap.empty) box.innerHTML = "<p class='opacity-20 text-[10px] text-center py-10'>No claims to review</p>";
+            snap.forEach(doc => {
+                const p = doc.data(); const pId = doc.id; const mRef = doc.ref.parent.parent;
+                box.innerHTML += `
+                <div class="glass p-5 border border-white/5">
+                    <div class="flex justify-between mb-4">
+                        <div><h4 class="text-xs font-black text-blue-400 uppercase italic">${p.username || 'Player'}</h4><p class="text-[8px] opacity-30 mt-1 uppercase">UID: ${pId.slice(0,8)}</p></div>
+                        <a href="${p.proofImg}" target="_blank" class="text-orange-500 font-black text-[9px] uppercase italic">View SS ↗</a>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="verifyWin('${mRef.id}','${pId}')" class="w-full bg-green-600 py-3 rounded-xl text-[9px] font-black uppercase italic">Approve</button>
+                        <button onclick="rejectWin('${mRef.id}','${pId}')" class="w-full bg-red-600/20 text-red-500 py-3 rounded-xl text-[9px] font-black uppercase italic">Reject</button>
+                    </div>
+                </div>`;
+            });
+        });
+    }
+
+    async function verifyWin(mId, pId) {
+        await db.collection('matches').doc(mId).collection('participants').doc(pId).update({ status: 'Verified' });
+        alert("Win Confirmed!");
+    }
+    async function rejectWin(mId, pId) {
+        await db.collection('matches').doc(mId).collection('participants').doc(pId).update({ status: 'Rejected' });
+        alert("Rejected!");
+    }
+
+    // TABS
+    function aTab(t) {
+        document.querySelectorAll('.a-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('sec-' + t).classList.add('active');
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-' + t).classList.add('active');
+        if(t === 'finance') loadFinance();
+        if(t === 'claims') loadClaims();
+    }
 </script>
 </body>
 </html>
