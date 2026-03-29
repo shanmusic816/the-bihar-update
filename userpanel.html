@@ -5,99 +5,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BBL | Bharat Battle League</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Orbitron:wght@800&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        :root { --bbl: #f97316; --dark: #020617; }
-        body { background-color: var(--dark); color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
-        .bg-mesh { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #020408 100%); opacity: 0.6; }
-        .glass-panel { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 35px; }
-        .bbl-logo-text { font-family: 'Orbitron', sans-serif; background: linear-gradient(to bottom, #fff, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.3)); }
+        :root { --bbl-gold: #f97316; --bbl-dark: #020617; --bbl-glass: rgba(255, 255, 255, 0.03); }
+        body { background-color: var(--bbl-dark); color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        
+        /* Premium Background Mesh */
+        .bg-mesh { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 10% 10%, #1e1b4b 0%, transparent 40%), radial-gradient(circle at 90% 90%, #431407 0%, transparent 40%), #020617; }
+        
+        /* Glassmorphism Components */
+        .glass-card { background: var(--bbl-glass); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .neon-btn { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3); border: 1px solid rgba(255,255,255,0.1); }
+        
+        /* Typography */
+        .bbl-logo-text { font-family: 'Orbitron', sans-serif; background: linear-gradient(to bottom, #ffffff 30%, #f97316 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.3)); }
+        
+        /* Custom Animations */
         .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeInUp 0.4s ease-out; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .diamond-nav { width: 56px; height: 56px; background: linear-gradient(135deg, #f97316, #d946ef); transform: rotate(45deg); border-radius: 14px; cursor: pointer; position: relative; top: -25px; border: 2px solid rgba(255,255,255,0.2); transition: 0.3s; z-index: 160; box-shadow: 0 0 20px rgba(249, 115, 22, 0.4); }
-        .diamond-nav span { transform: rotate(-45deg); display: block; font-weight: 800; font-size: 9px; color: white; }
-        .nav-icon { transition: 0.3s; opacity: 0.4; filter: grayscale(1); }
-        .nav-icon.active { opacity: 1 !important; filter: grayscale(0) !important; transform: translateY(-3px); }
-        .badge-joined { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); padding: 4px 12px; border-radius: 12px; font-size: 10px; font-weight: bold; position: absolute; top: 1rem; left: 1rem; z-index: 20; }
-        .rank-card { border-left: 4px solid transparent; transition: 0.3s; }
-        .rank-1 { border-left-color: #fbbf24; background: linear-gradient(90deg, rgba(251, 191, 36, 0.1) 0%, transparent 100%); }
+        .tab-content.active { display: block; animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Navigation Style */
+        .nav-active { color: #f97316 !important; opacity: 1 !important; transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.6)); }
+        .diamond-nav { width: 58px; height: 58px; background: linear-gradient(135deg, #f97316, #d946ef); transform: rotate(45deg); border-radius: 14px; position: relative; top: -25px; border: 2px solid rgba(255,255,255,0.2); transition: 0.4s; z-index: 160; }
+        .diamond-nav span { transform: rotate(-45deg); display: block; font-weight: 800; font-size: 10px; color: white; }
     </style>
 </head>
 <body class="bg-[#020617]">
     <div class="bg-mesh"></div>
-    <div class="max-w-[450px] mx-auto min-h-screen relative text-white">
-        <div id="auth-screen" class="fixed inset-0 z-[500] bg-[#020617] flex items-center justify-center p-8 text-center">
-            <div class="w-full max-w-sm glass-panel p-10 border-orange-500/20 border">
-                <h1 class="text-5xl bbl-logo-text italic mb-1">BBL</h1>
-                <p class="text-[8px] text-white/40 tracking-[0.5em] uppercase mb-12 font-bold italic">Bharat Battle League</p>
+    <div class="max-w-[450px] mx-auto min-h-screen relative text-white px-4">
+        
+        <div id="auth-screen" class="fixed inset-0 z-[500] bg-[#020617] flex items-center justify-center p-8">
+            <div class="w-full glass-card p-10 text-center border-t-2 border-orange-500/20">
+                <h1 class="text-4xl bbl-logo-text italic mb-1 tracking-tighter">BHARAT</h1>
+                <p class="text-[9px] text-white/30 tracking-[0.6em] uppercase mb-10 font-bold italic">Battle League</p>
                 <div class="space-y-4">
-                    <div id="signup-fields" class="hidden"><input type="text" id="auth-username" placeholder="Character Name" class="w-full p-4 bg-black/40 rounded-2xl border border-white/5 outline-none text-center text-sm mb-4 text-white"></div>
-                    <input type="email" id="auth-email" placeholder="Email" class="w-full p-4 bg-black/40 rounded-2xl border border-white/5 outline-none text-center text-sm text-white">
-                    <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 bg-black/40 rounded-2xl border border-white/5 outline-none text-center text-sm text-white">
-                    <button onclick="processAuth()" id="auth-btn" class="w-full bg-gradient-to-r from-orange-600 to-orange-400 py-4 rounded-2xl font-bold uppercase tracking-widest text-white shadow-lg">ENTER ARENA</button>
-                    <p id="toggle-text" class="text-[10px] text-white/30 uppercase mt-6 cursor-pointer py-2 text-white" onclick="toggleAuthMode()">New Player? <span class="text-orange-500 font-bold">Register</span></p>
+                    <div id="signup-fields" class="hidden space-y-4">
+                        <input type="text" id="auth-username" placeholder="Character Name" class="w-full p-4 glass-card border-none outline-none text-center text-xs">
+                        <input type="text" id="auth-game-id" placeholder="Free Fire UID" class="w-full p-4 glass-card border-none outline-none text-center text-xs">
+                    </div>
+                    <input type="email" id="auth-email" placeholder="Email Address" class="w-full p-4 glass-card border-none outline-none text-center text-xs">
+                    <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 glass-card border-none outline-none text-center text-xs">
+                    <button onclick="processAuth()" id="auth-btn" class="w-full neon-btn py-4 rounded-2xl font-bold uppercase tracking-[0.2em] text-xs">Authorize Entry</button>
+                    <p id="toggle-text" class="text-[10px] text-white/20 uppercase mt-4 cursor-pointer" onclick="toggleAuthMode()">New Recruit? <span class="text-orange-500 font-bold">Sign Up</span></p>
                 </div>
             </div>
         </div>
 
-        <header id="main-header" class="hidden sticky top-0 z-[100] bg-[#020617]/90 backdrop-blur-xl px-6 py-5 flex justify-between items-center border-b border-white/5">
-            <div><h2 class="text-xl font-bold italic bbl-logo-text leading-none uppercase">BBL Bharat Battle League</h2><p class="text-[8px] text-green-500 font-bold uppercase mt-1 tracking-widest leading-none">● Online Server</p></div>
-            <div class="glass-panel px-3 py-1.5 rounded-2xl border-orange-500/20 flex items-center gap-3">
-                <div class="text-right text-white"><p class="text-[7px] text-white/40 uppercase font-bold leading-none">Wallet</p><p class="text-xs font-bold text-orange-400">₹<span id="u-bal">0</span></p></div>
-                <img id="h-av" class="w-8 h-8 rounded-full border border-orange-500 shadow-lg">
+        <header id="main-header" class="hidden sticky top-0 z-[100] bg-[#020617]/70 backdrop-blur-2xl py-5 flex justify-between items-center border-b border-white/5">
+            <div><h2 class="text-2xl font-bold italic bbl-logo-text leading-none">BBL</h2><p class="text-[7px] text-green-500 font-bold uppercase tracking-[0.3em] mt-1">● Bharat_S1_Server</p></div>
+            <div class="glass-card px-4 py-2 flex items-center gap-3 border-orange-500/20 border">
+                <div class="text-right"><p class="text-[6px] text-white/30 uppercase font-bold">Credits</p><p class="text-xs font-bold text-orange-400">₹<span id="u-bal">0</span></p></div>
+                <img id="h-av" class="w-8 h-8 rounded-full border border-orange-500/30 bg-black">
             </div>
         </header>
-
-        <main id="main-content" class="hidden p-5 pb-32">
+        <main id="main-content" class="hidden pb-32 pt-4">
             <section id="tab-home" class="tab-content active space-y-8"><div id="match-list" class="space-y-8"></div></section>
-            <section id="tab-my-matches" class="tab-content space-y-8 text-center text-white"><h2 class="text-xl font-bold bbl-logo-text italic mb-6">REGISTERED BATTLES</h2><div id="my-match-list" class="space-y-8"></div></section>
+            
+            <section id="tab-my-matches" class="tab-content space-y-8"><h2 class="text-center text-xl font-bold bbl-logo-text italic uppercase mb-6">Registered Arena</h2><div id="my-match-list" class="space-y-8"></div></section>
             
             <section id="tab-leaderboard" class="tab-content text-center space-y-6">
-                <h2 class="text-xl font-bold bbl-logo-text italic mb-6 uppercase tracking-[0.2em]">Hall of Fame</h2>
-                <div class="px-2 text-white">
-                    <select id="leader-match-select" onchange="loadGlobalLeaderboard(this.value)" class="w-full p-4 bg-black/40 rounded-2xl border border-white/10 text-xs font-bold text-orange-400 outline-none text-white shadow-xl"><option value="">Select Finished Match</option></select>
-                </div>
-                <div id="global-res-list" class="space-y-3 px-2 mt-4 text-white"></div>
+                <h2 class="text-xl font-bold bbl-logo-text italic mb-6 uppercase tracking-widest">Hall of Fame</h2>
+                <div class="px-2"><select id="leader-match-select" onchange="loadGlobalLeaderboard(this.value)" class="w-full p-4 glass-card rounded-2xl text-xs font-bold text-orange-400 outline-none"><option value="">Select Tournament Results</option></select></div>
+                <div id="global-res-list" class="space-y-3 px-2 mt-6"></div>
             </section>
 
-            <section id="tab-wallet" class="tab-content text-center space-y-6">
-                <div class="glass-panel p-10 border-l-4 border-orange-500 text-white text-center">
-                    <p class="text-white/30 text-[10px] uppercase font-bold mb-2">Available Balance</p>
-                    <h3 class="text-6xl font-bold text-orange-500 uppercase italic tracking-tighter">₹<span id="wallet-display">0</span></h3>
+            <section id="tab-wallet" class="tab-content space-y-6">
+                <div class="glass-card p-10 border-t-2 border-orange-500/40 text-center">
+                    <p class="text-white/20 text-[10px] uppercase font-bold mb-2 tracking-[0.3em]">Total Balance</p>
+                    <h3 class="text-6xl font-bold text-white italic tracking-tighter">₹<span id="wallet-display" class="text-orange-500">0</span></h3>
                     <div class="mt-10 space-y-4">
-                        <input type="number" id="cash-amount" placeholder="Enter Amount (₹)" class="w-full p-4 bg-black/40 rounded-2xl border border-white/10 text-center font-bold text-orange-400 outline-none text-white">
-                        <button onclick="sendCashRequest()" class="w-full bg-green-600/20 text-green-500 py-4 rounded-2xl font-bold uppercase mt-2 tracking-widest text-xs border border-green-500/10">Add Cash</button>
+                        <input type="number" id="cash-amount" placeholder="Amount (₹)" class="w-full p-4 glass-card border-none text-center font-bold text-orange-400 outline-none">
+                        <button onclick="sendCashRequest()" class="w-full neon-btn py-4 rounded-2xl font-bold uppercase tracking-widest text-xs">Request Deposit</button>
                     </div>
                 </div>
             </section>
 
-            <section id="tab-profile" class="tab-content text-center space-y-6 text-white">
-                <div class="glass-panel p-10">
-                    <img id="p-av" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-orange-500 p-1">
-                    <h3 id="p-name" class="text-3xl font-bold italic text-orange-500 uppercase tracking-tighter">---</h3>
-                    <div class="mt-8 p-4 bg-black/40 rounded-3xl border border-white/5 text-left text-white"><p class="text-[7px] text-white/30 uppercase font-bold mb-1 tracking-widest">Player UID</p><p id="p-uid" class="text-[10px] font-mono font-bold text-orange-200 uppercase break-all">---</p></div>
-                    <button onclick="logout()" class="w-full mt-6 py-4 text-red-500 font-bold text-[10px] uppercase border border-red-500/10 rounded-2xl tracking-[0.3em]">Logout Account</button>
+            <section id="tab-profile" class="tab-content text-center space-y-6">
+                <div class="glass-card p-10 border-b-2 border-white/5">
+                    <img id="p-av" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-orange-500 p-1 shadow-2xl">
+                    <h3 id="p-name" class="text-3xl font-bold italic text-white uppercase tracking-tighter">---</h3>
+                    <div class="mt-8 p-5 bg-white/5 rounded-3xl border border-white/10 text-left">
+                        <p class="text-[7px] text-white/30 uppercase font-bold mb-1 tracking-widest">Authenticated Game ID</p>
+                        <p id="p-game-id" class="text-lg font-mono font-bold text-orange-400">---</p>
+                    </div>
+                    <button onclick="logout()" class="w-full mt-10 py-4 text-white/20 font-bold text-[9px] uppercase hover:text-red-500 transition-all tracking-[0.4em]">Sign Out</button>
                 </div>
             </section>
         </main>
-        <nav id="bottom-nav" class="hidden fixed bottom-0 left-0 right-0 h-20 bg-[#05070a]/95 backdrop-blur-2xl border-t border-white/5 flex justify-around items-center z-[150] px-4">
-            <button onclick="switchTab('home')" class="flex flex-col items-center gap-1"><img id="ico-home" src="https://img.icons8.com/material-rounded/24/f97316/home.png" class="w-5 nav-icon active"><span class="text-[7px] font-bold text-orange-500 uppercase">Home</span></button>
-            <button onclick="switchTab('my-matches')" class="flex flex-col items-center gap-1"><img id="ico-my-matches" src="https://img.icons8.com/material-rounded/24/ffffff/controller.png" class="w-5 nav-icon"><span class="text-[7px] font-bold text-white/40 uppercase tracking-tighter">My play</span></button>
+
+        <nav id="bottom-nav" class="hidden fixed bottom-0 left-0 right-0 h-24 bg-[#020617]/80 backdrop-blur-3xl border-t border-white/5 flex justify-around items-center z-[150] px-6">
+            <button onclick="switchTab('home')" class="flex flex-col items-center gap-1"><img id="ico-home" src="https://img.icons8.com/material-rounded/24/f97316/home.png" class="w-6 nav-icon active"><span class="text-[8px] font-bold text-orange-500 uppercase">Arena</span></button>
+            <button onclick="switchTab('my-matches')" class="flex flex-col items-center gap-1"><img id="ico-my-matches" src="https://img.icons8.com/material-rounded/24/ffffff/controller.png" class="w-6 nav-icon"><span class="text-[8px] font-bold text-white/20 uppercase">Play</span></button>
             <div class="diamond-nav flex items-center justify-center" onclick="switchTab('leaderboard')"><span>WINS</span></div>
-            <button onclick="switchTab('wallet')" class="flex flex-col items-center gap-1"><img id="ico-wallet" src="https://img.icons8.com/material-rounded/24/ffffff/wallet.png" class="w-5 nav-icon"><span class="text-[7px] font-bold text-white/40 uppercase">Cash</span></button>
-            <button onclick="switchTab('profile')" class="flex flex-col items-center gap-1"><img id="ico-profile" src="https://img.icons8.com/material-rounded/24/ffffff/user.png" class="w-5 nav-icon"><span class="text-[7px] font-bold text-white/40 uppercase">User</span></button>
+            <button onclick="switchTab('wallet')" class="flex flex-col items-center gap-1"><img id="ico-wallet" src="https://img.icons8.com/material-rounded/24/ffffff/wallet.png" class="w-6 nav-icon"><span class="text-[8px] font-bold text-white/20 uppercase">Bank</span></button>
+            <button onclick="switchTab('profile')" class="flex flex-col items-center gap-1"><img id="ico-profile" src="https://img.icons8.com/material-rounded/24/ffffff/user.png" class="w-6 nav-icon"><span class="text-[8px] font-bold text-white/20 uppercase">User</span></button>
         </nav>
 
-        <div id="join-modal" class="fixed inset-0 z-[400] bg-black/95 hidden flex items-center justify-center p-6 backdrop-blur-md text-white text-center">
-            <div class="glass-panel w-full p-8 border border-orange-500/30 shadow-2xl">
-                <h3 class="text-xl font-bold text-orange-500 mb-6 uppercase tracking-widest italic leading-none">Confirm Battle Entry</h3>
-                <input type="text" id="game-uid-input" placeholder="Enter Character ID" class="w-full p-4 bg-black/50 rounded-2xl border border-white/10 outline-none text-white mb-6 text-center tracking-widest font-bold">
-                <button id="final-join-btn" class="w-full bg-gradient-to-r from-orange-600 to-orange-400 py-4 rounded-2xl font-bold tracking-[0.2em] shadow-lg uppercase text-xs">Join Now</button>
-                <button onclick="document.getElementById('join-modal').classList.add('hidden')" class="w-full mt-4 text-white/20 text-[10px] font-bold uppercase tracking-widest">Cancel</button>
+        <div id="join-modal" class="fixed inset-0 z-[400] bg-black/98 hidden flex items-center justify-center p-6 backdrop-blur-xl">
+            <div class="glass-card w-full p-10 text-center border-orange-500/30 border">
+                <h3 class="text-2xl font-bold text-orange-500 mb-2 uppercase tracking-tighter italic">One-Click Entry</h3>
+                <p id="modal-match-title" class="text-[10px] text-white/30 mb-8 uppercase tracking-[0.3em]"></p>
+                <div class="bg-white/5 p-6 rounded-3xl mb-10 border border-white/5">
+                    <p class="text-[8px] text-white/20 uppercase font-bold mb-1">Authenticated Character ID</p>
+                    <p id="modal-game-id" class="text-xl font-mono font-bold text-orange-500">---</p>
+                </div>
+                <button id="final-join-btn" class="w-full neon-btn py-5 rounded-3xl font-bold tracking-[0.3em] uppercase text-xs">Confirm Deployment</button>
+                <button onclick="document.getElementById('join-modal').classList.add('hidden')" class="w-full mt-6 text-white/10 text-[9px] font-bold uppercase tracking-widest">Abort</button>
             </div>
         </div>
     </div>
@@ -107,23 +124,30 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth(); const db = firebase.firestore();
     let isSignup = false; let selectedMatch = { id: null, fee: 0 };
+    let globalUserGameId = ""; 
 
     function formatBBLDate(dateStr) {
-        if(!dateStr) return "TBD"; const date = new Date(dateStr);
-        return date.toLocaleDateString('en-IN', {day:'numeric', month:'short'}) + " | " + date.toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
+        if(!dateStr || dateStr === "") return "TBD"; 
+        try { const date = new Date(dateStr); return date.toLocaleDateString('en-IN', {day:'numeric', month:'short'}) + " | " + date.toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'}); } catch(e) { return "TBD"; }
     }
 
     function toggleAuthMode() { isSignup = !isSignup; document.getElementById('signup-fields').classList.toggle('hidden', !isSignup); document.getElementById('auth-btn').innerText = isSignup ? "CREATE ACCOUNT" : "ENTER ARENA"; }
     
     async function processAuth() {
         const email = document.getElementById('auth-email').value.trim(); const pass = document.getElementById('auth-pass').value.trim();
-        try { if (isSignup) { const nick = document.getElementById('auth-username').value.trim(); const res = await auth.createUserWithEmailAndPassword(email, pass); await db.collection('users').doc(res.user.uid).set({uid: res.user.uid, username: nick, email, wallet: 0, createdAt: Date.now()}); } else { await auth.signInWithEmailAndPassword(email, pass); }
+        try { if (isSignup) {
+                const nick = document.getElementById('auth-username').value.trim();
+                const gid = document.getElementById('auth-game-id').value.trim();
+                if(!gid || !nick) return alert("Character Name and UID are mandatory!");
+                const res = await auth.createUserWithEmailAndPassword(email, pass);
+                await db.collection('users').doc(res.user.uid).set({uid: res.user.uid, username: nick, gameId: gid, email: email, wallet: 0, createdAt: Date.now()});
+            } else { await auth.signInWithEmailAndPassword(email, pass); }
         } catch (err) { alert(err.message); }
     }
 
     auth.onAuthStateChanged(user => { if (user) { document.getElementById('auth-screen').style.display = 'none'; document.querySelectorAll('#main-header, #main-content, #bottom-nav').forEach(el => el.classList.remove('hidden')); loadData(user.uid); loadMatches(user.uid); loadFinishedMatches(); } else { document.getElementById('auth-screen').style.display = 'flex'; } });
 
-    function loadData(uid) { db.collection('users').doc(uid).onSnapshot(doc => { const d = doc.data(); if(!d) return; document.getElementById('u-bal').innerText = d.wallet || 0; document.getElementById('wallet-display').innerText = d.wallet || 0; document.getElementById('p-name').innerText = d.username; document.getElementById('p-uid').innerText = uid; const av = `https://api.dicebear.com/7.x/avataaars/svg?seed=${d.username}`; document.getElementById('h-av').src = av; document.getElementById('p-av').src = av; }); }
+    function loadData(uid) { db.collection('users').doc(uid).onSnapshot(doc => { const d = doc.data(); if(!d) return; globalUserGameId = d.gameId; document.getElementById('u-bal').innerText = d.wallet || 0; document.getElementById('wallet-display').innerText = d.wallet || 0; document.getElementById('p-name').innerText = d.username; document.getElementById('p-uid').innerText = uid; document.getElementById('p-game-id').innerText = d.gameId; const av = `https://api.dicebear.com/7.x/avataaars/svg?seed=${d.username}`; document.getElementById('h-av').src = av; document.getElementById('p-av').src = av; }); }
 
     function loadMatches(uid) {
         db.collection('matches').orderBy('createdAt', 'desc').onSnapshot(snap => {
@@ -134,33 +158,31 @@
                 const mDiv = document.createElement('div'); mDiv.id = `match-card-${mId}`; list.appendChild(mDiv);
                 db.collection('matches').doc(mId).collection('participants').doc(uid).get().then(pDoc => {
                     const hasJoined = pDoc.exists;
-                    const cardHTML = `<div class="glass-panel overflow-hidden border-white/5 relative mb-8"><div class="h-44 relative text-white"><img src="${m.img}" class="w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent"></div>${hasJoined ? '<div class="badge-joined uppercase tracking-widest">REGISTERED</div>' : ''}<div class="absolute bottom-4 left-6 text-left"><h4 class="text-2xl font-bold italic bbl-logo-text uppercase leading-none">${m.title}</h4><p class="text-[9px] text-orange-500 font-bold mt-1 uppercase tracking-widest leading-none">${formatBBLDate(m.startTime)}</p></div></div><div class="p-6 text-white text-left"><div class="flex justify-between items-center mb-6 text-[10px] font-bold"><div class="text-orange-500 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20 uppercase tracking-widest">₹${m.prizePool} Prize</div><div class="text-white/40 uppercase tracking-widest">Entry: ₹${m.entryFee}</div></div>${hasJoined ? `<div class="grid grid-cols-2 gap-3 p-4 bg-orange-500/10 rounded-2xl border border-orange-500/20 text-xs font-bold text-orange-400"><div><p class="text-[7px] text-white/40 uppercase mb-1 font-bold">Room ID</p>${m.roomId || 'Wait..'}</div><div><p class="text-[7px] text-white/40 uppercase mb-1 font-bold">Pass</p>${m.roomPass || 'Wait..'}</div></div>` : `<button onclick="openJoinUI('${mId}', ${m.entryFee}, '${m.title}')" class="w-full bg-orange-600 py-4 rounded-2xl font-bold uppercase text-xs shadow-lg tracking-[0.2em]">Join Battle</button>`}</div></div>`;
+                    const cardHTML = `<div class="glass-card overflow-hidden relative mb-8"><div class="h-52 relative"><img src="${m.img}" class="w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent"></div>${hasJoined ? '<div class="badge-joined">REGISTERED</div>' : ''}<div class="absolute bottom-4 left-6 text-left"><h4 class="text-2xl font-bold italic bbl-logo-text uppercase leading-none">${m.title}</h4><p class="text-[9px] text-orange-500 font-bold mt-1 uppercase tracking-widest leading-none">${formatBBLDate(m.startTime)}</p></div></div><div class="p-6 text-white text-left"><div class="flex justify-between items-center mb-6 text-[11px] font-bold"><div class="text-orange-500 bg-orange-500/10 px-4 py-1.5 rounded-full border border-orange-500/20">₹${m.prizePool} PRIZEPOOL</div><div class="text-white/20 uppercase">FEE: ₹${m.entryFee}</div></div>${hasJoined ? `<div class="grid grid-cols-2 gap-3 p-4 bg-white/5 rounded-3xl border border-white/5 text-xs font-bold text-orange-400"><div><p class="text-[7px] text-white/30 uppercase mb-1">Room ID</p>${m.roomId || 'Syncing..'}</div><div><p class="text-[7px] text-white/30 uppercase mb-1">Password</p>${m.roomPass || 'Syncing..'}</div></div>` : `<button onclick="openJoinUI('${mId}', ${m.entryFee}, '${m.title}')" class="w-full neon-btn py-4 rounded-3xl font-bold uppercase text-[10px] tracking-[0.3em]">Join Tournament</button>`}</div></div>`;
                     mDiv.innerHTML = cardHTML; if(hasJoined) { const myMDiv = document.createElement('div'); myMDiv.innerHTML = cardHTML; myList.appendChild(myMDiv); }
                 });
             });
         });
     }
 
-    function loadFinishedMatches() { db.collection('matches').where('status', '==', 'Finished').onSnapshot(snap => { const select = document.getElementById('leader-match-select'); select.innerHTML = '<option value="">Select Finished Match</option>'; snap.forEach(doc => { select.innerHTML += `<option value="${doc.id}">${doc.data().title}</option>`; }); }); }
+    function loadFinishedMatches() { db.collection('matches').where('status', '==', 'Finished').onSnapshot(snap => { const select = document.getElementById('leader-match-select'); select.innerHTML = '<option value="">Select Results</option>'; snap.forEach(doc => { select.innerHTML += `<option value="${doc.id}">${doc.data().title}</option>`; }); }); }
     
-    function loadGlobalLeaderboard(mId) { if(!mId) return; db.collection('matches').doc(mId).collection('participants').orderBy('rank', 'asc').onSnapshot(snap => { const resList = document.getElementById('global-res-list'); resList.innerHTML = ""; snap.forEach(doc => { const p = doc.data(); if(p.status === 'Verified') { resList.innerHTML += `<div class="glass-panel p-4 flex justify-between items-center border border-white/5 rank-card ${p.rank==1?'rank-1':''} text-white"><div class="flex items-center gap-4 text-white"><span class="text-xl font-bold w-8 text-center leading-none">${p.rank==1?'🥇':'#'+p.rank}</span><h4 class="text-xs font-bold uppercase tracking-widest">${p.gameUid}</h4></div><div class="text-right leading-none"><p class="text-[7px] text-white/40 uppercase mb-1 font-bold tracking-widest">Kills</p><p class="text-sm font-bold text-orange-500">${p.kills}</p></div></div>`; } }); }); }
+    function loadGlobalLeaderboard(mId) { if(!mId) return; db.collection('matches').doc(mId).collection('participants').orderBy('rank', 'asc').onSnapshot(snap => { const resList = document.getElementById('global-res-list'); resList.innerHTML = ""; snap.forEach(doc => { const p = doc.data(); if(p.status === 'Verified') { resList.innerHTML += `<div class="glass-card p-5 flex justify-between items-center border border-white/5 shadow-2xl"><div class="flex items-center gap-5 text-white"><span class="text-2xl font-bold w-10 text-center">${p.rank==1?'🥇':'#'+p.rank}</span><h4 class="text-sm font-bold uppercase tracking-wider">${p.gameId}</h4></div><div class="text-right"><p class="text-[8px] text-white/20 uppercase mb-1 font-bold">Kills Secured</p><p class="text-lg font-bold text-orange-500">${p.kills}</p></div></div>`; } }); }); }
 
-    window.openJoinUI = (id, fee, title) => { selectedMatch = { id, fee: Number(fee) }; document.getElementById('join-modal').classList.remove('hidden'); };
+    window.openJoinUI = (id, fee, title) => { selectedMatch = { id, fee: Number(fee) }; document.getElementById('modal-match-title').innerText = title; document.getElementById('modal-game-id').innerText = globalUserGameId; document.getElementById('join-modal').classList.remove('hidden'); };
     
     document.getElementById('final-join-btn').onclick = async () => {
-        const gUid = document.getElementById('game-uid-input').value.trim(); if(!gUid) return alert("Character ID required!");
-        try { const uRef = db.collection('users').doc(auth.currentUser.uid); await db.runTransaction(async (t) => { const uDoc = await t.get(uRef); if (uDoc.data().wallet < selectedMatch.fee) throw "Low Balance!"; t.update(uRef, { wallet: uDoc.data().wallet - selectedMatch.fee }); t.set(db.collection('matches').doc(selectedMatch.id).collection('participants').doc(auth.currentUser.uid), { gameUid: gUid, status: 'Joined', rank: 0, kills: 0, time: Date.now() }); }); alert("Success!"); document.getElementById('join-modal').classList.add('hidden'); } catch (e) { alert(e); }
+        try { const uRef = db.collection('users').doc(auth.currentUser.uid); await db.runTransaction(async (t) => { const uDoc = await t.get(uRef); if (uDoc.data().wallet < selectedMatch.fee) throw "Insufficient Credits!"; t.update(uRef, { wallet: uDoc.data().wallet - selectedMatch.fee }); t.set(db.collection('matches').doc(selectedMatch.id).collection('participants').doc(auth.currentUser.uid), { gameId: globalUserGameId, status: 'Joined', rank: 0, kills: 0, time: Date.now() }); }); alert("Successfully Authenticated!"); document.getElementById('join-modal').classList.add('hidden'); } catch (e) { alert(e); }
     };
 
     async function sendCashRequest() {
-        const amt = document.getElementById('cash-amount').value;
-        if(!amt || amt < 10) return alert("Min ₹10 required!");
-        try { await db.collection('requests').add({ uid: auth.currentUser.uid, username: document.getElementById('p-name').innerText, amount: Number(amt), type: 'Deposit', status: 'Pending', createdAt: Date.now() }); alert("Request Sent! Admin will approve shortly."); document.getElementById('cash-amount').value = ""; } catch (e) { alert(e.message); }
+        const amt = document.getElementById('cash-amount').value; if(!amt || amt < 10) return alert("Minimum ₹10 required!");
+        try { await db.collection('requests').add({ uid: auth.currentUser.uid, username: document.getElementById('p-name').innerText, amount: Number(amt), type: 'Deposit', status: 'Pending', createdAt: Date.now() }); alert("Request Broadcasted! Waiting for Admin Approval."); document.getElementById('cash-amount').value = ""; } catch (e) { alert(e.message); }
     }
 
     function switchTab(t) { 
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.getElementById('tab-' + t).classList.add('active'); 
-        ['home', 'my-matches', 'wallet', 'profile', 'leaderboard'].forEach(id => { const ico = document.getElementById('ico-' + id); if(ico) { if(id === t) { ico.classList.add('active'); ico.nextElementSibling.style.color = '#f97316'; } else { ico.classList.remove('active'); ico.nextElementSibling.style.color = 'rgba(255,255,255,0.4)'; } } }); 
+        ['home', 'my-matches', 'wallet', 'profile', 'leaderboard'].forEach(id => { const ico = document.getElementById('ico-' + id); if(ico) { if(id === t) { ico.classList.add('nav-active'); ico.nextElementSibling.style.color = '#f97316'; ico.nextElementSibling.style.opacity = '1'; } else { ico.classList.remove('nav-active'); ico.nextElementSibling.style.color = 'white'; ico.nextElementSibling.style.opacity = '0.2'; } } }); 
     }
     function logout() { auth.signOut(); location.reload(); }
 </script>
