@@ -120,6 +120,30 @@ async function handleSubmission() {
         }
     };
 }
+
+// GitHub upload ke success hone ke baad ye code hona chahiye
+const finalImgUrl = `https://raw.githubusercontent.com/${GH_REPO}/main/proofs/${fileName}`;
+
+// AB FIREBASE MEIN DATA BHEJNA HAI
+try {
+    console.log("Firebase mein save ho raha hai...");
+    
+    // Check karo collection ka naam 'payouts' hai ya 'payout_claims'
+    await db.collection("payouts").add({
+        uid: document.getElementById('u-uid').value,
+        upi: document.getElementById('u-upi').value,
+        screenshot: finalImgUrl, // GitHub wali photo ka link
+        status: "Pending",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert("SUCCESS! Admin ko request bhej di gayi hai.");
+    location.reload(); 
+
+} catch (error) {
+    console.error("Firebase Error: ", error);
+    alert("GitHub toh chal gaya par Firebase mein error hai: " + error.message);
+}
     
 </script>
 </body>
