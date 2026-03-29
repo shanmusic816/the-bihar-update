@@ -42,8 +42,8 @@
                 <p class="text-[13px] text-white/70 font-medium leading-relaxed">India's supreme Esports ecosystem. Real-time competitive tracking, secured credits, and daily high-stakes matches.</p>
             </div>
             <div class="flex gap-4 w-full">
-                <a href="https://instagram.com/thebiharupdate" target="_blank" class="soc-btn">INSTAGRAM</a>
-                <a href="https://youtube.com/@thebiharupdate" target="_blank" class="soc-btn">YOUTUBE</a>
+                <a href="https://www.instagram.com/biharbattleleague?igsh=MXFidHk2YXA3YXhvaw==" target="_blank" class="soc-btn">INSTAGRAM</a>
+                <a href="https://youtube.com/@songheartstation?si=5uRVIr8H2qKP9CX3" target="_blank" class="soc-btn">YOUTUBE</a>
             </div>
             <button onclick="enterArena()" class="neon-btn">ENTER SYSTEM NODE</button>
         </div>
@@ -102,13 +102,15 @@
 
     <script>
         // --- FIREBASE INITIALIZATION ---
-        const firebaseConfig = { 
-            apiKey: "AIzaSyDiHxA8XHVTAKFSU1UMobZMY_Kw7612fw", 
-            authDomain: "tournament-app-b77c0.firebaseapp.com", 
-            databaseURL: "https://tournament-app-b77c0-default-rtdb.asia-southeast1.firebasedatabase.app", 
-            projectId: "tournament-app-b77c0", 
-            appId: "1:925200484535:web:c15c87fcecb5e793bca532" 
-        };
+                  const firebaseConfig = {
+  apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw",
+  authDomain: "tournament-app-b77c0.firebaseapp.com",
+  databaseURL: "https://tournament-app-b77c0-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tournament-app-b77c0",
+  storageBucket: "tournament-app-b77c0.firebasestorage.app",
+  messagingSenderId: "925200484535",
+  appId: "1:925200484535:web:c15c87fcecb5e793bca532"
+};
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(); const db = firebase.firestore();
 
@@ -138,7 +140,7 @@
                 if (isSignup) {
                     const nick = document.getElementById('auth-username').value;
                     const res = await auth.createUserWithEmailAndPassword(email, pass);
-                    await db.collection('users').doc(res.user.uid).set({uid: res.user.uid, username: nick, wallet: 0});
+          await db.collection('users').doc(res.user.uid).set({uid: res.user.uid, username: nick, wallet: 0});
                 } else { await auth.signInWithEmailAndPassword(email, pass); }
             } catch (err) { alert(err.message); }
         }
