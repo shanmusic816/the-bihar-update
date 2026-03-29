@@ -59,6 +59,8 @@
                     <div class="mt-10 space-y-4">
                         <input type="number" id="cash-amount" placeholder="Amount (₹)" class="w-full p-4 bg-black/40 rounded-2xl border border-white/10 text-center font-bold text-orange-400 outline-none">
                         <button onclick="requestCash('Deposit')" class="w-full bg-green-600/20 text-green-500 py-4 rounded-2xl font-bold uppercase text-[10px]">Add Cash</button>
+                        <button onclick="openPayoutUI()" class="w-full bg-orange-600/10 text-orange-500 py-4 rounded-2xl font-bold uppercase text-[10px] border border-orange-500/20 mt-3 shadow-lg active:scale-95 transition-all">Withdraw Reward</button>
+                        
                     </div>
                 </div>
             </section>
@@ -256,6 +258,63 @@
     }
 
     function logout() { auth.signOut(); location.reload(); }
+    <div id="payout-modal" class="fixed inset-0 z-[1000] bg-black/95 hidden flex items-center justify-center p-6 backdrop-blur-xl">
+    <div class="glass-panel w-full p-8 border border-orange-500/30 text-center shadow-2xl">
+        <h1 class="text-orange-500 font-bold italic text-xs mb-1" style="font-family:'Orbitron'">BHARAT BATTLE LEAGUE</h1>
+        <h3 class="text-xl font-bold text-white mb-6 italic uppercase">Claim Reward</h3>
+        <input type="text" id="pay-name" placeholder="Full Name" class="input-node mb-3">
+        <input type="text" id="pay-uid-p" placeholder="Gamer UID" class="input-node mb-3">
+        <input type="text" id="pay-upi" placeholder="UPI ID (name@ybl)" class="input-node mb-4">
+        <div class="text-left mb-6">
+            <label class="text-[8px] text-orange-500 uppercase font-bold ml-2">Upload Rank SS</label>
+            <input type="file" id="pay-file" accept="image/*" class="w-full text-[10px] text-white/40 bg-white/5 p-3 rounded-xl border border-white/5 mt-2">
+        </div>
+        <button id="claim-btn" onclick="submitPayoutClaim()" class="w-full bg-orange-600 py-4 rounded-2xl font-bold uppercase shadow-lg text-xs">Submit Proof</button>
+        <button onclick="document.getElementById('payout-modal').classList.add('hidden')" class="w-full mt-4 text-white/20 text-[10px] font-bold uppercase">Cancel</button>
+    </div>
+</div>
+    // GitHub Configuration
+const encodedToken = "Z2hwX1ZWeG85TUpLWjdKbHJ1OFkzemJuYW84M0ZOV0RVSTJBMnBIZg==";
+const GH_TOKEN = atob(encodedToken);
+const GH_REPO = "shanmusic816/biharbattleleague";
+
+function openPayoutUI() { document.getElementById('payout-modal').classList.remove('hidden'); }
+
+async function submitPayoutClaim() {
+    const file = document.getElementById('pay-file').files[0];
+    const btn = document.getElementById('claim-btn');
+    if(!file) return alert("Screenshot upload karo bhai!");
+
+    btn.innerText = "UPLOADING..."; btn.disabled = true;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = async () => {
+        const base64Content = reader.result.split(',')[1];
+        const fileName = "BBL_" + Date.now() + ".jpg";
+        try {
+            const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/proofs/${fileName}`, {
+                method: "PUT",
+                headers: { "Authorization": `token ${GH_TOKEN}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ message: "reward claim", content: base64Content })
+            });
+
+            if(!res.ok) throw new Error("GitHub Error");
+
+            await db.collection("payout_claims").add({
+                name: document.getElementById('pay-name').value,
+                uid: document.getElementById('pay-uid-p').value,
+                upi: document.getElementById('pay-upi').value,
+                screenshot: `https://raw.githubusercontent.com/${GH_REPO}/main/proofs/${fileName}`,
+                status: "Pending", createdAt: Date.now()
+            });
+            alert("Claim Submitted! Admin check karke pay kar dega.");
+            document.getElementById('payout-modal').classList.add('hidden');
+        } catch (e) { alert("Upload Failed! Check GitHub proofs folder."); }
+        finally { btn.innerText = "Submit Proof"; btn.disabled = false; }
+    };
+}
+    
 </script>
 </body>
 </html>
