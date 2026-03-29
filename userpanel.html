@@ -41,15 +41,17 @@
                 <a href="https://www.instagram.com/biharbattleleague" target="_blank" class="soc-btn">INSTAGRAM</a>
                 <a href="https://youtube.com/@songheartstation" target="_blank" class="soc-btn">YOUTUBE</a>
             </div>
-            <button onclick="processAuth()" class="neon-btn">ENTER SYSTEM NODE</button>
+            <button onclick="enterArena()" class="neon-btn">ENTER SYSTEM NODE</button>
         </div>
 
         <div id="auth-screen" class="hidden fixed inset-0 z-[500] bg-[#020617] flex items-center justify-center p-8 text-center">
             <div class="w-full max-w-sm glass-panel p-10 border border-orange-500/20 shadow-2xl">
                 <h1 class="text-6xl bbl-logo-text mb-2 italic">BBL</h1>
-                <div class="space-y-4 mt-8">
-                    <div id="signup-fields" class="hidden"><input type="text" id="auth-username" placeholder="Nickname" class="input-node"></div>
-                    <input type="email" id="auth-email" placeholder="Email" class="input-node"><input type="password" id="auth-pass" placeholder="Password" class="input-node">
+                <p class="text-[9px] text-white/30 uppercase font-bold mb-12 tracking-widest leading-none">Bihar Battle League</p>
+                <div class="space-y-4">
+                    <div id="signup-fields" class="hidden"><input type="text" id="auth-username" placeholder="Character Name" class="input-node mb-3"></div>
+                    <input type="email" id="auth-email" placeholder="Email" class="input-node">
+                    <input type="password" id="auth-pass" placeholder="Password" class="input-node">
                     <button onclick="processAuth()" id="auth-btn" class="neon-btn !p-4 !text-xs">ENTER ARENA</button>
                     <p id="toggle-text" class="text-[10px] text-white/30 uppercase mt-8 cursor-pointer" onclick="toggleAuthMode()">New Player? <span class="text-orange-500 font-bold">Register</span></p>
                 </div>
