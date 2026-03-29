@@ -53,16 +53,16 @@
 <script>
     // --- SERVER CONFIG ---
     const firebaseConfig = {
-  apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw",
-  authDomain: "tournament-app-b77c0.firebaseapp.com",
-  databaseURL: "https://tournament-app-b77c0-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "tournament-app-b77c0",
-  storageBucket: "tournament-app-b77c0.firebasestorage.app",
-  messagingSenderId: "925200484535",
-  appId: "1:925200484535:web:c15c87fcecb5e793bca532"
-};
+        apiKey: "AIzaSyDiHxA8XHVTAKFSU1UMobZMY_Kw7612fw",
+        authDomain: "tournament-app-b77c0.firebaseapp.com",
+        projectId: "tournament-app-b77c0",
+        databaseURL: "https://tournament-app-b77c0-default-rtdb.asia-southeast1.firebasedatabase.app",
+        appId: "1:925200484535:web:c15c87fcecb5e793bca532"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    // --- GITHUB STORAGE CONFIG ---
+       // --- GITHUB STORAGE CONFIG ---
     // --- GITHUB SCANNER BYPASS LOGIC ---
 // 1. Apne NAYE encoded token ke 3 barabar tukde yahan dalo
 const p1 = "Z2hwX2JXT0dzOGd6Sl"; // Pehla hissa
@@ -74,77 +74,58 @@ const GH_TOKEN = atob(p1 + p2 + p3);
 
 // 3. Apne Repo ka ekdum sahi naam check karlo
 const GH_REPO = "shanmusic816/biharbattleleague"; 
-    
-async function handleSubmission() {
-    const file = document.getElementById('u-file').files[0];
-    const uid = document.getElementById('u-uid').value;
-    const btn = document.getElementById('sub-btn');
-    const status = document.getElementById('status');
 
-    if(!file || !uid) return alert("Bhai, Details aur Screenshot dalo!");
+    async function handleSubmission() {
+        const file = document.getElementById('u-file').files[0];
+        const btn = document.getElementById('sub-btn');
+        const status = document.getElementById('status');
 
-    btn.disabled = true;
-    btn.innerText = "UPLOADING...";
-    status.innerText = "SYNCING WITH BHARAT SERVER...";
+        if(!file || !document.getElementById('u-uid').value) return alert("Bhai, Details aur Screenshot bharna zaroori hai!");
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = async () => {
-        const base64Content = reader.result.split(',')[1];
-        const fileName = `${Date.now()}_${uid}.jpg`;
-        const url = `https://api.github.com/repos/${GH_REPO}/contents/proofs/${fileName}`;
+        btn.disabled = true;
+        btn.innerText = "UPLOADING...";
+        status.innerText = "SYNCING WITH BHARAT SERVER...";
 
-        try {
-            const res = await fetch(url, {
-                method: "PUT",
-                headers: {
-                    "Authorization": `token ${GH_TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ message: "payout proof", content: base64Content })
-            });
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async () => {
+            const base64Content = reader.result.split(',')[1];
+            const fileName = Date.now() + "_" + file.name.replace(/\s/g, "_");
+            const url = `https://api.github.com/repos/${GH_REPO}/contents/proofs/${fileName}`;
 
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.message);
+            try {
+                const res = await fetch(url, {
+                    method: "PUT",
+                    headers: { "Authorization": `token ${GH_TOKEN}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: "reward claim", content: base64Content })
+                });
+
+                if(!res.ok) throw new Error("GitHub Upload Failed");
+
+                const finalImgUrl = `https://raw.githubusercontent.com/${GH_REPO}/main/proofs/${fileName}`;
+                
+                await db.collection("payout_claims").add({
+                    name: document.getElementById('u-name').value,
+                    uid: document.getElementById('u-uid').value,
+                    email: document.getElementById('u-email').value,
+                    upi: document.getElementById('u-upi').value,
+                    screenshot: finalImgUrl,
+                    status: "Pending",
+                    createdAt: Date.now()
+                });
+
+                document.getElementById('claim-form').style.display = 'none';
+                document.getElementById('success-node').style.display = 'block';
+                status.innerText = "";
+
+            } catch (e) {
+                alert("Error: " + e.message);
+                btn.disabled = false;
+                btn.innerText = "Submit Proof";
+                status.innerText = "";
             }
-
-            // Firebase logic (Success hone par)
-            alert("SUCCESS! Request bhej di gayi hai.");
-            location.reload();
-
-        } catch (e) {
-            alert("GitHub Error: " + e.message);
-            btn.disabled = false;
-            btn.innerText = "Submit Proof";
-        }
-    };
-}
-
-// GitHub upload ke success hone ke baad ye code hona chahiye
-const finalImgUrl = `https://raw.githubusercontent.com/${GH_REPO}/main/proofs/${fileName}`;
-
-// AB FIREBASE MEIN DATA BHEJNA HAI
-try {
-    console.log("Firebase mein save ho raha hai...");
-    
-    // Check karo collection ka naam 'payouts' hai ya 'payout_claims'
-    await db.collection("payouts").add({
-        uid: document.getElementById('u-uid').value,
-        upi: document.getElementById('u-upi').value,
-        screenshot: finalImgUrl, // GitHub wali photo ka link
-        status: "Pending",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    alert("SUCCESS! Admin ko request bhej di gayi hai.");
-    location.reload(); 
-
-} catch (error) {
-    console.error("Firebase Error: ", error);
-    alert("GitHub toh chal gaya par Firebase mein error hai: " + error.message);
-}
-    
+        };
+    }
 </script>
 </body>
 </html>
