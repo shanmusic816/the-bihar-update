@@ -70,9 +70,10 @@
     <a href="https://thebiharupdate.vercel.app/payout" target="_blank" class="neon-btn block text-center">
         Withdraw Reward
     </a>
-                    <a href="add-cash.html" target="_blank" class="neon-btn block text-center mt-4" style="background: #28a745 !important;">
-    Add Cash (Deposit)
-                    </a>
+                    <button onclick="document.getElementById('add-cash-modal').style.display='flex'" class="neon-btn block text-center" style="background: #28a745 !important; width:100%;">
+    + Add Cash
+                    </button>
+                    
                     
                 </div>
                     <a href="https://wa.me/918102549120" target="_blank" class="block w-full bg-[#25d366]/10 text-[#25d366] py-4 rounded-2xl font-bold uppercase text-[10px] border border-[#25d366]/20">WhatsApp Support</a></div></div>
@@ -188,6 +189,43 @@
                 } catch (e) { alert("Error!"); } finally { btn.innerText = "Submit Proof"; btn.disabled = false; }
             };
         }
+        async function processDeposit() {
+    const amount = document.getElementById('deposit-amount').value;
+    const uid = document.getElementById('deposit-uid').value;
+    
+    if(!amount || !uid) return alert("Bhai, details toh bharo!");
+
+    try {
+        // Firebase mein entry (Admin Panel ke liye)
+        await db.collection("deposits").add({
+            uid: uid,
+            amount: amount,
+            status: "Pending",
+            type: "Deposit",
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert("SUCCESS! Request submitted successfully. Admin will approve it shortly."
+              .");
+        document.getElementById('add-cash-modal').style.display = 'none'; // Box band kar do
+    } catch (e) {
+        alert("Error: " + e.message);
+    }
+        }
+        
     </script>
+    <div id="add-cash-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9999; flex-direction:column; justify-content:center; align-items:center; padding:20px;">
+    <div class="glass-panel" style="width:100%; max-width:400px; padding:20px; border:1px solid orange; border-radius:15px; background:#1a1a1a;">
+        <h2 style="color:white; text-align:center; margin-bottom:20px;">ADD CASH</h2>
+        
+        <input type="number" id="deposit-amount" placeholder="Enter Amount" style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:none; background:#333; color:white;">
+        
+        <input type="text" id="deposit-uid" placeholder="Confirm Your UID" style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:none; background:#333; color:white;">
+
+        <button onclick="processDeposit()" class="neon-btn" style="width:100%; margin-bottom:10px;">Submit Request</button>
+        <button onclick="document.getElementById('add-cash-modal').style.display='none'" style="width:100%; background:transparent; border:none; color:gray; cursor:pointer;">Cancel</button>
+    </div>
+    </div>
+    
 </body>
 </html>
