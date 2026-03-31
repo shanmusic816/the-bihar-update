@@ -127,74 +127,80 @@
             }
         });
 
-        async function loadData(uid) {
-    // 1. User Wallet & Avatar Listener
+        function loadData(uid) {
+    // 1. User Ka Balance aur Avatar (Real-time)
     db.collection('users').doc(uid).onSnapshot(doc => {
         if(!doc.exists) return;
         const userData = doc.data();
         document.getElementById('u-bal').innerText = userData.wallet || 0;
         document.getElementById('wallet-display').innerText = userData.wallet || 0;
-        document.getElementById('h-av').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.username || 'Warrior'}`;
+        document.getElementById('h-av').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.username}`;
     });
 
-    // 2. Matches Real-time Listener (Solid Logic)
-    db.collection('matches').orderBy('createdAt', 'desc').onSnapshot(async snap => {
+    // 2. Matches Ka Real-time Listener
+    db.collection('matches').orderBy('createdAt', 'desc').onSnapshot(snap => {
         const list = document.getElementById('match-list');
         const myList = document.getElementById('my-match-list');
         
-        // Saare matches ka participation status fetch karo pehle
-        const matchPromises = snap.docs.map(async (mDoc) => {
-            const m = mDoc.data();
-            const pDoc = await db.collection('matches').doc(mDoc.id).collection('participants').doc(uid).get();
-            return { id: mDoc.id, ...m, hasJoined: pDoc.exists };
-        });
-
-        const allMatches = await Promise.all(matchPromises);
-        
-        // Purana list khali karo render se pehle
+        // UI saaf karo naye data ke liye
         list.innerHTML = "";
         myList.innerHTML = "";
 
-        allMatches.forEach(m => {
-            const cardHTML = `
-                <div id="match-${m.id}" class="glass-panel overflow-hidden border-white/5 mb-6">
-                    <div class="relative">
-                        <img src="${m.img || 'https://via.placeholder.com/400x180'}" class="w-full h-36 object-cover opacity-80">
-                        <div class="absolute bottom-2 left-2 flex flex-wrap gap-2">
-                            <span class="m-badge">📅 ${m.matchDate || 'TBA'}</span>
-                            <span class="m-badge">⏰ ${m.matchTime || 'TBA'}</span>
-                        </div>
-                        <div class="absolute top-2 right-2 flex flex-wrap gap-2">
-                            <span class="m-badge" style="color:white; background:rgba(249,115,22,0.8)">${m.map || 'Bermuda'}</span>
-                            <span class="m-badge" style="color:white; background:rgba(16,185,129,0.8)">${m.mode || 'Solo'}</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h4 class="text-xl font-bold bbl-logo-text mb-2 uppercase italic">${m.title || 'MATCH'}</h4>
-                        <div class="flex justify-between text-[10px] mb-4 text-orange-500 font-bold uppercase italic">
-                            <span>Prize Pool: ₹${m.prizePool || 0}</span><span>Entry: ₹${m.fee || 0}</span>
-                        </div>
-                        ${m.hasJoined ? 
-                            `<div class="bg-orange-500/10 p-4 rounded-xl border border-orange-500/20 text-center">
-                                <p class="text-[9px] text-orange-500 font-bold mb-1 uppercase tracking-widest">Status: Joined ✅</p>
-                                <p class="text-xs">ID: ${m.roomId || 'WAITING'} | PASS: ${m.roomPass || 'WAITING'}</p>
-                            </div>` : 
-                            `<button onclick="joinMatch('${m.id}', ${m.fee || 0})" class="neon-btn !p-3 !text-[10px]">Join Arena</button>`
-                        }
-                    </div>
-                </div>`;
+        snap.forEach(mDoc => {
+            const m = mDoc.data();
+            const mId = mDoc.id;
 
-            // Home tab mein add karo
-            list.innerHTML += cardHTML;
-            
-            // Agar joined hai toh My Matches mein bhi add karo
-            if (m.hasJoined) {
-                const myCardHTML = cardHTML.replace(`id="match-${m.id}"`, `id="my-match-${m.id}"`);
-                myList.innerHTML += myCardHTML;
-            }
+            // --- SABSE ZAROORI PART: Participants ka bhi real-time listener ---
+            db.collection('matches').doc(mId).collection('participants').doc(uid).onSnapshot(pDoc => {
+                const hasJoined = pDoc.exists;
+                
+                // Purana card hatao agar pehle se hai (Duplicate rokne ke liye)
+                const oldCard = document.getElementById("match-" + mId);
+                if (oldCard) oldCard.remove();
+                const oldMyCard = document.getElementById("my-match-" + mId);
+                if (oldMyCard) oldMyCard.remove();
+
+                const cardHTML = `
+                    <div id="match-${mId}" class="glass-panel overflow-hidden border-white/5 mb-6">
+                        <div class="relative">
+                            <img src="${m.img || 'https://via.placeholder.com/400x180'}" class="w-full h-36 object-cover opacity-80">
+                            <div class="absolute bottom-2 left-2 flex flex-wrap gap-2">
+                                <span class="m-badge">📅 ${m.matchDate || 'TBA'}</span>
+                                <span class="m-badge">⏰ ${m.matchTime || 'TBA'}</span>
+                            </div>
+                            <div class="absolute top-2 right-2 flex flex-wrap gap-2">
+                                <span class="m-badge" style="color:white; background:rgba(249,115,22,0.8)">${m.map || 'Bermuda'}</span>
+                                <span class="m-badge" style="color:white; background:rgba(16,185,129,0.8)">${m.mode || 'Solo'}</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-bold bbl-logo-text mb-2 uppercase italic">${m.title}</h4>
+                            <div class="flex justify-between text-[10px] mb-4 text-orange-500 font-bold uppercase italic">
+                                <span>Prize: ₹${m.prizePool || 0}</span><span>Fee: ₹${m.fee || 0}</span>
+                            </div>
+                            <div id="status-area-${mId}">
+                                ${hasJoined ? 
+                                    `<div class="bg-orange-500/10 p-4 rounded-xl border border-orange-500/20 text-center">
+                                        <p class="text-[9px] text-orange-500 font-bold mb-1 uppercase tracking-widest">Status: Joined ✅</p>
+                                        <p class="text-xs">ID: ${m.roomId || 'WAITING'} | PASS: ${m.roomPass || 'WAITING'}</p>
+                                    </div>` : 
+                                    `<button onclick="joinMatch('${mId}', ${m.fee || 0})" class="neon-btn !p-3 !text-[10px]">Join Arena</button>`
+                                }
+                            </div>
+                        </div>
+                    </div>`;
+
+                list.insertAdjacentHTML('beforeend', cardHTML);
+                
+                if(hasJoined) {
+                    const myCardHTML = cardHTML.replace(`id="match-${mId}"`, `id="my-match-${mId}"`);
+                    myList.insertAdjacentHTML('beforeend', myCardHTML);
+                }
+            });
         });
     });
         }
+        
         
         async function joinMatch(id, fee) {
             const user = auth.currentUser;
