@@ -203,27 +203,57 @@
         
         
         async function joinMatch(id, fee) {
-            const user = auth.currentUser;
-            const uRef = db.collection('users').doc(user.uid);
-            try {
-                const uDoc = await uRef.get();
-                const bal = Number(uDoc.data().wallet || 0);
-                if(bal < fee) return alert("Paisa kam hai bhai!");
-                
-                if(confirm(`₹${fee} kategi, join karein?`)) {
-                    await db.runTransaction(async (t) => {
-                        const freshU = await t.get(uRef);
-                        t.update(uRef, { wallet: Number(freshU.data().wallet) - fee });
-                        t.set(db.collection('matches').doc(id).collection('participants').doc(user.uid), { 
-                            uid: String(user.uid), 
-                            username: String(freshU.data().username || "Player"), 
-                            joinedAt: Date.now() 
-                        });
-                    });
-                    alert("Joined Successfully!");
-                }
-            } catch(e) { alert("Join Failed! Firebase Error."); }
+    const user = auth.currentUser;
+    if (!user) return alert("Bhai pehle Login karo!");
+
+    const uRef = db.collection('users').doc(user.uid);
+    const mRef = db.collection('matches').doc(id);
+
+    try {
+        // 1. Pehle check karo user DB mein hai ya nahi
+        const uDoc = await uRef.get();
+        if (!uDoc.exists) return alert("User Profile nahi mili!");
+
+        const currentBal = Number(uDoc.data().wallet || 0);
+        const matchFee = Number(fee);
+
+        // 2. Balance Check
+        if (currentBal < matchFee) {
+            return alert("Paisa kam hai! Recharge karo. Current: ₹" + currentBal);
         }
+
+        if (confirm(`Joining Fee ₹${matchFee} kategi. Confirm?`)) {
+            // 3. TRANSACTION START (Ye sabse important hai)
+            await db.runTransaction(async (transaction) => {
+                const freshUserDoc = await transaction.get(uRef);
+                const freshBal = Number(freshUserDoc.data().wallet || 0);
+
+                if (freshBal < matchFee) {
+                    throw "Transaction Failed: Insufficient Balance!";
+                }
+
+                // A. Paisa Kato
+                transaction.update(uRef, { 
+                    wallet: freshBal - matchFee 
+                });
+
+                // B. Participant List mein Entry dalo (Unsupported field fix)
+                const pRef = mRef.collection('participants').doc(user.uid);
+                transaction.set(pRef, {
+                    uid: String(user.uid),
+                    username: String(freshUserDoc.data().username || "Warrior"),
+                    joinedAt: Date.now()
+                });
+            });
+
+            alert("✅ Joined! Match is conifermed.");
+        }
+    } catch (e) {
+        console.error("Join Error:", e);
+        alert("Error: " + e);
+    }
+        }
+        
 
         function switchTab(t) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
