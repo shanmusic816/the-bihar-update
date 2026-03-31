@@ -23,6 +23,8 @@
         .tab-content.active { display: block; }
         .hidden { display: none !important; }
         .nav-link-btn { font-size: 10px; font-weight: bold; transition: 0.3s; background: none; border: none; cursor: pointer; }
+        /* Detail Badge Style */
+        .m-badge { background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 8px; font-size: 9px; font-weight: 700; color: #ff6b00; }
     </style>
 </head>
 <body>
@@ -125,7 +127,6 @@
             }
         });
 
-        // --- KEY FIX: Real-time Data Loading ---
         function loadData(uid) {
             db.collection('users').doc(uid).onSnapshot(doc => {
                 if(!doc.exists) return;
@@ -134,7 +135,6 @@
                 document.getElementById('h-av').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${doc.data().username}`;
             });
 
-            // FIXED: Anti-duplication logic
             db.collection('matches').orderBy('createdAt', 'desc').onSnapshot(snap => {
                 const list = document.getElementById('match-list');
                 const myList = document.getElementById('my-match-list');
@@ -145,19 +145,28 @@
                     const m = mDoc.data();
                     const mId = mDoc.id;
 
-                    // Real-time participation check
                     db.collection('matches').doc(mId).collection('participants').doc(uid).onSnapshot(pDoc => {
                         const hasJoined = pDoc.exists;
                         
-                        // Pehle check karo ki ye card already list mein hai kya (to avoid duplication)
                         const existingCard = document.getElementById("match-" + mId);
                         if (existingCard) existingCard.remove();
 
+                        // --- NEW UPDATED CARD WITH TIME/MAP FEATURES ---
                         const cardHTML = `
                             <div id="match-${mId}" class="glass-panel overflow-hidden border-white/5 mb-6">
-                                <img src="${m.img || 'https://via.placeholder.com/400x180'}" class="w-full h-32 object-cover opacity-80">
+                                <div class="relative">
+                                    <img src="${m.img || 'https://via.placeholder.com/400x180'}" class="w-full h-36 object-cover opacity-80">
+                                    <div class="absolute bottom-2 left-2 flex flex-wrap gap-2">
+                                        <span class="m-badge">📅 ${m.matchDate || 'TBA'}</span>
+                                        <span class="m-badge">⏰ ${m.matchTime || 'TBA'}</span>
+                                    </div>
+                                    <div class="absolute top-2 right-2 flex flex-wrap gap-2">
+                                        <span class="m-badge" style="color:white; background:rgba(249,115,22,0.8)">${m.map || 'Bermuda'}</span>
+                                        <span class="m-badge" style="color:white; background:rgba(16,185,129,0.8)">${m.mode || 'Solo'}</span>
+                                    </div>
+                                </div>
                                 <div class="p-6">
-                                    <h4 class="text-xl font-bold bbl-logo-text mb-2 uppercase">${m.title}</h4>
+                                    <h4 class="text-xl font-bold bbl-logo-text mb-2 uppercase italic">${m.title}</h4>
                                     <div class="flex justify-between text-[10px] mb-4 text-orange-500 font-bold uppercase italic">
                                         <span>Prize Pool: ₹${m.prizePool || 0}</span><span>Entry: ₹${m.fee || 0}</span>
                                     </div>
@@ -190,7 +199,6 @@
                     await db.runTransaction(async (t) => {
                         const freshU = await t.get(uRef);
                         t.update(uRef, { wallet: Number(freshU.data().wallet) - fee });
-                        // String() wrap prevents "Unsupported Field" error
                         t.set(db.collection('matches').doc(id).collection('participants').doc(user.uid), { 
                             uid: String(user.uid), 
                             username: String(freshU.data().username || "Player"), 
