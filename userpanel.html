@@ -176,7 +176,7 @@
                         <div class="p-6">
                             <h4 class="text-xl font-bold bbl-logo-text mb-2 uppercase italic">${m.title}</h4>
                             <div class="flex justify-between text-[10px] mb-4 text-orange-500 font-bold uppercase italic">
-                                <span>Prize: ₹${m.prizePool || 0}</span><span>Fee: ₹${m.fee || 0}</span>
+                                <span>Prize Pool: ₹${m.prizePool || 0}</span><span>Fee: ₹${m.fee || 0}</span>
                             </div>
                             <div id="status-area-${mId}">
                                 ${hasJoined ? 
@@ -204,7 +204,7 @@
         
         async function joinMatch(id, fee) {
     const user = auth.currentUser;
-    if (!user) return alert("Bhai pehle Login karo!");
+    if (!user) return alert("Login Please!");
 
     const uRef = db.collection('users').doc(user.uid);
     const mRef = db.collection('matches').doc(id);
