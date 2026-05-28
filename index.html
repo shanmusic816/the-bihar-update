@@ -1,205 +1,548 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBL Admin | Tournament Manager</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        // Yahan apna Firebase Config dalein
-        const firebaseConfig = {
-            apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw",
-            authDomain: "tournament-app-b77c0.firebaseapp.com",
-            projectId: "tournament-app-b77c0",
-            storageBucket: "tournament-app-b77c0.firebasestorage.app",
-            messagingSenderId: "925200484535",
-            appId: "1:925200484535:web:c15c87fcecb5e793bca532"
-        };
+<title>The Bihar Update • Coming Soon</title>
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-// Updated Login Logic with Admin Check
-window.adminLogin = async () => {
-    const e = document.getElementById('ae').value;
-    const p = document.getElementById('ap').value;
-    try {
-        const res = await signInWithEmailAndPassword(auth, e, p);
-        const userDoc = await getDoc(doc(db, "users", res.user.uid));
+<style>
 
-        if (userDoc.exists() && userDoc.data().role === 'admin') {
-            // Agar Admin hai toh dashboard dikhao
-            document.getElementById('admin-login').style.display = 'none';
-            document.getElementById('admin-dash').style.display = 'block';
-            listenTournaments();
-        } else {
-            // Agar Admin nahi hai toh Logout kar do
-            alert("Access Denied: You are not authorized as Admin!");
-            await signOut(auth);
-        }
-    } catch (err) {
-        alert("Login Error: " + err.message);
-    }
-};
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-// Auth Status Change
-onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists() && userDoc.data().role === 'admin') {
-            document.getElementById('admin-login').style.display = 'none';
-            document.getElementById('admin-dash').style.display = 'block';
-            listenTournaments();
-        } else {
-            document.getElementById('admin-login').style.display = 'block';
-            document.getElementById('admin-dash').style.display = 'none';
-        }
-    } else {
-        document.getElementById('admin-login').style.display = 'block';
-        document.getElementById('admin-dash').style.display = 'none';
-    }
-});
+body{
 
+font-family:'Inter',sans-serif;
+height:100vh;
+overflow:hidden;
+background:#050505;
+color:white;
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
 
-        // Create Tournament Logic
-        window.saveTournament = async () => {
-            const title = document.getElementById('t-title').value;
-            const fee = document.getElementById('t-fee').value;
-            const prize = document.getElementById('t-prize').value;
-            const time = document.getElementById('t-time').value;
+}
 
-            if(!title || !fee) return alert("Please fill details");
+/* Animated Background */
 
-            try {
-                await addDoc(collection(db, "tournaments"), {
-                    title: title,
-                    fee: parseInt(fee),
-                    pool: prize,
-                    time: time,
-                    filled: 0,
-                    total: 100,
-                    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400"
-                });
-                alert("Tournament Created Successfully!");
-                document.getElementById('t-form').reset();
-            } catch(e) { alert(e.message); }
-        };
+.bg{
 
-        // Real-time List
-        function listenTournaments() {
-            onSnapshot(collection(db, "tournaments"), (snap) => {
-                const list = document.getElementById('admin-t-list');
-                list.innerHTML = '';
-                snap.forEach(d => {
-                    const t = d.data();
-                  // Tournament List display loop ke andar ye button daalein
-list.innerHTML += `
-    <div class="t-card" style="border-left: 5px solid #f59e0b;">
-        <div>
-            <strong>${t.title}</strong><br>
-            <small>Status: ${t.status || 'Pending'}</small>
-        </div>
-        <div style="display:flex; gap:10px;">
-            <button onclick="updateRoomDetails('${d.id}')" style="background: #f59e0b; padding: 5px 10px; font-size: 12px;">
-                <i class="fa fa-key"></i> SET ID-PASS
-            </button>
-            <button onclick="deleteT('${d.id}')" style="background:red; padding: 5px 10px;">
-                <i class="fa fa-trash"></i>
-            </button>
-        </div>
-    </div>`;
+position:absolute;
+inset:0;
 
-                    list.innerHTML += `
-                        <div class="t-card">
-                            <div>
-                                <strong>${t.title}</strong><br>
-                                <small>Fee: ₹${t.fee} | Prize: ${t.pool}</small>
-                            </div>
-                            <button onclick="deleteT('${d.id}')" style="background:red; padding:5px 10px;">Delete</button>
-                        </div>`;
-                });
-            });
-        }
+background:
 
-        window.deleteT = async (id) => {
-            if(confirm("Delete this tournament?")) await deleteDoc(doc(db, "tournaments", id));
-        };
+radial-gradient(circle at top left,
+rgba(255,59,48,0.35),
+transparent 30%),
 
-        window.logout = () => signOut(auth);
-    
-  // Room ID aur Password update karne ka function
-window.updateRoomDetails = async (tournamentId) => {
-    const roomId = prompt("Enter Room ID:");
-    const password = prompt("Enter Room Password:");
+radial-gradient(circle at bottom right,
+rgba(255,255,255,0.06),
+transparent 25%),
 
-    if (roomId && password) {
-        try {
-            const tRef = doc(db, "tournaments", tournamentId);
-            await updateDoc(tRef, {
-                roomId: roomId,
-                password: password,
-                status: "ROOM READY" // Status change takki user ko pata chale
-            });
-            alert("Room ID/Pass successfully updated!");
-        } catch (error) {
-            alert("Error: " + error.message);
-        }
-    } else {
-        alert("Dono cheezein dalna zaroori hai!");
-    }
-};
+#050505;
 
-  </script>
+animation:bgZoom 10s infinite alternate;
 
-    <style>
-        body { font-family: 'Poppins'; background: #000; color: #fff; margin: 0; padding: 20px; }
-        .container { max-width: 500px; margin: auto; }
-        .card { background: #111; padding: 20px; border-radius: 12px; border: 1px solid #333; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #22c55e; border: none; color: white; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .t-card { background: #1a1a1a; padding: 15px; margin-top: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #22c55e; }
-        h2 { color: #22c55e; }
-    </style>
+}
+
+@keyframes bgZoom{
+
+0%{
+transform:scale(1);
+}
+
+100%{
+transform:scale(1.08);
+}
+
+}
+
+/* Floating Glow Circles */
+
+.circle{
+
+position:absolute;
+border-radius:50%;
+filter:blur(80px);
+opacity:0.35;
+animation:float 10s infinite ease-in-out;
+
+}
+
+.circle1{
+
+width:240px;
+height:240px;
+background:#ff3b30;
+top:-50px;
+left:-50px;
+
+}
+
+.circle2{
+
+width:280px;
+height:280px;
+background:#ff3b30;
+bottom:-80px;
+right:-80px;
+animation-delay:2s;
+
+}
+
+@keyframes float{
+
+0%,100%{
+transform:translateY(0px);
+}
+
+50%{
+transform:translateY(-20px);
+}
+
+}
+
+/* Main Card */
+
+.container{
+
+position:relative;
+z-index:10;
+
+width:92%;
+max-width:650px;
+
+padding:50px 40px;
+
+border-radius:40px;
+
+background:rgba(255,255,255,0.05);
+
+backdrop-filter:blur(24px);
+
+border:1px solid rgba(255,255,255,0.08);
+
+box-shadow:
+0 10px 60px rgba(0,0,0,0.6),
+inset 0 1px 1px rgba(255,255,255,0.1);
+
+text-align:center;
+
+animation:fadeUp 1s ease;
+
+}
+
+@keyframes fadeUp{
+
+from{
+opacity:0;
+transform:translateY(30px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+/* Logo */
+
+.logo{
+
+font-size:38px;
+font-weight:700;
+font-family:'Poppins',sans-serif;
+
+}
+
+.logo span{
+
+color:#ff3b30;
+
+}
+
+/* Badge */
+
+.badge{
+
+display:inline-block;
+
+margin-top:20px;
+
+padding:10px 22px;
+
+border-radius:50px;
+
+background:rgba(255,59,48,0.15);
+
+color:#ff3b30;
+
+font-size:13px;
+font-weight:600;
+
+border:1px solid rgba(255,59,48,0.2);
+
+}
+
+/* Heading */
+
+h1{
+
+font-size:68px;
+line-height:1;
+margin-top:28px;
+
+font-family:'Poppins',sans-serif;
+font-weight:700;
+
+}
+
+h1 span{
+
+color:#ff3b30;
+
+}
+
+/* Subtext */
+
+.sub{
+
+margin-top:22px;
+
+font-size:15px;
+
+line-height:1.9;
+
+opacity:0.82;
+
+max-width:560px;
+margin-inline:auto;
+
+}
+
+/* Ticker */
+
+.ticker{
+
+margin-top:28px;
+
+overflow:hidden;
+
+white-space:nowrap;
+
+border-top:1px solid rgba(255,255,255,0.08);
+border-bottom:1px solid rgba(255,255,255,0.08);
+
+padding:12px 0;
+
+}
+
+.track{
+
+display:inline-block;
+
+animation:scroll 16s linear infinite;
+
+font-size:14px;
+color:#ff3b30;
+font-weight:600;
+
+}
+
+@keyframes scroll{
+
+0%{
+transform:translateX(100%);
+}
+
+100%{
+transform:translateX(-100%);
+}
+
+}
+
+/* Countdown */
+
+.countdown{
+
+display:flex;
+justify-content:center;
+gap:16px;
+flex-wrap:wrap;
+
+margin-top:35px;
+
+}
+
+.time{
+
+min-width:100px;
+
+padding:18px;
+
+border-radius:28px;
+
+background:rgba(255,255,255,0.05);
+
+border:1px solid rgba(255,255,255,0.08);
+
+box-shadow:
+0 5px 30px rgba(0,0,0,0.35);
+
+transition:0.3s;
+
+}
+
+.time:hover{
+
+transform:translateY(-6px);
+
+background:rgba(255,59,48,0.12);
+
+}
+
+.time h2{
+
+font-size:36px;
+color:#ff3b30;
+font-weight:700;
+
+}
+
+.time span{
+
+font-size:12px;
+opacity:0.7;
+
+}
+
+/* Email */
+
+.email{
+
+margin-top:35px;
+font-size:14px;
+opacity:0.75;
+
+}
+
+.email span{
+
+color:#ff3b30;
+
+}
+
+/* Socials */
+
+.socials{
+
+display:flex;
+justify-content:center;
+gap:15px;
+margin-top:28px;
+
+}
+
+.social{
+
+width:50px;
+height:50px;
+
+border-radius:18px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+background:rgba(255,255,255,0.05);
+
+border:1px solid rgba(255,255,255,0.08);
+
+font-size:20px;
+
+transition:0.3s;
+
+cursor:pointer;
+
+}
+
+.social:hover{
+
+transform:translateY(-5px);
+
+background:#ff3b30;
+
+}
+
+/* Footer */
+
+.footer{
+
+margin-top:35px;
+
+font-size:13px;
+opacity:0.5;
+
+}
+
+/* Responsive */
+
+@media(max-width:700px){
+
+.container{
+padding:40px 25px;
+}
+
+h1{
+font-size:50px;
+}
+
+.logo{
+font-size:30px;
+}
+
+.time{
+min-width:80px;
+padding:14px;
+}
+
+.time h2{
+font-size:28px;
+}
+
+}
+
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <div id="admin-login" style="text-align: center; margin-top: 50px;">
-            <h1>🛡️ BBL ADMIN</h1>
-            <div class="card">
-                <input id="ae" placeholder="Admin Email">
-                <input id="ap" type="password" placeholder="Password">
-                <button onclick="adminLogin()" style="background: #6366f1;">LOGIN TO DASHBOARD</button>
-            </div>
-        </div>
 
-        <div id="admin-dash" style="display:none">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2>Admin Panel</h2>
-                <i class="fa fa-sign-out-alt" onclick="logout()" style="cursor:pointer; color: red;"></i>
-            </div>
+<div class="bg"></div>
 
-            <div class="card">
-                <h3>+ Create Tournament</h3>
-                <form id="t-form">
-                    <input id="t-title" placeholder="Game Title (e.g. BGMI Solo)">
-                    <input id="t-fee" type="number" placeholder="Entry Fee (₹)">
-                    <input id="t-prize" placeholder="Prize Pool (₹)">
-                    <input id="t-time" placeholder="Match Time (e.g. 09:00 PM)">
-                </form>
-                <button onclick="saveTournament()">PUBLISH TOURNAMENT</button>
-            </div>
+<div class="circle circle1"></div>
+<div class="circle circle2"></div>
 
-            <h3>Active Tournaments</h3>
-            <div id="admin-t-list">
-                </div>
-        </div>
-    </div>
+<div class="container">
+
+<div class="logo">
+📰 The <span>Bihar Update</span>
+</div>
+
+<div class="badge">
+Launching Soon
+</div>
+
+<h1>
+Big <span>News</span><br>
+Is Coming
+</h1>
+
+<p class="sub">
+
+A premium modern news platform for Bihar, India, and the world — bringing breaking updates, politics, jobs, sports, technology, entertainment, and much more with a fast modern experience.
+
+</p>
+
+<div class="ticker">
+
+<div class="track">
+
+Breaking News • Politics • Sports • Technology • Entertainment • Bihar Updates • Government Jobs • Education • Business • World News •
+
+</div>
+
+</div>
+
+<div class="countdown">
+
+<div class="time">
+<h2 id="days">00</h2>
+<span>DAYS</span>
+</div>
+
+<div class="time">
+<h2 id="hours">00</h2>
+<span>HOURS</span>
+</div>
+
+<div class="time">
+<h2 id="minutes">00</h2>
+<span>MINUTES</span>
+</div>
+
+<div class="time">
+<h2 id="seconds">00</h2>
+<span>SECONDS</span>
+</div>
+
+</div>
+
+<div class="email">
+
+Contact:
+<span>evernote820@gmail.com</span>
+
+</div>
+
+<div class="socials">
+
+<div class="social">📸</div>
+<div class="social">📢</div>
+<div class="social">▶️</div>
+<div class="social">🌐</div>
+
+</div>
+
+<div class="footer">
+
+© 2026 The Bihar Update • All Rights Reserved
+
+</div>
+
+</div>
+
+<script>
+
+const launchDate =
+new Date("June 1, 2026 00:00:00").getTime();
+
+setInterval(()=>{
+
+const now =
+new Date().getTime();
+
+const distance =
+launchDate - now;
+
+const days =
+Math.floor(distance / (1000*60*60*24));
+
+const hours =
+Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+
+const minutes =
+Math.floor((distance % (1000*60*60)) / (1000*60));
+
+const seconds =
+Math.floor((distance % (1000*60)) / 1000);
+
+document.getElementById("days").innerHTML = days;
+document.getElementById("hours").innerHTML = hours;
+document.getElementById("minutes").innerHTML = minutes;
+document.getElementById("seconds").innerHTML = seconds;
+
+},1000);
+
+</script>
+
 </body>
 </html>
