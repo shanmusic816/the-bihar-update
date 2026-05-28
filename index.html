@@ -1,492 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>window.location.href = 'maintenance.html';</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE BIHAR UPDATE – Coming Soon</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maintenance | The Bihar Update</title>
 
-        :root {
-            --primary: #ff3b30;
-            --bg: #0b0b0b;
-            --glass: rgba(255, 255, 255, 0.03);
-        }
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-        /* Animated gradient background */
-        .bg-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at 50% 50%, rgba(255,59,48,0.12) 0%, rgba(0,0,0,0) 70%);
-            z-index: 0;
-            animation: pulseBg 6s ease-in-out infinite;
-        }
+body{
+    background:#0f0f10;
+    font-family:'Inter',sans-serif;
+    color:#f1f1f1;
+}
 
-        @keyframes pulseBg {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
+/* Top Red Accent */
+.top-bar{
+    height:4px;
+    background:#c62828;
+}
 
-        /* Particles canvas */
-        #particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
+/* Header */
+.header{
+    padding:25px 70px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #222;
+}
 
-        /* Main card */
-        .container {
-            position: relative;
-            z-index: 2;
-            width: 90%;
-            max-width: 860px;
-            padding: 3rem 2rem;
-            text-align: center;
-            background: rgba(20, 20, 20, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 3rem;
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05) inset,
-                        0 0 60px rgba(255,59,48,0.15);
-            animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+.logo{
+    font-family:'Playfair Display',serif;
+    font-size:26px;
+}
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(60px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+.logo span{
+    color:#c62828;
+}
 
-        /* Logo */
-        .logo {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: clamp(2.2rem, 8vw, 3.8rem);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            margin-bottom: 0.6rem;
-            background: linear-gradient(135deg, #fff 0%, #ff6b6b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 40px rgba(255,59,48,0.5);
-            letter-spacing: -0.02em;
-        }
+.date{
+    font-size:14px;
+    color:#aaa;
+}
 
-        .badge {
-            display: inline-block;
-            background: var(--primary);
-            color: #fff;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            padding: 0.5rem 1.5rem;
-            border-radius: 100px;
-            margin-bottom: 2.5rem;
-            animation: pulseBadge 2s infinite;
-            box-shadow: 0 0 20px rgba(255,59,48,0.5);
-        }
+/* Main */
+.wrapper{
+    height:calc(100vh - 110px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:40px;
+}
 
-        @keyframes pulseBadge {
-            0% { box-shadow: 0 0 0 0 rgba(255,59,48,0.7); }
-            70% { box-shadow: 0 0 0 18px rgba(255,59,48,0); }
-            100% { box-shadow: 0 0 0 0 rgba(255,59,48,0); }
-        }
+.content{
+    max-width:750px;
+    animation:fadeIn 1s ease;
+}
 
-        h1 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 800;
-            font-size: clamp(2.8rem, 10vw, 4.8rem);
-            line-height: 1.15;
-            margin-bottom: 1.2rem;
-            background: linear-gradient(to right, #ffffff, #cccccc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 80px rgba(255,59,48,0.3);
-        }
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
 
-        .subtitle {
-            font-size: 1.15rem;
-            font-weight: 300;
-            color: rgba(255,255,255,0.65);
-            max-width: 550px;
-            margin: 0 auto 3rem;
-            line-height: 1.7;
-        }
+h1{
+    font-family:'Playfair Display',serif;
+    font-size:48px;
+    margin-bottom:20px;
+}
 
-        /* Countdown */
-        .countdown {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 3.5rem;
-        }
+.divider{
+    width:80px;
+    height:2px;
+    background:#c62828;
+    margin:30px auto;
+}
 
-        .countdown-item {
-            background: rgba(255,255,255,0.04);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 1.8rem;
-            padding: 1.4rem 1.6rem;
-            min-width: 95px;
-            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05) inset;
-            transition: all 0.3s ease;
-            animation: float 4s ease-in-out infinite;
-        }
+p{
+    font-size:17px;
+    color:#b5b5b5;
+    line-height:1.9;
+    margin-bottom:30px;
+}
 
-        .countdown-item:hover {
-            transform: translateY(-8px);
-            border-color: rgba(255,59,48,0.5);
-            box-shadow: 0 25px 45px -10px rgba(255,59,48,0.25);
-        }
+.status{
+    font-size:14px;
+    letter-spacing:2px;
+    color:#c62828;
+    font-weight:500;
+}
 
-        .countdown-item:nth-child(2) { animation-delay: 0.6s; }
-        .countdown-item:nth-child(3) { animation-delay: 1.2s; }
-        .countdown-item:nth-child(4) { animation-delay: 1.8s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-        }
-
-        .countdown-number {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 2.8rem;
-            line-height: 1;
-            color: #fff;
-            text-shadow: 0 0 25px rgba(255,59,48,0.7);
-            letter-spacing: 0.02em;
-        }
-
-        .countdown-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: rgba(255,255,255,0.45);
-            margin-top: 0.4rem;
-        }
-
-        /* Ticker */
-        .ticker-wrapper {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 50px;
-            padding: 0.7rem 1.8rem;
-            margin-bottom: 2.8rem;
-            overflow: hidden;
-            width: 100%;
-            max-width: 560px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .ticker {
-            display: flex;
-            animation: scroll 25s linear infinite;
-            white-space: nowrap;
-            font-weight: 500;
-            font-size: 0.95rem;
-            color: rgba(255,255,255,0.8);
-        }
-
-        .ticker span {
-            display: inline-block;
-            padding: 0 0.8rem;
-        }
-
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        .ticker-wrapper:hover .ticker {
-            animation-play-state: paused;
-        }
-
-        /* Socials */
-        .socials {
-            display: flex;
-            gap: 1.8rem;
-            margin-bottom: 2.2rem;
-            justify-content: center;
-        }
-
-        .social-icon {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 1.4rem;
-            transition: all 0.3s;
-            text-decoration: none;
-            box-shadow: 0 12px 25px -10px rgba(0,0,0,0.5);
-        }
-
-        .social-icon:hover {
-            background: var(--primary);
-            transform: translateY(-6px) scale(1.1);
-            border-color: var(--primary);
-            box-shadow: 0 25px 40px -10px rgba(255,59,48,0.5);
-        }
-
-        .email-link {
-            font-size: 1.05rem;
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            transition: color 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .email-link:hover {
-            color: var(--primary);
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 2rem 1.2rem;
-                border-radius: 2.5rem;
-                margin: 1rem;
-            }
-            .countdown {
-                gap: 0.8rem;
-            }
-            .countdown-item {
-                padding: 1rem 1rem;
-                min-width: 70px;
-                border-radius: 1.2rem;
-            }
-            .countdown-number {
-                font-size: 2rem;
-            }
-            .ticker {
-                font-size: 0.8rem;
-            }
-        }
-    </style>
+@media(max-width:600px){
+    h1{
+        font-size:28px;
+    }
+}
+</style>
 </head>
-<body>
-    <div class="bg-gradient"></div>
-    <canvas id="particles"></canvas>
 
-    <div class="container">
-        <div class="logo">📰 THE BIHAR UPDATE</div>
-        <div class="badge">LAUNCHING SOON</div>
-        <h1>Big News Is Coming</h1>
-        <p class="subtitle">
-            A modern premium news platform for Bihar, India, and the world. Stay tuned for breaking stories, in‑depth analysis, and real‑time updates.
+<body>
+
+<div class="top-bar"></div>
+
+<div class="header">
+    <div class="logo">The <span>Bihar Update</span></div>
+    <div class="date" id="date"></div>
+</div>
+
+<div class="wrapper">
+    <div class="content">
+
+        <h1>WE ARE UNDER MAINTENANCE</h1>
+
+        <div class="divider"></div>
+
+        <p>
+            Our website is temporarily unavailable while we perform scheduled updates.
+            We are working to enhance performance and improve your experience.
+            Please check back shortly.
         </p>
 
-        <!-- Countdown -->
-        <div class="countdown" id="countdown">
-            <div class="countdown-item">
-                <div class="countdown-number" id="days">00</div>
-                <div class="countdown-label">Days</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="hours">00</div>
-                <div class="countdown-label">Hours</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="minutes">00</div>
-                <div class="countdown-label">Minutes</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="seconds">00</div>
-                <div class="countdown-label">Seconds</div>
-            </div>
+        <div class="status">
+            MAINTENANCE IN PROGRESS
         </div>
 
-        <!-- News Ticker -->
-        <div class="ticker-wrapper">
-            <div class="ticker">
-                <span>🔴 Breaking News</span><span>•</span>
-                <span>Politics</span><span>•</span>
-                <span>Sports</span><span>•</span>
-                <span>Technology</span><span>•</span>
-                <span>Entertainment</span><span>•</span>
-                <span>Jobs</span><span>•</span>
-                <span>🔴 Breaking News</span><span>•</span>
-                <span>Politics</span><span>•</span>
-                <span>Sports</span><span>•</span>
-                <span>Technology</span><span>•</span>
-                <span>Entertainment</span><span>•</span>
-                <span>Jobs</span>
-            </div>
-        </div>
-
-        <!-- Social Icons -->
-        <div class="socials">
-            <a href="#" class="social-icon" aria-label="Instagram">📸</a>
-            <a href="#" class="social-icon" aria-label="Telegram">✈️</a>
-            <a href="#" class="social-icon" aria-label="YouTube">▶️</a>
-            <a href="#" class="social-icon" aria-label="Facebook">📘</a>
-        </div>
-
-        <a href="mailto:evernote820@gmail.com" class="email-link">
-            <span>✉️</span> evernote820@gmail.com
-        </a>
     </div>
+</div>
 
-    <script>
-        (function() {
-            // ========== COUNTDOWN ==========
-            const countdownDate = new Date('2026-06-01T00:00:00').getTime();
+<script>
+function updateDateTime() {
+    const now = new Date();
 
-            function updateCountdown() {
-                const now = Date.now();
-                const distance = countdownDate - now;
+    const dateOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
 
-                if (distance < 0) {
-                    document.getElementById('days').textContent = '00';
-                    document.getElementById('hours').textContent = '00';
-                    document.getElementById('minutes').textContent = '00';
-                    document.getElementById('seconds').textContent = '00';
-                    return;
-                }
+    const date = now.toLocaleDateString('en-IN', dateOptions);
 
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    const time = now.toLocaleTimeString('en-IN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
 
-                document.getElementById('days').textContent = String(days).padStart(2, '0');
-                document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-                document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-                document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-            }
+    document.getElementById("date").innerHTML =
+        date + " | " + time + " IST";
+}
 
-            setInterval(updateCountdown, 1000);
-            updateCountdown();
+updateDateTime();
+setInterval(updateDateTime, 1000);
+</script>
 
-            // ========== ADVANCED PARTICLES ==========
-            const canvas = document.getElementById('particles');
-            const ctx = canvas.getContext('2d');
-            let width, height;
-            let particles = [];
-            const mouse = { x: 0.5, y: 0.5 };
-
-            function resize() {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
-
-            // Create two types of particles: glowing orbs and tiny stars
-            for (let i = 0; i < 70; i++) {
-                const type = Math.random() > 0.5 ? 'orb' : 'star';
-                particles.push({
-                    type,
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    radius: type === 'orb' ? Math.random() * 3 + 2 : Math.random() * 1.5 + 0.5,
-                    baseX: Math.random() * width,
-                    baseY: Math.random() * height,
-                    speed: 0.005 + Math.random() * 0.02,
-                    angle: Math.random() * Math.PI * 2,
-                    color: type === 'orb' 
-                        ? `rgba(255, ${59 + Math.floor(Math.random()*30)}, ${48 + Math.floor(Math.random()*20)}, ${0.4 + Math.random()*0.4})`
-                        : `rgba(255, 255, 255, ${0.3 + Math.random()*0.4})`,
-                    glow: type === 'orb' ? 15 : 4
-                });
-            }
-
-            document.addEventListener('mousemove', (e) => {
-                mouse.x = e.clientX / width;
-                mouse.y = e.clientY / height;
-            });
-            document.addEventListener('touchmove', (e) => {
-                if (e.touches.length) {
-                    mouse.x = e.touches[0].clientX / width;
-                    mouse.y = e.touches[0].clientY / height;
-                }
-            }, { passive: true });
-
-            function draw() {
-                ctx.clearRect(0, 0, width, height);
-
-                for (let p of particles) {
-                    // parallax offset based on mouse
-                    const offsetX = (mouse.x - 0.5) * 60;
-                    const offsetY = (mouse.y - 0.5) * 60;
-
-                    p.angle += p.speed;
-                    p.x = p.baseX + Math.cos(p.angle) * 20 + offsetX;
-                    p.y = p.baseY + Math.sin(p.angle) * 20 + offsetY;
-
-                    // wrap around edges
-                    if (p.x > width + 50) p.x = -50;
-                    if (p.x < -50) p.x = width + 50;
-                    if (p.y > height + 50) p.y = -50;
-                    if (p.y < -50) p.y = height + 50;
-
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI);
-                    ctx.fillStyle = p.color;
-                    if (p.type === 'orb') {
-                        ctx.shadowColor = p.color;
-                        ctx.shadowBlur = p.glow;
-                    } else {
-                        ctx.shadowBlur = 0;
-                    }
-                    ctx.fill();
-                    ctx.shadowBlur = 0;
-                }
-
-                requestAnimationFrame(draw);
-            }
-
-            draw();
-        })();
-    </script>
 </body>
 </html>
