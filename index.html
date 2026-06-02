@@ -1,170 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance | The Bihar Update</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    background:#0f0f10;
-    font-family:'Inter',sans-serif;
-    color:#f1f1f1;
-}
-
-/* Top Red Accent */
-.top-bar{
-    height:4px;
-    background:#c62828;
-}
-
-/* Header */
-.header{
-    padding:25px 70px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:1px solid #222;
-}
-
-.logo{
-    font-family:'Playfair Display',serif;
-    font-size:26px;
-}
-
-.logo span{
-    color:#c62828;
-}
-
-.date{
-    font-size:14px;
-    color:#aaa;
-}
-
-/* Main */
-.wrapper{
-    height:calc(100vh - 110px);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:40px;
-}
-
-.content{
-    max-width:750px;
-    animation:fadeIn 1s ease;
-}
-
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(20px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-h1{
-    font-family:'Playfair Display',serif;
-    font-size:48px;
-    margin-bottom:20px;
-}
-
-.divider{
-    width:80px;
-    height:2px;
-    background:#c62828;
-    margin:30px auto;
-}
-
-p{
-    font-size:17px;
-    color:#b5b5b5;
-    line-height:1.9;
-    margin-bottom:30px;
-}
-
-.status{
-    font-size:14px;
-    letter-spacing:2px;
-    color:#c62828;
-    font-weight:500;
-}
-
-@media(max-width:600px){
-    h1{
-        font-size:28px;
-    }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Bihar Update – Latest News</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #0a0a0a; }
+    .glass { background: rgba(20,20,20,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+    .hover-card { transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1); }
+    .hover-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 30px 50px -20px rgba(239,68,68,0.35); border-color: rgba(239,68,68,0.5); }
+    .hero-bg { background: radial-gradient(ellipse at 50% 0%, rgba(220,38,38,0.18) 0%, rgba(0,0,0,0.9) 70%); }
+    .ticker-wrap { animation: scroll 35s linear infinite; }
+    @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  </style>
 </head>
+<body class="text-gray-100 min-h-screen flex flex-col">
 
-<body>
-
-<div class="top-bar"></div>
-
-<div class="header">
-    <div class="logo">The <span>Bihar Update</span></div>
-    <div class="date" id="date"></div>
-</div>
-
-<div class="wrapper">
-    <div class="content">
-
-        <h1>WE ARE UNDER MAINTENANCE</h1>
-
-        <div class="divider"></div>
-
-        <p>
-            Our website is temporarily unavailable while we perform scheduled updates.
-            We are working to enhance performance and improve your experience.
-            Please check back shortly.
-        </p>
-
-        <div class="status">
-            MAINTENANCE IN PROGRESS
-        </div>
-
+  <!-- TOP BAR -->
+  <div class="bg-gray-900/90 backdrop-blur-md border-b border-gray-800/50 text-xs text-gray-400 px-4 py-2 flex justify-between items-center">
+    <span><i class="far fa-calendar-alt mr-2"></i> <span id="current-date"></span></span>
+    <div class="flex gap-3">
+      <a href="#" class="hover:text-white"><i class="fab fa-facebook"></i></a>
+      <a href="#" class="hover:text-white"><i class="fab fa-twitter"></i></a>
+      <a href="#" class="hover:text-white"><i class="fab fa-instagram"></i></a>
     </div>
-</div>
+  </div>
 
-<script>
-function updateDateTime() {
-    const now = new Date();
+  <!-- HEADER -->
+  <header class="bg-gray-900/80 backdrop-blur-lg sticky top-0 z-40 border-b border-gray-800/50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-3xl font-extrabold tracking-tight">
+          <span class="text-red-500">Bihar</span> <span class="text-white">Update</span>
+        </span>
+      </a>
+      <nav class="hidden md:flex gap-8 text-sm font-medium">
+        <a href="/" class="text-white hover:text-red-400 transition border-b-2 border-red-500 pb-1">Home</a>
+        <a href="contact.html" class="text-gray-300 hover:text-red-400 transition">Contact</a>
+        <a href="disclaimer.html" class="text-gray-300 hover:text-red-400 transition">Disclaimer</a>
+      </nav>
+      <div class="relative">
+        <input type="text" id="search-input" placeholder="Search..." class="bg-gray-800/80 text-sm rounded-full pl-10 pr-4 py-2.5 border border-gray-700/50 focus:outline-none focus:ring-2 focus:ring-red-500 w-48 md:w-64 text-white placeholder-gray-400">
+        <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+      </div>
+    </div>
+  </header>
 
-    const dateOptions = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+  <!-- BREAKING NEWS TICKER -->
+  <div class="bg-red-600/10 border-b border-red-800/20 overflow-hidden">
+    <div class="ticker-wrap flex whitespace-nowrap py-2">
+      <span class="inline-block px-6 text-red-300 font-semibold text-sm" id="ticker-content"></span>
+      <span class="inline-block px-6 text-red-300 font-semibold text-sm" id="ticker-content-duplicate"></span>
+    </div>
+  </div>
+
+  <!-- HERO (dynamic featured image background) -->
+  <section class="relative py-20 md:py-28 border-b border-gray-800/50 overflow-hidden" id="hero-section">
+    <div class="absolute inset-0 bg-black/60 z-0" id="hero-overlay"></div>
+    <div class="absolute inset-0 z-0 bg-cover bg-center opacity-30" id="hero-bg-image"></div>
+    <div class="max-w-4xl mx-auto px-4 text-center relative z-10" id="hero-content">
+      <div class="animate-pulse space-y-4">
+        <div class="h-8 bg-gray-800 rounded w-3/4 mx-auto"></div>
+        <div class="h-4 bg-gray-800 rounded w-1/2 mx-auto"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 py-10 w-full">
+    <h2 class="text-3xl font-bold mb-8 flex items-center gap-3">
+      <span class="w-2 h-8 bg-red-500 rounded-full"></span> Latest News
+    </h2>
+    
+    <div id="news-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="col-span-full text-center py-20 text-gray-400">Loading news...</div>
+    </div>
+
+    <div id="pagination-section" class="flex justify-center mt-10 hidden">
+      <button id="load-more-btn" class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-full font-medium transition shadow-xl shadow-red-600/20 flex items-center gap-2">
+        <i class="fas fa-spinner fa-spin hidden" id="loading-spinner"></i>
+        <span id="load-more-text">Load More</span>
+      </button>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900/80 backdrop-blur-md border-t border-gray-800/50 mt-12">
+    <div class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div>
+        <h3 class="text-2xl font-bold mb-3"><span class="text-red-500">Bihar</span> Update</h3>
+        <p class="text-gray-400 text-sm italic">Bihar's Voice, Nation's Choice</p>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-4 text-white">Quick Links</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/" class="hover:text-red-400 transition">Home</a></li>
+          <li><a href="contact.html" class="hover:text-red-400 transition">Contact</a></li>
+          <li><a href="disclaimer.html" class="hover:text-red-400 transition">Disclaimer</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-4 text-white">Categories</h4>
+        <ul class="space-y-2 text-sm text-gray-400" id="footer-cats">
+          <li>Loading...</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-4 text-white">Contact</h4>
+        <p class="text-gray-400 text-sm mb-2"><i class="fas fa-envelope mr-2 text-red-400"></i> evernote820@gmail.com</p>
+        <a href="mailto:evernote820@gmail.com" class="inline-block bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-full text-sm font-medium transition shadow-lg shadow-red-600/20">
+          <i class="fas fa-paper-plane mr-2"></i>Email Us
+        </a>
+      </div>
+    </div>
+    <div class="border-t border-gray-800 py-6 text-center text-gray-500 text-xs">
+      © 2025 The Bihar Update. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, query, orderByChild, limitToLast, endAt } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDiHxA8fXHVTAKFSU1UMobZMY_Kw7612fw",
+      authDomain: "tournament-app-b77c0.firebaseapp.com",
+      databaseURL: "https://tournament-app-b77c0-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "tournament-app-b77c0",
+      storageBucket: "tournament-app-b77c0.firebasestorage.app",
+      messagingSenderId: "925200484535",
+      appId: "1:925200484535:web:c15c87fcecb5e793bca532"
     };
 
-    const date = now.toLocaleDateString('en-IN', dateOptions);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-    const time = now.toLocaleTimeString('en-IN', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-    });
+    const PAGE_SIZE = 10;
+    let lastCreatedAt = null;
+    let hasMore = true;
+    let allLoadedArticles = [];
+    const PLACEHOLDER = 'https://placehold.co/600x400/1f2937/ffffff?text=No+Image';
 
-    document.getElementById("date").innerHTML =
-        date + " | " + time + " IST";
-}
+    // Load footer categories
+    async function loadFooterCategories() {
+      const snap = await get(ref(db, 'categories'));
+      const container = document.getElementById('footer-cats');
+      if (!snap.exists()) {
+        container.innerHTML = '<li>No categories</li>';
+        return;
+      }
+      const cats = Object.values(snap.val()).map(c => c.name);
+      container.innerHTML = cats.map(c => `<li><a href="#" class="hover:text-red-400">${c}</a></li>`).join('');
+    }
 
-updateDateTime();
-setInterval(updateDateTime, 1000);
-</script>
+    // Hero background image
+    function setHeroBackground(article) {
+      if (article && article.imageUrl) {
+        document.getElementById('hero-bg-image').style.backgroundImage = `url(${article.imageUrl})`;
+      }
+    }
 
+    // Ticker
+    function updateTicker(title) {
+      const text = '🔴 BREAKING: ' + (title || 'Latest news updates');
+      document.getElementById('ticker-content').textContent = text;
+      document.getElementById('ticker-content-duplicate').textContent = text;
+    }
+
+    async function loadLatestNews() {
+      // ... (same pagination logic as before)
+      // After fetching publishedNews:
+      // setHeroBackground(heroArticle);
+      // updateTicker(heroArticle.title);
+      // renderArticles(publishedNews);
+    }
+
+    // (Include the complete loadLatestNews, loadMoreNews, renderArticles, searchNews functions from earlier version)
+  </script>
 </body>
 </html>
